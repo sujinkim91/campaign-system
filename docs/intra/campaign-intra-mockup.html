@@ -69,14 +69,15 @@
     .data-table .link { color: var(--primary); text-decoration: none; margin-right: 12px; font-size: 13px; }
     .data-table .link:hover { text-decoration: underline; }
 
-    .data-table col:nth-child(1) { width: 10%; }
-    .data-table col:nth-child(2) { width: 18%; }
-    .data-table col:nth-child(3) { width: 8%; }
-    .data-table col:nth-child(4) { width: 8%; }
-    .data-table col:nth-child(5) { width: 8%; }
-    .data-table col:nth-child(6) { width: 10%; }
+    .data-table col:nth-child(1) { width: 9%; }
+    .data-table col:nth-child(2) { width: 14%; }
+    .data-table col:nth-child(3) { width: 7%; }
+    .data-table col:nth-child(4) { width: 9%; }
+    .data-table col:nth-child(5) { width: 7%; }
+    .data-table col:nth-child(6) { width: 7%; }
     .data-table col:nth-child(7) { width: 8%; }
-    .data-table col:nth-child(8) { width: 18%; }
+    .data-table col:nth-child(8) { width: 8%; }
+    .data-table col:nth-child(9) { width: 18%; }
 
     /* ===== 푸터 안내 ===== */
     .page-note { margin-top: 20px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
@@ -96,6 +97,20 @@
     .form-actions .btn-submit { padding: 10px 24px; background: var(--primary); color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; }
     .form-actions .btn-submit:hover { background: var(--primary-hover); }
     .form-note { margin-top: 16px; font-size: 13px; color: #dc2626; }
+    /* 가이드 */
+    .form-guide { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: #0c4a6e; line-height: 1.5; }
+    .form-guide strong { display: block; margin-bottom: 4px; }
+    .list-guide { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+    .form-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; margin-left: 140px; }
+    /* 리워드 등급(소분류) 다중 추가 */
+    .form-row.so-single { display: flex; }
+    .form-row.so-multi { display: none; align-items: flex-start; }
+    .form-row.so-multi .grade-list { flex: 1; border: 1px solid var(--border); border-radius: 6px; padding: 12px; min-height: 60px; background: #fafafa; }
+    .grade-item { display: inline-flex; align-items: center; gap: 8px; margin: 4px; padding: 6px 10px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+    .grade-item .rm { color: var(--text-muted); cursor: pointer; font-size: 16px; line-height: 1; }
+    .grade-item .rm:hover { color: #dc2626; }
+    .btn-add-grade { padding: 6px 12px; margin-top: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; cursor: pointer; }
+    .btn-add-grade:hover { background: #f8fafc; }
   </style>
 </head>
 <body>
@@ -116,6 +131,7 @@
       <div class="content">
         <!-- 화면 1: 캠페인 현황 (목록) -->
         <div id="screen-list" class="screen active">
+        <p class="list-guide">캠페인 목록을 검색한 뒤 상세·수정으로 관리할 수 있습니다.</p>
         <div class="filter-section">
           <div class="filter-required">필수 입력 사항</div>
           <div class="filter-row">
@@ -146,13 +162,14 @@
         <div class="table-wrap">
           <table class="data-table">
             <colgroup>
-              <col><col><col><col><col><col><col><col>
+              <col><col><col><col><col><col><col><col><col>
             </colgroup>
             <thead>
               <tr>
                 <th>캠페인 코드</th>
                 <th>캠페인명</th>
                 <th>구분</th>
+                <th>소진예산</th>
                 <th>대분류</th>
                 <th>적용 대상</th>
                 <th>소분류</th>
@@ -165,6 +182,7 @@
                 <td>CP-2024-001</td>
                 <td>상점 할인 프로모션</td>
                 <td>프로모션</td>
+                <td>500만 원</td>
                 <td>할인</td>
                 <td>상점</td>
                 <td>상점 일반</td>
@@ -175,6 +193,7 @@
                 <td>CP-2024-002</td>
                 <td>라이더 단계형 미션</td>
                 <td>미션</td>
+                <td>1,200만 원</td>
                 <td>지급</td>
                 <td>라이더</td>
                 <td>단계형</td>
@@ -185,6 +204,7 @@
                 <td>CP-2024-003</td>
                 <td>리워드 그린 등급</td>
                 <td>리워드</td>
+                <td>—</td>
                 <td>보너스</td>
                 <td>라이더</td>
                 <td>그린</td>
@@ -201,10 +221,19 @@
 
         <!-- 화면 2: 캠페인 등록 (신규 등록 폼) - 유형 통합표에 따라 동적 전환 -->
         <div id="screen-register" class="screen">
+          <div class="form-guide">
+            <strong>가이드</strong>
+            구분 → 대분류 → 적용 대상 → 소분류 순으로 선택하면 지급 방식과 적용 조건이 자동으로 설정됩니다. <strong>리워드·보너스</strong>는 하나의 캠페인에 등급(그린, 블루, 퍼플, 골드1, 골드2)을 여러 개 추가할 수 있습니다. 소진예산은 캠페인별 사용 상한(선택)입니다.
+          </div>
           <div class="form-section">
             <div class="form-row">
               <label>구분</label>
               <select id="f-gu"><option value="">선택</option><option value="프로모션">프로모션</option><option value="미션">미션</option><option value="리워드">리워드</option></select>
+            </div>
+            <div class="form-row">
+              <label>소진예산</label>
+              <input type="text" id="f-budget" placeholder="예산 금액 (원)" style="max-width:200px;" />
+              <span class="form-hint" style="margin-left:8px;">선택 입력. 단위: 원</span>
             </div>
             <div class="form-row">
               <label>대분류</label>
@@ -218,9 +247,25 @@
               <label>적용대상 유형</label>
               <select id="f-target-type"><option value="">선택</option><option value="전체">전체</option><option value="직영">직영</option><option value="프렌즈">프렌즈</option><option value="지점">지점</option></select>
             </div>
-            <div class="form-row">
+            <div class="form-row so-single" id="row-so-single">
               <label>소분류</label>
               <select id="f-so"><option value="">선택</option></select>
+            </div>
+            <div class="form-row so-multi" id="row-so-multi">
+              <label>등급(소분류)</label>
+              <div style="flex:1;">
+                <div class="grade-list" id="grade-list"></div>
+                <div style="margin-top:8px; display:flex; align-items:center; gap:8px;">
+                  <select id="grade-select" style="padding:6px 10px; font-size:13px; min-width:140px;">
+                    <option value="그린">그린 (+7%)</option>
+                    <option value="블루">블루 (+15%)</option>
+                    <option value="퍼플">퍼플 (+20%)</option>
+                    <option value="골드1">골드1 (+25%)</option>
+                    <option value="골드2">골드2 (+30%)</option>
+                  </select>
+                  <button type="button" class="btn-add-grade" id="btn-add-grade">+ 등급 추가</button>
+                </div>
+              </div>
             </div>
             <div class="form-row" id="row-payment-method" style="display:none;">
               <label>지급 방식</label>
@@ -261,7 +306,6 @@
             <div class="form-actions">
               <button type="button" class="btn-submit">신규 캠페인 등록</button>
             </div>
-            <p class="form-note">* 최소결제(누적)금액은 결제 수단별로 상이할 수 있으니 반드시 확인 후 설정하세요.</p>
           </div>
         </div>
         <!-- /화면 2 -->
@@ -287,6 +331,8 @@
 
       function uniq(arr) { var u = {}; arr.forEach(function(x) { u[x] = true; }); return Object.keys(u); }
 
+      var REWARD_GRADES = { '그린': '+7%', '블루': '+15%', '퍼플': '+20%', '골드1': '+25%', '골드2': '+30%' };
+
       var fGu = document.getElementById('f-gu');
       var fDae = document.getElementById('f-dae');
       var fTarget = document.getElementById('f-target');
@@ -305,6 +351,52 @@
       var fCond2 = document.getElementById('f-cond2');
       var fCond3 = document.getElementById('f-cond3');
       var fRemark = document.getElementById('f-remark');
+      var rowSoSingle = document.getElementById('row-so-single');
+      var rowSoMulti = document.getElementById('row-so-multi');
+      var gradeListEl = document.getElementById('grade-list');
+      var btnAddGrade = document.getElementById('btn-add-grade');
+      var gradeSelect = document.getElementById('grade-select');
+
+      var selectedGrades = [];
+
+      function isRewardBonus() { return fGu.value === '리워드' && fDae.value === '보너스'; }
+
+      function renderGradeList() {
+        gradeListEl.innerHTML = '';
+        selectedGrades.forEach(function(so) {
+          var tag = document.createElement('span');
+          tag.className = 'grade-item';
+          tag.innerHTML = so + ' ' + (REWARD_GRADES[so] || '') + ' <span class="rm" data-grade="' + so + '" title="제거">×</span>';
+          gradeListEl.appendChild(tag);
+        });
+        gradeListEl.querySelectorAll('.rm').forEach(function(el) {
+          el.addEventListener('click', function() {
+            var g = el.getAttribute('data-grade');
+            selectedGrades = selectedGrades.filter(function(x) { return x !== g; });
+            renderGradeList();
+            if (selectedGrades.length > 0) applyRewardConditions();
+            else { rowPayment.style.display = 'none'; rowCond1.style.display = 'none'; rowCond2.style.display = 'none'; rowCond3.style.display = 'none'; rowRemark.style.display = 'none'; }
+          });
+        });
+      }
+
+      function applyRewardConditions() {
+        var one = TYPES.find(function(t) { return t.gu === '리워드' && t.dae === '보너스' && t.so === '그린'; });
+        if (!one) return;
+        rowPayment.style.display = 'flex';
+        setSelect(fPayment, [one.payment], false);
+        fPayment.value = one.payment;
+        lCond1.textContent = one.c1;
+        lCond2.textContent = one.c2;
+        lCond3.textContent = one.c3;
+        fCond1.placeholder = one.c1;
+        fCond2.placeholder = one.c2;
+        fCond3.placeholder = one.c3;
+        rowCond1.style.display = 'flex';
+        rowCond2.style.display = 'flex';
+        rowCond3.style.display = 'flex';
+        rowRemark.style.display = 'none';
+      }
 
       function setSelect(sel, options, keepFirst) {
         var first = sel.options[0] ? sel.options[0].cloneNode(true) : null;
@@ -323,6 +415,10 @@
         fDae.value = '';
         fTarget.value = '';
         fSo.value = '';
+        selectedGrades = [];
+        renderGradeList();
+        rowSoSingle.style.display = 'flex';
+        rowSoMulti.style.display = 'none';
         rowTargetType.style.display = 'none';
         rowPayment.style.display = 'none';
         rowCond1.style.display = 'none';
@@ -346,11 +442,21 @@
         rowCond2.style.display = 'none';
         rowCond3.style.display = 'none';
         rowRemark.style.display = 'none';
-        if (!gu || !dae) { setSelect(fSo, [], true); return; }
+        if (!gu || !dae) { setSelect(fSo, [], true); rowSoSingle.style.display = 'flex'; rowSoMulti.style.display = 'none'; selectedGrades = []; renderGradeList(); return; }
         var list = TYPES.filter(function(t) { return t.gu === gu && t.dae === dae; });
         fTarget.value = '';
         setSelect(fTarget, uniq(list.map(function(t) { return t.target; })), true);
-        setSelect(fSo, list.map(function(t) { return t.so; }), true);
+        if (isRewardBonus()) {
+          rowSoSingle.style.display = 'none';
+          rowSoMulti.style.display = 'flex';
+          selectedGrades = [];
+          renderGradeList();
+        } else {
+          rowSoSingle.style.display = 'flex';
+          rowSoMulti.style.display = 'none';
+          selectedGrades = [];
+          setSelect(fSo, list.map(function(t) { return t.so; }), true);
+        }
         onTargetChange();
       }
 
@@ -361,6 +467,16 @@
       }
 
       function onSoChange() {
+        if (isRewardBonus()) {
+          if (selectedGrades.length === 0) {
+            rowPayment.style.display = 'none';
+            rowCond1.style.display = 'none';
+            rowCond2.style.display = 'none';
+            rowCond3.style.display = 'none';
+            rowRemark.style.display = 'none';
+          }
+          return;
+        }
         var gu = fGu.value;
         var dae = fDae.value;
         var so = fSo.value;
@@ -396,6 +512,14 @@
           rowRemark.style.display = 'none';
         }
       }
+
+      btnAddGrade.addEventListener('click', function() {
+        var v = gradeSelect.value;
+        if (!v || selectedGrades.indexOf(v) >= 0) return;
+        selectedGrades.push(v);
+        renderGradeList();
+        applyRewardConditions();
+      });
 
       fGu.addEventListener('change', onGuChange);
       fDae.addEventListener('change', onDaeChange);
