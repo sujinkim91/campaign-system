@@ -80,6 +80,22 @@
 
     /* ===== 푸터 안내 ===== */
     .page-note { margin-top: 20px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ===== 화면 전환 (메뉴별) ===== */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ===== 신규 캠페인 등록 폼 ===== */
+    .form-section { background: var(--card); border-radius: 8px; border: 1px solid var(--border); padding: 24px; max-width: 640px; }
+    .form-row { display: flex; align-items: center; margin-bottom: 16px; }
+    .form-row label { width: 140px; flex-shrink: 0; font-weight: 500; font-size: 14px; }
+    .form-row input, .form-row select, .form-row textarea { flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
+    .form-row textarea { min-height: 80px; resize: vertical; }
+    .form-byte { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    .form-actions { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .form-actions .btn-submit { padding: 10px 24px; background: var(--primary); color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; }
+    .form-actions .btn-submit:hover { background: var(--primary-hover); }
+    .form-note { margin-top: 16px; font-size: 13px; color: #dc2626; }
   </style>
 </head>
 <body>
@@ -87,17 +103,19 @@
     <aside class="sidebar">
       <div class="sidebar-logo">캠페인 관리 시스템</div>
       <nav class="sidebar-nav">
-        <a href="#" class="active">캠페인 현황</a>
-        <a href="#">캠페인 등록</a>
+        <a href="#" id="nav-list" class="active">캠페인 현황</a>
+        <a href="#" id="nav-register">캠페인 등록</a>
       </nav>
     </aside>
 
     <main class="main">
       <header class="header">
-        <h1>캠페인 목록</h1>
+        <h1 id="page-title">캠페인 목록</h1>
       </header>
 
       <div class="content">
+        <!-- 화면 1: 캠페인 현황 (목록) -->
+        <div id="screen-list" class="screen active">
         <div class="filter-section">
           <div class="filter-required">필수 입력 사항</div>
           <div class="filter-row">
@@ -178,8 +196,86 @@
         </div>
 
         <p class="page-note">* 캠페인은 삭제할 수 없습니다. 변경이 필요한 경우 수정하거나 비활성화 후 신규 캠페인을 등록해 주세요.</p>
+        </div>
+        <!-- /화면 1 -->
+
+        <!-- 화면 2: 캠페인 등록 (신규 등록 폼) -->
+        <div id="screen-register" class="screen">
+          <div class="form-section">
+            <div class="form-row">
+              <label>구분</label>
+              <select><option value="">선택</option><option>프로모션</option><option>미션</option><option>리워드</option></select>
+            </div>
+            <div class="form-row">
+              <label>대분류</label>
+              <select><option value="">선택</option><option>할인</option><option>쿠폰</option><option>지급</option><option>보너스</option></select>
+            </div>
+            <div class="form-row">
+              <label>적용 대상</label>
+              <select><option value="">선택</option><option>상점</option><option>라이더</option></select>
+            </div>
+            <div class="form-row">
+              <label>적용대상 유형</label>
+              <select><option value="">선택</option><option>전체</option><option>직영</option><option>프렌즈</option><option>지점</option></select>
+            </div>
+            <div class="form-row">
+              <label>소분류</label>
+              <select><option value="">선택</option><option>상점 일반</option><option>제로패스</option><option>라이더 프로모션</option><option>단계형</option><option>단일 목표형</option><option>복귀</option><option>그린</option><option>블루</option><option>퍼플</option><option>골드1</option><option>골드2</option></select>
+            </div>
+            <div class="form-row">
+              <label>캠페인명</label>
+              <input type="text" placeholder="35자 이내" maxlength="35" />
+            </div>
+            <div class="form-row">
+              <label>캠페인 설명</label>
+              <div style="flex:1;"><div class="form-byte">0/1000 byte</div><textarea placeholder="캠페인 설명" maxlength="1000"></textarea></div>
+            </div>
+            <div class="form-row">
+              <label>적용 기간 (GMT)</label>
+              <span style="flex:1; display:flex; gap:8px; align-items:center;"><input type="datetime-local" /><input type="datetime-local" /></span>
+            </div>
+            <div class="form-row">
+              <label>지급 방식</label>
+              <select><option value="">선택</option><option>정액</option><option>횟수</option><option>정률(%)</option></select>
+            </div>
+            <div class="form-row">
+              <label>등록자 ID</label>
+              <input type="text" placeholder="등록자 ID" />
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn-submit">신규 캠페인 등록</button>
+            </div>
+            <p class="form-note">* 최소결제(누적)금액은 결제 수단별로 상이할 수 있으니 반드시 확인 후 설정하세요.</p>
+          </div>
+        </div>
+        <!-- /화면 2 -->
       </div>
     </main>
   </div>
+  <script>
+    (function() {
+      var navList = document.getElementById('nav-list');
+      var navRegister = document.getElementById('nav-register');
+      var screenList = document.getElementById('screen-list');
+      var screenRegister = document.getElementById('screen-register');
+      var pageTitle = document.getElementById('page-title');
+      function showList() {
+        navList.classList.add('active');
+        navRegister.classList.remove('active');
+        screenList.classList.add('active');
+        screenRegister.classList.remove('active');
+        pageTitle.textContent = '캠페인 목록';
+      }
+      function showRegister() {
+        navList.classList.remove('active');
+        navRegister.classList.add('active');
+        screenList.classList.remove('active');
+        screenRegister.classList.add('active');
+        pageTitle.textContent = '신규 캠페인 등록';
+      }
+      navList.addEventListener('click', function(e) { e.preventDefault(); showList(); });
+      navRegister.addEventListener('click', function(e) { e.preventDefault(); showRegister(); });
+    })();
+  </script>
 </body>
 </html>
