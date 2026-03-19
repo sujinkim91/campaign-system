@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Service Architecture</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { overflow: visible; }
+  body { font-family:'Malgun Gothic','맑은 고딕',sans-serif; background:#fff; padding:16px; }
+  h2 { font-size:16px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
+  .sub { font-size:11px; color:#666; margin-bottom:12px; }
+  .svg-wrap { max-width:100%; overflow:visible; margin:0 auto; display:block; }
+  .svg-wrap svg { max-width:100%; height:auto; display:block; margin:0 auto; }
+</style>
+</head>
+<body>
+<h2>Service Architecture</h2>
+<p class="sub">캠페인 시스템(마케팅 서버) 중심의 서비스 구조</p>
+
+<div class="svg-wrap">
+<svg viewBox="0 0 1240 820" width="1240" height="820" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+<defs>
+  <marker id="mb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+    <path d="M1 1.5L8 5L1 8.5" fill="none" stroke="#1a3a6b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <marker id="mr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+    <path d="M1 1.5L8 5L1 8.5" fill="none" stroke="#c0392b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <marker id="mo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+    <path d="M1 1.5L8 5L1 8.5" fill="none" stroke="#e67e22" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <marker id="mg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto">
+    <path d="M1 1.5L8 5L1 8.5" fill="none" stroke="#888" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <marker id="mg2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+    <path d="M1 1.5L8 5L1 8.5" fill="none" stroke="#27ae60" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- ================================================================
+     ROW 1: 마케팅 서버 (상단 중앙)
+================================================================ -->
+<rect x="420" y="40" width="300" height="150" rx="8" fill="#e8f0fb" stroke="#1a3a6b" stroke-width="2"/>
+<text x="570" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a2e">마케팅 서버</text>
+<text x="570" y="84" text-anchor="middle" font-size="10" fill="#555">캠페인 시스템</text>
+<rect x="438" y="96" width="80" height="28" rx="4" fill="#1a3a6b"/>
+<text x="478" y="114" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">프로모션</text>
+<rect x="530" y="96" width="80" height="28" rx="4" fill="#1a3a6b"/>
+<text x="570" y="114" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">미션</text>
+<rect x="622" y="96" width="80" height="28" rx="4" fill="#1a3a6b"/>
+<text x="662" y="114" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">리워드</text>
+<text x="570" y="154" text-anchor="middle" font-size="9" fill="#777">상점·라이더 정보 주기 동기화 + 이벤트 트리거</text>
+<text x="570" y="170" text-anchor="middle" font-size="9" fill="#aaa">(프라임 서버 / 라스트마일 서버)</text>
+
+<!-- 관리자 -->
+<circle cx="60" cy="95" r="13" fill="none" stroke="#1a3a6b" stroke-width="1.8"/>
+<line x1="60" y1="108" x2="60" y2="132" stroke="#1a3a6b" stroke-width="1.8"/>
+<line x1="42" y1="118" x2="78" y2="118" stroke="#1a3a6b" stroke-width="1.8"/>
+<line x1="60" y1="132" x2="46" y2="148" stroke="#1a3a6b" stroke-width="1.8"/>
+<line x1="60" y1="132" x2="74" y2="148" stroke="#1a3a6b" stroke-width="1.8"/>
+<text x="60" y="163" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a2e">관리자</text>
+<text x="60" y="175" text-anchor="middle" font-size="9" fill="#666">인트라</text>
+
+<!-- 관리자 → 마케팅 서버 -->
+<line x1="74" y1="108" x2="415" y2="108" stroke="#1a3a6b" stroke-width="1.6" marker-end="url(#mb)"/>
+<rect x="200" y="118" width="126" height="18" rx="3" fill="#fff" stroke="#d0dce8" stroke-width="0.8"/>
+<text x="263" y="131" text-anchor="middle" font-size="9.5" fill="#1a3a6b" font-weight="700">캠페인 등록 / 관리</text>
+
+<!-- ================================================================
+     ROW 2: 프라임 서버 (좌) | 라스트마일 서버 (우)
+================================================================ -->
+<rect x="160" y="280" width="170" height="85" rx="6" fill="#f5f5f5" stroke="#666" stroke-width="1.5"/>
+<text x="245" y="313" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a2e">프라임 서버</text>
+<text x="245" y="331" text-anchor="middle" font-size="9.5" fill="#555">상점 정보 / 판가 계산</text>
+<text x="245" y="347" text-anchor="middle" font-size="9.5" fill="#555">오더 접수</text>
+
+<rect x="830" y="260" width="185" height="85" rx="6" fill="#f5f5f5" stroke="#666" stroke-width="1.5"/>
+<text x="922" y="293" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a2e">라스트마일 서버</text>
+<text x="922" y="311" text-anchor="middle" font-size="9.5" fill="#555">라이더 정보 / 원가 계산</text>
+<text x="922" y="327" text-anchor="middle" font-size="9.5" fill="#555">오더 처리</text>
+
+<!-- 상점주 -->
+<circle cx="60" cy="305" r="13" fill="none" stroke="#27ae60" stroke-width="1.8"/>
+<line x1="60" y1="318" x2="60" y2="342" stroke="#27ae60" stroke-width="1.8"/>
+<line x1="42" y1="328" x2="78" y2="328" stroke="#27ae60" stroke-width="1.8"/>
+<line x1="60" y1="342" x2="46" y2="358" stroke="#27ae60" stroke-width="1.8"/>
+<line x1="60" y1="342" x2="74" y2="358" stroke="#27ae60" stroke-width="1.8"/>
+<text x="60" y="374" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a2e">상점주</text>
+<text x="60" y="386" text-anchor="middle" font-size="9" fill="#666">상점앱 / POS</text>
+
+<!-- 라이더 -->
+<circle cx="1185" cy="275" r="13" fill="none" stroke="#1565c0" stroke-width="1.8"/>
+<line x1="1185" y1="288" x2="1185" y2="312" stroke="#1565c0" stroke-width="1.8"/>
+<line x1="1167" y1="298" x2="1203" y2="298" stroke="#1565c0" stroke-width="1.8"/>
+<line x1="1185" y1="312" x2="1171" y2="328" stroke="#1565c0" stroke-width="1.8"/>
+<line x1="1185" y1="312" x2="1199" y2="328" stroke="#1565c0" stroke-width="1.8"/>
+<text x="1185" y="344" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1a2e">라이더</text>
+<text x="1185" y="356" text-anchor="middle" font-size="9" fill="#666">기사앱</text>
+
+<!-- 상점주 → 프라임 -->
+<path d="M74,316 L152,316" fill="none" stroke="#27ae60" stroke-width="1.8" marker-end="url(#mg2)"/>
+<rect x="82" y="324" width="56" height="18" rx="3" fill="#fff" stroke="#c8e6c9" stroke-width="0.6"/>
+<text x="110" y="336" text-anchor="middle" font-size="9.5" fill="#27ae60" font-weight="700">배송 신청</text>
+
+<!-- 라이더 → 라스트마일 -->
+<line x1="1168" y1="282" x2="1017" y2="282" stroke="#1565c0" stroke-width="1.8" marker-end="url(#mb)"/>
+<rect x="1052" y="268" width="72" height="18" rx="3" fill="#fff" stroke="#bbdefb" stroke-width="0.6"/>
+<text x="1088" y="280" text-anchor="middle" font-size="9.5" fill="#1565c0" font-weight="700">오더 수행</text>
+
+<!-- ================================================================
+     동기화 (회색 점선) — 경로 분리하여 겹침 방지
+================================================================ -->
+<!-- 프라임 → 마케팅 (상점 정보) -->
+<path d="M245,278 L245,222 L392,222 L392,188 L418,188"
+  fill="none" stroke="#888" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#mg)"/>
+<rect x="258" y="202" width="52" height="28" rx="3" fill="#fff" stroke="#e0e0e0" stroke-width="0.6"/>
+<text x="284" y="214" text-anchor="middle" font-size="8" fill="#666">상점 정보</text>
+<text x="284" y="226" text-anchor="middle" font-size="8" fill="#666">동기화</text>
+<!-- 마케팅 → 프라임 (동기화 반영) -->
+<path d="M418,168 L366,168 L366,278 L332,278"
+  fill="none" stroke="#888" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#mg)"/>
+
+<!-- 라스트마일 → 마케팅 (라이더 정보) -->
+<path d="M922,258 L922,212 L752,212 L752,188 L722,188"
+  fill="none" stroke="#888" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#mg)"/>
+<rect x="818" y="216" width="52" height="28" rx="3" fill="#fff" stroke="#e0e0e0" stroke-width="0.6"/>
+<text x="844" y="228" text-anchor="middle" font-size="8" fill="#666">라이더 정보</text>
+<text x="844" y="240" text-anchor="middle" font-size="8" fill="#666">동기화</text>
+<!-- 마케팅 → 라스트마일 (동기화 반영) -->
+<path d="M722,168 L766,168 L766,268 L830,268"
+  fill="none" stroke="#888" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#mg)"/>
+
+<!-- ================================================================
+     오더 접수/제안 시 캠페인 조회 (파란 실선) — 경로 분리
+================================================================ -->
+<!-- 라스트마일 → 마케팅 (캠페인 조회) -->
+<path d="M830,267 L800,267 L800,76 L720,76"
+  fill="none" stroke="#1a3a6b" stroke-width="1.8" marker-end="url(#mb)"/>
+<rect x="802" y="158" width="88" height="18" rx="3" fill="#e8f0fb" stroke="#b8d0e8" stroke-width="0.6"/>
+<text x="846" y="170" text-anchor="middle" font-size="9.5" fill="#1a3a6b" font-weight="700">캠페인 조회</text>
+
+<!-- 마케팅 → 라스트마일 (원가 반영) -->
+<path d="M720,100 L778,100 L778,276 L830,276"
+  fill="none" stroke="#1a3a6b" stroke-width="1.8" marker-end="url(#mb)"/>
+<rect x="782" y="182" width="90" height="18" rx="3" fill="#e8f0fb" stroke="#b8d0e8" stroke-width="0.6"/>
+<text x="827" y="194" text-anchor="middle" font-size="9.5" fill="#1a3a6b" font-weight="700">원가 계산 반영</text>
+
+<!-- 마케팅 → 프라임 (판가 반영) -->
+<path d="M456,188 L456,252 L250,252 L250,278"
+  fill="none" stroke="#1a3a6b" stroke-width="1.8" marker-end="url(#mb)"/>
+<rect x="308" y="256" width="90" height="18" rx="3" fill="#e8f0fb" stroke="#b8d0e8" stroke-width="0.6"/>
+<text x="353" y="268" text-anchor="middle" font-size="9.5" fill="#1a3a6b" font-weight="700">판가 계산 반영</text>
+
+<!-- 프라임 → 상점주 (판가 결과) -->
+<path d="M158,310 L98,310" fill="none" stroke="#1a3a6b" stroke-width="1.8" marker-end="url(#mb)"/>
+<rect x="92" y="272" width="82" height="18" rx="3" fill="#e8f0fb" stroke="#b8d0e8" stroke-width="0.6"/>
+<text x="133" y="285" text-anchor="middle" font-size="9.5" fill="#1a3a6b" font-weight="700">판가 적용 결과</text>
+
+<!-- 라스트마일 → 라이더 (원가 결과) -->
+<line x1="1015" y1="298" x2="1168" y2="298" stroke="#1a3a6b" stroke-width="1.8" marker-end="url(#mb)"/>
+<rect x="1042" y="306" width="90" height="18" rx="3" fill="#e8f0fb" stroke="#b8d0e8" stroke-width="0.6"/>
+<text x="1087" y="318" text-anchor="middle" font-size="9.5" fill="#1a3a6b" font-weight="700">원가 적용 결과</text>
+
+<!-- ================================================================
+     ROW 3: 포인트서버(M캐시서버) (하단 중앙)
+================================================================ -->
+<rect x="460" y="530" width="200" height="80" rx="6" fill="#fff8e1" stroke="#f9a825" stroke-width="1.8"/>
+<text x="560" y="562" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a2e">포인트서버</text>
+<text x="560" y="580" text-anchor="middle" font-size="10" fill="#b8860b" font-weight="600">(M캐시서버)</text>
+<text x="560" y="598" text-anchor="middle" font-size="9" fill="#888">라이더 수익금 / 상점 예치금</text>
+
+<!-- ================================================================
+     오더 완료 시 정산 (주황 실선) — 상하 경로 분리
+================================================================ -->
+<!-- 프라임 → 포인트서버 (판가 정산) -->
+<path d="M245,365 L245,548 L460,548 L460,530"
+  fill="none" stroke="#e67e22" stroke-width="1.8" marker-end="url(#mo)"/>
+<rect x="192" y="458" width="90" height="18" rx="3" fill="#fef5ec" stroke="#f0c674" stroke-width="0.6"/>
+<text x="237" y="470" text-anchor="middle" font-size="9.5" fill="#e67e22" font-weight="700">판가 정산 전달</text>
+
+<!-- 라스트마일 → 포인트서버 (원가 정산) -->
+<path d="M922,345 L922,548 L660,548 L660,530"
+  fill="none" stroke="#e67e22" stroke-width="1.8" marker-end="url(#mo)"/>
+<rect x="858" y="472" width="90" height="18" rx="3" fill="#fef5ec" stroke="#f0c674" stroke-width="0.6"/>
+<text x="903" y="484" text-anchor="middle" font-size="9.5" fill="#e67e22" font-weight="700">원가 정산 전달</text>
+
+<!-- ================================================================
+     정산 주기 후정산 (빨간 점선) — 세로선 분리
+================================================================ -->
+<!-- 라스트마일 → 마케팅 (배치 오더 카운트) -->
+<path d="M868,345 L868,418 L564,418 L564,188"
+  fill="none" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="6,4" marker-end="url(#mr)"/>
+<rect x="664" y="428" width="120" height="18" rx="3" fill="#fdecea" stroke="#e8b4b4" stroke-width="0.6"/>
+<text x="724" y="440" text-anchor="middle" font-size="9.5" fill="#c0392b" font-weight="700">배치 오더 카운트</text>
+
+<!-- 마케팅 → 포인트서버 (조건 달성 여부 확인) -->
+<path d="M576,188 L576,528"
+  fill="none" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="6,4" marker-end="url(#mr)"/>
+<rect x="582" y="358" width="126" height="18" rx="3" fill="#fdecea" stroke="#e8b4b4" stroke-width="0.6"/>
+<text x="645" y="370" text-anchor="middle" font-size="9.5" fill="#c0392b" font-weight="700">조건 달성 여부 확인</text>
+
+<!-- ================================================================
+     포인트서버 → 라이더 / 상점주 — 좌우 경로 분리
+================================================================ -->
+<!-- 포인트서버 → 라이더 (수익금 지급) -->
+<path d="M660,558 L1090,558 L1090,342 L1176,342"
+  fill="none" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="6,4" marker-end="url(#mr)"/>
+<rect x="902" y="544" width="80" height="18" rx="3" fill="#fdecea" stroke="#e8b4b4" stroke-width="0.6"/>
+<text x="942" y="556" text-anchor="middle" font-size="9.5" fill="#c0392b" font-weight="700">수익금 지급</text>
+
+<!-- 포인트서버 → 상점주 (예치금 처리) -->
+<path d="M460,582 L102,582 L102,388"
+  fill="none" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="6,4" marker-end="url(#mr)"/>
+<rect x="192" y="568" width="80" height="18" rx="3" fill="#fdecea" stroke="#e8b4b4" stroke-width="0.6"/>
+<text x="232" y="580" text-anchor="middle" font-size="9.5" fill="#c0392b" font-weight="700">예치금 처리</text>
+
+<!-- ================================================================
+     범례 (상하단 여백 동일)
+================================================================ -->
+<rect x="280" y="648" width="660" height="88" rx="6" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+<line x1="296" y1="660" x2="332" y2="660" stroke="#1a3a6b" stroke-width="1.8" marker-end="url(#mb)"/>
+<text x="340" y="664" font-size="10" fill="#333">오더 접수/제안 시 캠페인 조회 (판가/원가 반영)</text>
+<line x1="296" y1="688" x2="332" y2="688" stroke="#e67e22" stroke-width="1.8" marker-end="url(#mo)"/>
+<text x="340" y="692" font-size="10" fill="#333">오더 완료 시 정산 (→ 포인트서버)</text>
+<line x1="296" y1="716" x2="332" y2="716" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="6,3" marker-end="url(#mr)"/>
+<text x="340" y="720" font-size="10" fill="#333">후정산 (배치 오더 카운트 → 조건 확인 → 포인트서버)</text>
+
+</svg>
+</div>
+</body>
+</html>

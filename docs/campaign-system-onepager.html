@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>캠페인 시스템 개요</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" crossorigin="anonymous"></script>
+  <style>
+    :root { --primary: #1e4a72; --primary-bg: #e8eef5; --accent: #ffd700; --bg: #f8f9fa; --card: #fff; --text: #333; --muted: #6b7280; --border: #d4dce6; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 16px 20px 24px; font-size: 15px; line-height: 1.6; color: var(--text); background: var(--bg); font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', sans-serif; max-width: none; width: 100%; }
+    .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; margin-bottom: 12px; }
+    .btn { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; font-size: 13px; text-decoration: none; }
+    .btn.btn-small { padding: 6px 10px; font-size: 12px; }
+    .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    h1 { font-size: 1.75rem; margin: 0 0 20px; font-weight: 700; color: var(--primary); }
+    .callout { background: var(--primary-bg); border-left: 4px solid var(--accent); padding: 14px 18px; margin: 0 0 20px; border-radius: 0 8px 8px 0; font-size: 15px; }
+    .callout p { margin: 0; }
+    section { margin-bottom: 16px; }
+    section h2 { font-size: 1.15rem; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--primary); font-weight: 600; color: var(--primary); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; }
+    th { background: var(--primary-bg); font-weight: 600; color: var(--primary); }
+    .diagram-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin: 8px 0; overflow: visible; min-height: 280px; }
+    .diagram-wrap .mermaid { text-align: center; min-width: min-content; }
+    .embed-wrap { width: 100%; margin: 8px 0; border-radius: 8px; overflow: visible; border: 1px solid var(--border); background: var(--card); }
+    .embed-wrap iframe { width: 100%; height: 72vh; min-height: 420px; display: block; border: none; }
+    .embed-wrap.embed-full { overflow: visible; }
+    .embed-wrap.embed-full iframe { height: 900px; min-height: 900px; }
+    .embed-wrap.embed-full-flow { overflow: visible; }
+    .embed-wrap.embed-full-flow iframe { height: 1000px; min-height: 1000px; }
+    .embed-placeholder { min-height: 120px; display: flex; align-items: center; justify-content: center; }
+    .placeholder-msg { margin: 0; color: var(--muted); font-size: 14px; }
+    .compact-table th, .compact-table td { padding: 8px 10px; font-size: 12px; }
+    .table-scroll { overflow: visible; margin: 8px 0; border: 1px solid var(--border); border-radius: 8px; background: var(--card); }
+    .terms-box { margin-top: 16px; padding: 16px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; border-left: 4px solid var(--accent); }
+    .terms-title { font-size: 0.95rem; font-weight: 700; color: var(--primary); margin: 0 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+    .terms-list { margin: 0; font-size: 13px; }
+    .terms-list dt { font-weight: 600; color: var(--primary); margin-top: 10px; margin-bottom: 2px; }
+    .terms-list dt:first-of-type { margin-top: 0; }
+    .terms-list dd { margin: 0 0 0 1em; color: var(--text); line-height: 1.5; }
+    .terms-list-right { display: grid; grid-template-columns: auto 1fr; gap: 6px 20px; align-items: start; }
+    .terms-list-right dt { margin: 0; grid-column: 1; }
+    .terms-list-right dd { margin: 0; grid-column: 2; }
+    .terms-two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 32px; align-items: start; }
+    .terms-two-cols .terms-list { margin: 0; }
+    .terms-two-cols .terms-list dt { margin-top: 8px; }
+    .terms-two-cols .terms-list dt:first-of-type { margin-top: 0; }
+    @media print {
+      body { background: #fff; padding: 6px 8px; font-size: 10px; line-height: 1.4; overflow: visible; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .toolbar { display: none !important; }
+      #main-content { padding: 0; }
+      h1 { font-size: 1.25rem; margin: 0 0 8px; }
+      .callout { padding: 8px 12px; margin: 0 0 10px; font-size: 10px; }
+      section { margin-bottom: 8px; page-break-inside: avoid; }
+      section h2 { font-size: 0.95rem; margin: 0 0 6px; padding-bottom: 4px; }
+      .diagram-wrap, .embed-wrap, .table-scroll { overflow: visible !important; page-break-inside: avoid; padding: 6px; margin: 4px 0; min-height: 0; }
+      .embed-wrap iframe { height: 420px; min-height: 420px; }
+      .embed-wrap.embed-full iframe { height: 480px; min-height: 480px; }
+      .embed-wrap.embed-full-flow iframe { height: 520px; min-height: 520px; }
+      table, .compact-table th, .compact-table td { font-size: 9px; padding: 4px 6px; }
+      .terms-box { margin-top: 8px; padding: 8px 12px; page-break-inside: avoid; }
+      .terms-title { font-size: 0.85rem; margin: 0 0 6px; padding-bottom: 4px; }
+      .terms-list, .terms-list-right { font-size: 9px; }
+      .terms-two-cols { gap: 12px 20px; }
+      .callout, .terms-box { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar no-print">
+    <a href="캠페인-시스템-초안.md" class="btn" target="_blank" rel="noopener">Markdown</a>
+    <button type="button" class="btn primary" onclick="window.print()">PDF로 저장</button>
+  </div>
+  <div id="main-content">
+  <h1>캠페인 시스템 개요</h1>
+  <div class="callout">
+    <p>상점과 라이더를 대상으로 다양한 인센티브를 설계·운영하는 통합 관리 체계입니다.<br><strong>프로모션</strong>·<strong>미션</strong>·<strong>리워드</strong> 세 가지 운영 방식을 하나의 구조로 관리하며, 지급 대상·지급 방식·적용 조건에 따라 세분화합니다.</p>
+  </div>
+
+  <section>
+    <h2>1. 구분 정의</h2>
+    <table>
+      <thead><tr><th>구분</th><th>정의</th><th>적용 대상</th><th>지급 시점</th></tr></thead>
+      <tbody>
+        <tr><td><strong>프로모션</strong></td><td>관리자가 직접 대상과 기간을 지정하여 정액·횟수 혜택을 부여</td><td>상점 / 라이더</td><td>오더 발생 시 즉시 적용</td></tr>
+        <tr><td><strong>미션</strong></td><td>특정 조건(시간대·건수·날짜) 설정 후 라이더 달성 시 보상 지급</td><td>라이더</td><td>미션 달성 확인 후 지급</td></tr>
+        <tr><td><strong>리워드</strong></td><td>고정 주기별 실적 기준 등급 산정, 배달건당 정률 보너스 지급</td><td>라이더</td><td>등급 산정 후 다음 주기 배달건에 적용</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>2. 서비스 아키텍처</h2>
+    <div class="embed-wrap embed-full">
+      <iframe title="서비스 아키텍처" src="appn/캠페인_아키텍처.html"></iframe>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. 캠페인 적용 흐름</h2>
+    <div class="diagram-wrap">
+      <pre class="mermaid">
+flowchart LR
+    subgraph actors [ ]
+      direction TB
+      상점주(["🏪 상점주\n상점앱/POS"]):::actor
+      관리자(["👨‍💼 관리자\n인트라"]):::actor
+      라이더(["🛵 라이더\n기사앱"]):::actor
+    end
+    상점주 -->|배송 신청| PRIME
+    관리자 -->|캠페인 등록/관리| MS
+    라이더 -->|오더 수행| LM
+
+    subgraph SYNC [데이터 동기화]
+        PRIME[프라임 서버] -->|상점 정보 주기 동기화| MS
+        PRIME -->|상점 정보 변경 이벤트| MS
+        LM[라스트마일 서버] -->|라이더 정보 주기 동기화| MS
+        LM -->|라이더 정보 변경 이벤트| MS
+    end
+
+    subgraph MS [🎫 마케팅 서버 - 캠페인 시스템]
+        PRO[프로모션]
+        MIS[미션]
+        REW[리워드]
+    end
+
+    PRIME -->|오더 전달| LM
+
+    subgraph 오더접수 [오더 접수/제안 시 - 캠페인 조회]
+        LM2[라스트마일 서버] -->|캠페인 조회| MS2[마케팅 서버]
+        MS2 -->|원가 계산 반영| LM2
+        MS2 -->|판가 계산 반영| PRIME2[프라임 서버]
+        PRIME2 -->|판가 적용 결과| 상점주2(["🏪 상점주"]):::actor
+        LM2 -->|원가 적용 결과| 라이더2(["🛵 라이더"]):::actor
+    end
+
+    subgraph 오더정산 [오더 완료 시 정산 - 프라임/라스트마일 계산]
+        PRIME3[프라임 서버] -->|판가 정산 전달| PT["포인트서버\n(M캐시서버)"]
+        LM3[라스트마일 서버] -->|원가 정산 전달| PT
+        PT -->|수익금 지급| 라이더3(["🛵 라이더"]):::actor
+        PT -->|예치금 처리| 상점주3(["🏪 상점주"]):::actor
+    end
+
+    subgraph 후정산 [정산 주기 후정산 - 마케팅서버 계산]
+        LM4[라스트마일 서버] -->|배치 오더 카운트| MS4[마케팅 서버]
+        MS4 -->|조건 달성 여부 확인| PT2["포인트서버\n(M캐시서버)"]
+        PT2 -->|수익금 지급| 라이더4(["🛵 라이더"]):::actor
+    end
+
+    MS -.->|캠페인 적용| 오더접수
+    MS -.->|즉시 정산| 오더정산
+    MS -.->|후정산| 후정산
+
+    classDef actor fill:#e8eef5,stroke:#1e4a72,color:#333,font-weight:600
+      </pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>4. 유저 플로우</h2>
+    <div class="embed-wrap embed-full embed-full-flow">
+      <iframe title="유저 플로우" src="appn/캠페인_유저플로우.html"></iframe>
+    </div>
+  </section>
+
+  <section>
+    <h2>5. 캠페인 유형 통합표</h2>
+    <div class="table-scroll">
+      <table class="compact-table">
+        <thead>
+          <tr>
+            <th>구분</th><th>대분류</th><th>적용 대상</th><th>적용대상 유형</th><th>소분류</th>
+            <th>지급 방식</th><th>적용 조건 1</th><th>적용 조건 2</th><th>적용 조건 3</th><th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>프로모션</td><td>할인</td><td>상점</td><td>-</td><td>상점 일반</td><td>정액</td><td>지역/ZONE 선택</td><td>특정 상점 선택</td><td>적용 기간</td><td></td></tr>
+          <tr><td>프로모션</td><td>쿠폰</td><td>상점</td><td>-</td><td>제로패스</td><td>횟수</td><td>지역/ZONE 선택</td><td>특정 상점 선택</td><td>횟수 설정 (최대 5회)</td><td>기본판가만 적용</td></tr>
+          <tr><td>프로모션</td><td>지급</td><td>라이더</td><td>전체/직영/프렌즈/지점</td><td>라이더 프로모션</td><td>정액</td><td>지역/ZONE 선택</td><td>특정 라이더 선택</td><td>적용 기간</td><td></td></tr>
+          <tr><td>미션</td><td>지급</td><td>라이더</td><td>전체/직영/프렌즈/지점</td><td>단계형</td><td>정액</td><td>시간대 설정</td><td>특정 건수 단계 설정</td><td>등급 선택</td><td>예: 4/8/10건</td></tr>
+          <tr><td>미션</td><td>지급</td><td>라이더</td><td>전체/직영/프렌즈/지점</td><td>단일 목표형</td><td>정액</td><td>날짜 지정</td><td>목표 건수</td><td>등급 선택</td><td>특정일 집중 유도</td></tr>
+          <tr><td>미션</td><td>지급</td><td>라이더</td><td>전체/직영/프렌즈/지점</td><td>복귀</td><td>정액</td><td>비활성 기간 조건</td><td>복귀 후 목표 건수</td><td>등급 선택</td><td>이탈 라이더 복귀</td></tr>
+          <tr><td>리워드</td><td>보너스</td><td>라이더</td><td>전체/직영/프렌즈/지점</td><td>그린</td><td>정률(%)</td><td>직전 2주 배달 누적 건수</td><td>배차 수락률 기준</td><td>매주 배달 최소 건수</td><td>+7%</td></tr>
+          <tr><td>리워드</td><td>보너스</td><td>라이더</td><td>전체/직영/프렌즈/지점</td><td>블루</td><td>정률(%)</td><td>직전 2주 배달 누적 건수</td><td>배차 수락률 기준</td><td>매주 배달 최소 건수</td><td>+15%</td></tr>
+          <tr><td>리워드</td><td>보너스</td><td>라이더</td><td>전체/직영/프렌즈/지점</td><td>퍼플</td><td>정률(%)</td><td>직전 2주 배달 누적 건수</td><td>배차 수락률 기준</td><td>매주 배달 최소 건수</td><td>+20%</td></tr>
+          <tr><td>리워드</td><td>보너스</td><td>라이더</td><td>전체/직영/프렌즈/지점</td><td>골드1</td><td>정률(%)</td><td>직전 2주 배달 누적 건수</td><td>배차 수락률 기준</td><td>매주 배달 최소 건수</td><td>+25%</td></tr>
+          <tr><td>리워드</td><td>보너스</td><td>라이더</td><td>전체/직영/프렌즈/지점</td><td>골드2</td><td>정률(%)</td><td>직전 2주 배달 누적 건수</td><td>배차 수락률 기준</td><td>매주 배달 최소 건수</td><td>+30%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="terms-box">
+      <div class="terms-title">항목 설명</div>
+      <div class="terms-two-cols">
+        <dl class="terms-list">
+          <dt>캠페인</dt><dd>프로모션·미션·리워드를 묶는 최상위 운영 단위</dd>
+          <dt>구분</dt><dd>캠페인 내 운영 방식 분류 (프로모션 / 미션 / 리워드)</dd>
+          <dt>대분류</dt><dd>혜택의 성격에 따른 분류 (할인 / 쿠폰 / 지급 / 보너스)</dd>
+          <dt>적용 대상</dt><dd>캠페인이 적용되는 대상 (상점 / 라이더)</dd>
+          <dt>적용 대상 유형</dt><dd>라이더 구분 유형 (전체/직영/프렌즈/지점)</dd>
+        </dl>
+        <dl class="terms-list terms-list-right">
+          <dt>소분류</dt><dd>대분류 내 세부 유형</dd>
+          <dt>지급 방식</dt><dd>정액: 고정 금액 지급 / 횟수: 횟수 차감 / 정률: 배달건당 % 추가 지급</dd>
+          <dt>적용 조건 1~3</dt><dd>캠페인의 범위·기준·대상을 지정하는 항목</dd>
+          <dt>비고</dt><dd>해당 유형의 제약 조건 또는 특이사항</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>6. 구조도</h2>
+    <div class="embed-wrap">
+      <iframe title="캠페인 구조도" src="appn/캠페인_구조도.html"></iframe>
+    </div>
+  </section>
+  </div>
+
+  <script>
+    (function() {
+      try {
+        if (typeof mermaid !== 'undefined') {
+          mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+        }
+      } catch (e) { console.warn('Mermaid init:', e); }
+    })();
+  </script>
+</body>
+</html>

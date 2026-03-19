@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>캠페인 구조도</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Malgun Gothic','맑은 고딕',sans-serif; background:#fff; padding:32px; }
+  h2 { font-size:18px; font-weight:700; color:#1a1a2e; margin-bottom:20px; padding-bottom:8px; border-bottom:2px solid #1a3a6b; }
+  #diagram { position:relative; }
+  .hdr {
+    position:absolute; top:8px;
+    font-size:11px; font-weight:700; color:#fff;
+    background:#0d2244; text-align:center;
+    padding:5px 4px; border-radius:3px; line-height:1.3;
+  }
+  .nd {
+    position:absolute;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center; border-radius:3px;
+    font-size:11px; line-height:1.3; padding:2px 4px;
+    color:#fff; font-weight:600;
+  }
+  .c0 { background:#1a3a6b; border:1px solid #0d2244; }
+  .c1 { background:#1e4b8a; border:1px solid #1a3a6b; }
+  .c2 { background:#2e5fa3; border:1px solid #1e4b8a; }
+  .c3 { background:#3668b5; border:1px solid #2e5fa3; }
+  .c4 { background:#4a7cc7; border:1px solid #3668b5; }
+  .c5 { background:#5a8fd4; border:1px solid #4a7cc7; }
+  .c6 { background:#6ba3e0; border:1px solid #5a8fd4; }
+  .pre  { background:#2e7d32; border:1px solid #1b5e20; }
+  .post { background:#1565c0; border:1px solid #0d47a1; }
+  svg { position:absolute; top:0; left:0; pointer-events:none; overflow:visible; }
+</style>
+</head>
+<body>
+<div id="diagram">
+<svg id="svg"></svg>
+</div>
+<script>
+const D = document.getElementById('diagram');
+const SVG = document.getElementById('svg');
+const NH = 32;   // node height
+const RP = 56;   // row pitch
+const DT = 52;   // data top
+
+function rc(r) { return DT + r*RP + RP/2; }
+function gc(s,e) { return (rc(s)+rc(e))/2; }
+
+// 컬럼 정의
+const C = {
+  cam: { lbl:'Campaign',              x:10,  w:80  },
+  typ: { lbl:'Campaign Type',         x:104, w:90  },
+  tgt: { lbl:'Target',               x:208, w:72  },
+  rwt: { lbl:'Reward Type',          x:294, w:72  },
+  mtd: { lbl:'Method',               x:380, w:100 },
+  pm1: { lbl:'Payment Method\nDetails (1)', x:494, w:90 },
+  pm2: { lbl:'Payment Method\nDetails (2)', x:598, w:90 },
+  pyt: { lbl:'Payout Method',        x:702, w:80  },
+};
+
+// 그룹 데이터
+const G = {
+  cam: [{v:'캠페인', s:0, e:10}],
+  typ: [
+    {v:'프로모션', s:0, e:2},
+    {v:'미션',     s:3, e:5},
+    {v:'리워드',   s:6, e:10},
+  ],
+  tgt: [
+    {v:'상점',   s:0, e:1},
+    {v:'라이더', s:2, e:10},
+  ],
+  rwt: [
+    {v:'할인',   s:0, e:0},
+    {v:'쿠폰',   s:1, e:1},
+    {v:'지급',   s:2, e:5},
+    {v:'보너스', s:6, e:10},
+  ],
+  mtd: [
+    {v:'상점 일반',       s:0,  e:0},
+    {v:'제로패스',        s:1,  e:1},
+    {v:'라이더 프로모션', s:2,  e:2},
+    {v:'단계형',          s:3,  e:3},
+    {v:'단일 목표형',     s:4,  e:4},
+    {v:'복귀',            s:5,  e:5},
+    {v:'등급별',           s:6,  e:10},
+  ],
+  pm1: [
+    {v:'지역 선택',  s:0, e:2},
+    {v:'기간 선택',  s:3, e:5},
+    {v:'목표 건수',  s:6, e:10},
+  ],
+  pm2: [
+    {v:'특정 상점/라이더 선택', s:0, e:2},
+    {v:'목표 건수',             s:3, e:5},
+    {v:'배차 수락률',           s:6, e:10},
+  ],
+  pyt: [
+    {v:'정액',     s:0, e:2},
+    {v:'정액',     s:3, e:5},
+    {v:'정률 (%)', s:6, e:10},
+  ],
+};
+
+const CLS = ['c0','c1','c2','c3','c4','c5','c6','c6'];
+const KEYS = ['cam','typ','tgt','rwt','mtd','pm1','pm2','pyt'];
+
+function fgs(key, s) { return G[key] ? G[key].find(g => g.s === s) : null; }
+function fgr(key, r) { return G[key] ? G[key].find(g => g.s <= r && r <= g.e) : null; }
+
+// 헤더
+Object.entries(C).forEach(([k, col]) => {
+  const el = document.createElement('div');
+  el.className = 'hdr';
+  el.style.cssText = `left:${col.x}px; width:${col.w}px;`;
+  el.textContent = col.lbl;
+  D.appendChild(el);
+});
+
+// 노드
+KEYS.forEach((key, ki) => {
+  const col = C[key];
+  G[key].forEach(grp => {
+    if (!grp.v) return;
+    const cy = gc(grp.s, grp.e);
+    const el = document.createElement('div');
+    el.className = 'nd ' + (grp.cls || CLS[ki]);
+    el.style.cssText = `left:${col.x}px; top:${cy-NH/2}px; width:${col.w}px; height:${NH}px;`;
+    el.textContent = grp.v;
+    D.appendChild(el);
+  });
+});
+
+// 연결선
+function line(x1,y1,x2,y2) {
+  const mx = x1 + (x2-x1)*0.45;
+  const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d',`M${x1},${y1} L${mx},${y1} L${mx},${y2} L${x2},${y2}`);
+  p.setAttribute('fill','none');
+  p.setAttribute('stroke','#5a85c0');
+  p.setAttribute('stroke-width','1');
+  SVG.appendChild(p);
+}
+
+function connG(fkey, fs, tkey, ts) {
+  const fg = fgs(fkey, fs);
+  const tg = fgs(tkey, ts);
+  if (!fg || !tg) return;
+  const fc = C[fkey], tc = C[tkey];
+  line(fc.x+fc.w, gc(fg.s,fg.e), tc.x, gc(tg.s,tg.e));
+}
+
+// cam → typ
+connG('cam',0,'typ',0); connG('cam',0,'typ',3); connG('cam',0,'typ',6);
+
+// typ → tgt
+connG('typ',0,'tgt',0); connG('typ',0,'tgt',2); connG('typ',3,'tgt',2); connG('typ',6,'tgt',2);
+
+// tgt → rwt
+connG('tgt',0,'rwt',0); connG('tgt',0,'rwt',1);
+connG('tgt',2,'rwt',2); connG('tgt',2,'rwt',6);
+
+// rwt → mtd
+connG('rwt',0,'mtd',0); connG('rwt',1,'mtd',1); connG('rwt',2,'mtd',2);
+connG('rwt',2,'mtd',3); connG('rwt',2,'mtd',4); connG('rwt',2,'mtd',5);
+connG('rwt',6,'mtd',6);
+
+// mtd → pm1
+[0,1,2].forEach(s => {
+  const mg = fgs('mtd',s), pg = fgr('pm1',s);
+  if(mg&&pg) line(C.mtd.x+C.mtd.w, gc(mg.s,mg.e), C.pm1.x, gc(pg.s,pg.e));
+});
+[3,4,5].forEach(s => {
+  const mg = fgs('mtd',s), pg = fgr('pm1',s);
+  if(mg&&pg) line(C.mtd.x+C.mtd.w, gc(mg.s,mg.e), C.pm1.x, gc(pg.s,pg.e));
+});
+// 리워드 mtd(등급별) → pm1(목표건수) 단일 연결
+const mtdr = fgs('mtd',6), pm1r2 = fgs('pm1',6);
+if(mtdr&&pm1r2) line(C.mtd.x+C.mtd.w, gc(mtdr.s,mtdr.e), C.pm1.x, gc(pm1r2.s,pm1r2.e));
+
+// pm1(프로모션) → pm2(특정 상점/라이더 선택)
+const pp = fgs('pm1',0), pm2p = fgs('pm2',0);
+if(pp&&pm2p) line(C.pm1.x+C.pm1.w, gc(pp.s,pp.e), C.pm2.x, gc(pm2p.s,pm2p.e));
+
+// pm2(프로모션) → pyt
+const pm2p2 = fgs('pm2',0), py0 = fgs('pyt',0);
+if(pm2p2&&py0) line(C.pm2.x+C.pm2.w, gc(pm2p2.s,pm2p2.e), C.pyt.x, gc(py0.s,py0.e));
+
+// pm1(미션/리워드) → pm2
+const pm1m = fgs('pm1',3), pm2m = fgs('pm2',3);
+if(pm1m&&pm2m) line(C.pm1.x+C.pm1.w, gc(pm1m.s,pm1m.e), C.pm2.x, gc(pm2m.s,pm2m.e));
+const pm1r = fgs('pm1',6), pm2r = fgs('pm2',6);
+if(pm1r&&pm2r) line(C.pm1.x+C.pm1.w, gc(pm1r.s,pm1r.e), C.pm2.x, gc(pm2r.s,pm2r.e));
+
+// pm2 → pyt
+const pm2ma = fgs('pm2',3), py3 = fgs('pyt',3);
+if(pm2ma&&py3) line(C.pm2.x+C.pm2.w, gc(pm2ma.s,pm2ma.e), C.pyt.x, gc(py3.s,py3.e));
+const pm2ra = fgs('pm2',6), py6 = fgs('pyt',6);
+if(pm2ra&&py6) line(C.pm2.x+C.pm2.w, gc(pm2ra.s,pm2ra.e), C.pyt.x, gc(py6.s,py6.e));
+
+const totalH = DT + 11*RP + 30;
+const totalW = C.pyt.x + C.pyt.w + 20;
+D.style.cssText = `width:${totalW}px; height:${totalH}px;`;
+SVG.setAttribute('width', totalW);
+SVG.setAttribute('height', totalH);
+</script>
+</body>
+</html>

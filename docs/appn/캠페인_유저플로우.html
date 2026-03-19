@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Campaign User Flow</title>
+<style>
+  :root {
+    --admin:       #1e3a5f;
+    --admin-light: #e8f0fb;
+    --admin-mid:   #4a7cc7;
+    --shop:        #1b5e20;
+    --shop-light:  #e8f5e9;
+    --shop-mid:    #43a047;
+    --rider:       #0d47a1;
+    --rider-light: #e3f2fd;
+    --rider-mid:   #1e88e5;
+    --system-bg:   #f3e5f5;
+    --system-bd:   #ab47bc;
+    --system-tx:   #4a148c;
+    --cross-bg:    #fff8f0;
+    --cross-bd:    #ff8a65;
+    --cross-tx:    #bf360c;
+    --ok-bg:       #e8f5e9;
+    --ok-bd:       #81c784;
+    --ok-tx:       #1b5e20;
+    --warn-bg:     #fff3e0;
+    --warn-bd:     #ffb74d;
+    --warn-tx:     #e65100;
+    --settle-bg:   #fef5ec;
+    --settle-bd:   #e67e22;
+    --settle-tx:   #7d4e00;
+    --text:        #1a1a2e;
+    --text-sub:    #6b7280;
+    --border:      #e5e7ef;
+    --bg:          #f4f6fb;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { overflow: visible; height: auto; min-height: auto; }
+  body { font-family:'Malgun Gothic','맑은 고딕',sans-serif; background:var(--bg); padding:32px 36px; color:var(--text); }
+
+  .hdr { margin-bottom:24px; }
+  .hdr h1 { font-size:19px; font-weight:700; letter-spacing:-0.3px; margin-bottom:4px; }
+  .hdr p  { font-size:11px; color:var(--text-sub); }
+
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; align-items:start; }
+
+  .lane { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 1px 8px rgba(0,0,0,0.08),0 0 0 1px rgba(0,0,0,0.04); }
+
+  .lh { padding:13px 16px; display:flex; align-items:center; gap:10px; }
+  .lh .em { font-size:20px; }
+  .lh .nm { font-size:13px; font-weight:700; color:#fff; }
+  .lh .sm { font-size:9.5px; color:rgba(255,255,255,0.72); margin-top:1px; }
+  .la .lh { background:var(--admin); }
+  .ls .lh { background:var(--shop); }
+  .lr .lh { background:var(--rider); }
+
+  .lb { padding:14px 13px; display:flex; flex-direction:column; gap:0; }
+
+  .sec { font-size:8.5px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:3px 7px; border-radius:4px; display:inline-block; margin:8px 0 5px; }
+  .la .sec { background:var(--admin-light); color:var(--admin); }
+  .ls .sec { background:var(--shop-light);  color:var(--shop); }
+  .lr .sec { background:var(--rider-light); color:var(--rider); }
+
+  .arr { text-align:center; color:#c5cad8; font-size:13px; padding:2px 0; line-height:1; }
+  hr { border:none; border-top:1px dashed var(--border); margin:10px 0; }
+
+  .s { border-radius:8px; padding:8px 11px; font-size:11px; line-height:1.5; display:flex; align-items:flex-start; gap:9px; }
+  .sn { flex-shrink:0; width:20px; height:20px; border-radius:50%; font-size:9.5px; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:1px; }
+  .la .sn { background:var(--admin); color:#fff; }
+  .ls .sn { background:var(--shop);  color:#fff; }
+  .lr .sn { background:var(--rider); color:#fff; }
+
+  .sc { flex:1; }
+  .sc .t { font-weight:700; font-size:11.5px; }
+  .sc .d { font-size:9.5px; color:var(--text-sub); margin-top:2px; }
+
+  .s-normal   { background:#fafbfd; border:1px solid var(--border); }
+  .la .s-hl   { background:var(--admin-light); border:1.5px solid var(--admin-mid); color:var(--admin); }
+  .ls .s-hl   { background:var(--shop-light);  border:1.5px solid var(--shop-mid);  color:var(--shop); }
+  .lr .s-hl   { background:var(--rider-light); border:1.5px solid var(--rider-mid); color:var(--rider); }
+  .s-activate { background:#fff5f5; border:1.5px solid #e53935; color:#b71c1c; }
+  .s-system   { background:var(--system-bg); border:1px dashed var(--system-bd); color:var(--system-tx); }
+  .s-cross    { background:var(--cross-bg); border:1px dashed var(--cross-bd); color:var(--cross-tx); font-size:10px; text-align:center; justify-content:center; padding:6px 10px; border-radius:6px; }
+  .s-ok       { background:var(--ok-bg);     border:1px solid var(--ok-bd);     color:var(--ok-tx); }
+  .s-warn     { background:var(--warn-bg);   border:1px solid var(--warn-bd);   color:var(--warn-tx); }
+  .s-settle   { background:var(--settle-bg); border:1px solid var(--settle-bd); color:var(--settle-tx); }
+
+  /* 분기 */
+  .branch { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin:2px 0; }
+  .bc { display:flex; flex-direction:column; gap:2px; }
+  .bt { text-align:center; font-size:8.5px; font-weight:700; letter-spacing:0.3px; padding:2px 5px; border-radius:4px; margin-bottom:2px; }
+  .t-blue   { background:#e3f2fd; color:#0d47a1; }
+  .t-orange { background:#fff3e0; color:#e65100; }
+  .t-green  { background:#e8f5e9; color:#1b5e20; }
+  .t-gray   { background:#f1f3f5; color:#455a64; }
+  .t-amber  { background:#fff8e1; color:#b8860b; }
+
+  /* 분기 내 스텝 (번호 포함) */
+  .bs { border-radius:7px; padding:6px 9px; font-size:10.5px; line-height:1.4; display:flex; align-items:flex-start; gap:7px; }
+  .bsn { flex-shrink:0; width:18px; height:18px; border-radius:50%; font-size:9px; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:1px; }
+  .ls .bsn { background:var(--shop);  color:#fff; }
+  .lr .bsn { background:var(--rider); color:#fff; }
+  .bsc { flex:1; }
+  .bsc .t { font-weight:700; font-size:10.5px; }
+  .bsc .d { font-size:9px; color:var(--text-sub); margin-top:1px; }
+
+  /* 범례 */
+  .legend { display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-top:20px; padding:13px 18px; background:#fff; border-radius:10px; box-shadow:0 1px 6px rgba(0,0,0,0.06); }
+  .leg-title { font-size:9.5px; font-weight:700; color:var(--text-sub); margin-right:4px; }
+  .leg { display:flex; align-items:center; gap:5px; font-size:9.5px; color:var(--text-sub); }
+  .lb2 { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>Campaign User Flow</h1>
+  <p>캠페인 등록 → 오더 접수 → 정산 → 결과 확인 | Actor: 관리자 / 상점주 / 라이더</p>
+</div>
+
+<div class="grid">
+
+  <!-- ═══════════ 관리자 ═══════════ -->
+  <div class="lane la">
+    <div class="lh"><div class="em">👨‍💼</div><div><div class="nm">관리자</div><div class="sm">인트라</div></div></div>
+    <div class="lb">
+
+      <span class="sec">등록</span>
+      <div class="s s-normal"><div class="sn">1</div><div class="sc"><div class="t">인트라 로그인</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-normal"><div class="sn">2</div><div class="sc"><div class="t">캠페인 시스템 접속</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-hl"><div class="sn">3</div><div class="sc"><div class="t">캠페인 유형 선택</div><div class="d">프로모션 / 미션 / 리워드</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-hl"><div class="sn">4</div><div class="sc"><div class="t">대분류 선택</div><div class="d">할인 / 쿠폰 / 지급 / 보너스</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-hl"><div class="sn">5</div><div class="sc"><div class="t">대상 유형 선택</div><div class="d">전체 / 직영 / 프렌즈 / 지점</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-hl"><div class="sn">6</div><div class="sc"><div class="t">소분류 선택</div><div class="d">상점일반 / 제로패스 / 단계형 / 단일목표형 / 복귀</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-hl"><div class="sn">7</div><div class="sc"><div class="t">적용 조건 설정</div><div class="d">ZONE · 상점/라이더 선택 · 기간 / 횟수 / 등급</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-activate"><div class="sn" style="background:#e53935;">8</div><div class="sc"><div class="t">저장 및 활성화</div></div></div>
+      <hr>
+      <div class="s s-system"><div class="sc"><div class="t">마케팅 서버 캠페인 등록</div><div class="d">프라임 / 라스트마일 서버 동기화</div></div></div>
+      <hr>
+      <span class="sec">모니터링</span>
+      <div class="s s-ok"><div class="sn" style="background:#2e7d32;">9</div><div class="sc"><div class="t">캠페인 현황 모니터링</div><div class="d">적용 현황 · 달성률 · 지급 내역 확인</div></div></div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════ 상점주 ═══════════ -->
+  <div class="lane ls">
+    <div class="lh"><div class="em">🏪</div><div><div class="nm">상점주</div><div class="sm">상점앱 / POS</div></div></div>
+    <div class="lb">
+
+      <span class="sec">오더</span>
+      <div class="s s-normal"><div class="sn">1</div><div class="sc"><div class="t">상점앱 / POS 접속</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-normal"><div class="sn">2</div><div class="sc"><div class="t">배송 신청</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-normal"><div class="sn">3</div><div class="sc"><div class="t">오더 생성</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-cross">마케팅 서버 캠페인 조회<br><span style="font-size:9px;">판가 계산 반영</span></div>
+      <div class="arr">↓</div>
+
+      <!-- Step 4 분기 -->
+      <div class="branch">
+        <div class="bc">
+          <div class="bt t-green">프로모션 적용</div>
+          <div class="bs s-ok">
+            <div class="bsn">4</div>
+            <div class="bsc"><div class="t">판가 할인 반영</div><div class="d">즉시 적용</div></div>
+          </div>
+        </div>
+        <div class="bc">
+          <div class="bt t-gray">미적용</div>
+          <div class="bs s-normal">
+            <div class="bsn">4</div>
+            <div class="bsc"><div class="t">일반 요금 적용</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arr">↓</div>
+      <div class="s s-normal"><div class="sn">5</div><div class="sc"><div class="t">배송 진행</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-normal"><div class="sn">6</div><div class="sc"><div class="t">배송 완료</div></div></div>
+      <hr>
+      <span class="sec">정산</span>
+      <div class="s s-settle"><div class="sn">7</div><div class="sc"><div class="t">오더 완료 시 정산</div><div class="d">프라임 서버 → 포인트서버(M캐시서버)</div></div></div>
+      <hr>
+      <span class="sec">결과 확인</span>
+      <div class="s s-ok"><div class="sn" style="background:#2e7d32;">8</div><div class="sc"><div class="t">정산 내역 확인</div><div class="d">할인 내역 · 예치금 변동 확인</div></div></div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════ 라이더 ═══════════ -->
+  <div class="lane lr">
+    <div class="lh"><div class="em">🛵</div><div><div class="nm">라이더</div><div class="sm">기사앱</div></div></div>
+    <div class="lb">
+
+      <span class="sec">확인</span>
+      <div class="s s-normal"><div class="sn">1</div><div class="sc"><div class="t">기사앱 로그인</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-hl"><div class="sn">2</div><div class="sc"><div class="t">미션 / 리워드 등급 확인</div><div class="d">현재 등급 · 달성 조건 · 남은 건수</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-normal"><div class="sn">3</div><div class="sc"><div class="t">오더 수락</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-normal"><div class="sn">4</div><div class="sc"><div class="t">오더 수행 (배달 완료)</div></div></div>
+      <div class="arr">↓</div>
+      <div class="s s-cross">마케팅 서버 캠페인 조회<br><span style="font-size:9px;">원가 계산 반영</span></div>
+      <hr>
+      <span class="sec">정산</span>
+
+      <!-- Step 5 분기: 오더완료 vs 정산주기 -->
+      <div class="branch">
+        <div class="bc">
+          <div class="bt t-amber">오더 완료 시</div>
+          <div class="bs s-settle">
+            <div class="bsn">5</div>
+            <div class="bsc"><div class="t">즉시 정산</div><div class="d">라스트마일 →<br>포인트서버(M캐시)</div></div>
+          </div>
+        </div>
+        <div class="bc">
+          <div class="bt t-orange">정산 주기</div>
+          <div class="bs s-normal">
+            <div class="bsn">5</div>
+            <div class="bsc"><div class="t">배치 오더 카운트</div><div class="d">→ 마케팅 서버<br>조건 달성 확인</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arr">↓</div>
+
+      <!-- Step 6 분기: 달성 vs 미달성 -->
+      <div class="branch">
+        <div class="bc">
+          <div class="bt t-green">달성</div>
+          <div class="bs s-ok">
+            <div class="bsn">6</div>
+            <div class="bsc"><div class="t">수익금 지급</div><div class="d">포인트서버(M캐시)</div></div>
+          </div>
+        </div>
+        <div class="bc">
+          <div class="bt t-gray">미달성</div>
+          <div class="bs s-warn">
+            <div class="bsn">6</div>
+            <div class="bsc"><div class="t">누적 계속</div><div class="d">다음 오더 수행</div></div>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+      <span class="sec">결과 확인</span>
+      <div class="s s-ok"><div class="sn" style="background:#1565c0;">7</div><div class="sc"><div class="t">수익금 내역 확인</div><div class="d">기사앱 정산 화면 · 등급별 보너스 확인</div></div></div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="legend">
+  <span class="leg-title">범례</span>
+  <div class="leg"><div class="lb2" style="background:#fafbfd;border:1px solid #e5e7ef;"></div>사용자 액션</div>
+  <div class="leg"><div class="lb2" style="background:var(--admin-light);border:1.5px solid var(--admin-mid);"></div>주요 설정 단계</div>
+  <div class="leg"><div class="lb2" style="background:#fff5f5;border:1.5px solid #e53935;"></div>활성화</div>
+  <div class="leg"><div class="lb2" style="background:var(--ok-bg);border:1px solid var(--ok-bd);"></div>완료 / 긍정 결과</div>
+  <div class="leg"><div class="lb2" style="background:var(--warn-bg);border:1px solid var(--warn-bd);"></div>미달성</div>
+  <div class="leg"><div class="lb2" style="background:var(--settle-bg);border:1px solid var(--settle-bd);"></div>정산 처리</div>
+  <div class="leg"><div class="lb2" style="background:var(--system-bg);border:1px dashed var(--system-bd);"></div>시스템 내부 처리</div>
+  <div class="leg"><div class="lb2" style="background:var(--cross-bg);border:1px dashed var(--cross-bd);"></div>크로스 시스템 연동</div>
+</div>
+
+</body>
+</html>
