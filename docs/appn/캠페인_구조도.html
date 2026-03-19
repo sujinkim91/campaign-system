@@ -5,6 +5,7 @@
 <title>캠페인 구조도</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { overflow: hidden; }
   body { font-family:'Malgun Gothic','맑은 고딕',sans-serif; background:#fff; padding:32px; }
   h2 { font-size:18px; font-weight:700; color:#1a1a2e; margin-bottom:20px; padding-bottom:8px; border-bottom:2px solid #1a3a6b; }
   #diagram { position:relative; }
@@ -204,6 +205,10 @@ const totalW = C.pyt.x + C.pyt.w + 20;
 D.style.cssText = `width:${totalW}px; height:${totalH}px;`;
 SVG.setAttribute('width', totalW);
 SVG.setAttribute('height', totalH);
+document.documentElement.style.overflow = 'hidden';
+document.body.style.height = (totalH + 64) + 'px';
+document.body.style.minHeight = (totalH + 64) + 'px';
+document.body.style.maxHeight = (totalH + 64) + 'px';
 </script>
 </body>
 </html>

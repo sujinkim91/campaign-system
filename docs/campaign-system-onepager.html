@@ -29,6 +29,8 @@
     .embed-wrap.embed-full iframe { height: 900px; min-height: 900px; }
     .embed-wrap.embed-full-flow { overflow: visible; }
     .embed-wrap.embed-full-flow iframe { height: 1000px; min-height: 1000px; }
+    .embed-wrap.embed-full-structure { overflow: hidden; }
+    .embed-wrap.embed-full-structure iframe { height: 800px; min-height: 800px; display: block; }
     .embed-placeholder { min-height: 120px; display: flex; align-items: center; justify-content: center; }
     .placeholder-msg { margin: 0; color: var(--muted); font-size: 14px; }
     .compact-table th, .compact-table td { padding: 8px 10px; font-size: 12px; }
@@ -58,6 +60,7 @@
       .embed-wrap iframe { height: 420px; min-height: 420px; }
       .embed-wrap.embed-full iframe { height: 480px; min-height: 480px; }
       .embed-wrap.embed-full-flow iframe { height: 520px; min-height: 520px; }
+      .embed-wrap.embed-full-structure iframe { height: 520px; min-height: 520px; }
       table, .compact-table th, .compact-table td { font-size: 9px; padding: 4px 6px; }
       .terms-box { margin-top: 8px; padding: 8px 12px; page-break-inside: avoid; }
       .terms-title { font-size: 0.85rem; margin: 0 0 6px; padding-bottom: 4px; }
@@ -69,7 +72,6 @@
 </head>
 <body>
   <div class="toolbar no-print">
-    <a href="캠페인-시스템-초안.md" class="btn" target="_blank" rel="noopener">Markdown</a>
     <button type="button" class="btn primary" onclick="window.print()">PDF로 저장</button>
   </div>
   <div id="main-content">
@@ -79,7 +81,7 @@
   </div>
 
   <section>
-    <h2>1. 구분 정의</h2>
+    <h2>1. 캠페인 운영 방식</h2>
     <table>
       <thead><tr><th>구분</th><th>정의</th><th>적용 대상</th><th>지급 시점</th></tr></thead>
       <tbody>
@@ -192,7 +194,7 @@ flowchart LR
     <div class="terms-box">
       <div class="terms-title">항목 설명</div>
       <div class="terms-two-cols">
-        <dl class="terms-list">
+        <dl class="terms-list terms-list-right">
           <dt>캠페인</dt><dd>프로모션·미션·리워드를 묶는 최상위 운영 단위</dd>
           <dt>구분</dt><dd>캠페인 내 운영 방식 분류 (프로모션 / 미션 / 리워드)</dd>
           <dt>대분류</dt><dd>혜택의 성격에 따른 분류 (할인 / 쿠폰 / 지급 / 보너스)</dd>
@@ -211,8 +213,8 @@ flowchart LR
 
   <section>
     <h2>6. 구조도</h2>
-    <div class="embed-wrap">
-      <iframe title="캠페인 구조도" src="appn/캠페인_구조도.html"></iframe>
+    <div class="embed-wrap embed-full-structure">
+      <iframe title="캠페인 구조도" src="appn/캠페인_구조도.html" scrolling="no"></iframe>
     </div>
   </section>
   </div>
