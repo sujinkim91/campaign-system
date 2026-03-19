@@ -44,6 +44,10 @@
     .terms-list-right { display: grid; grid-template-columns: auto 1fr; gap: 6px 20px; align-items: start; }
     .terms-list-right dt { margin: 0; grid-column: 1; }
     .terms-list-right dd { margin: 0; grid-column: 2; }
+    /* 제목(항목명) 오른쪽 배치 */
+    .terms-list-title-right { display: grid; grid-template-columns: 1fr auto; gap: 6px 20px; align-items: start; }
+    .terms-list-title-right dt { margin: 0; grid-column: 2; text-align: right; font-weight: 600; color: var(--primary); }
+    .terms-list-title-right dd { margin: 0; grid-column: 1; }
     .terms-two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 32px; align-items: start; }
     .terms-two-cols .terms-list { margin: 0; }
     .terms-two-cols .terms-list dt { margin-top: 8px; }
@@ -64,7 +68,7 @@
       table, .compact-table th, .compact-table td { font-size: 9px; padding: 4px 6px; }
       .terms-box { margin-top: 8px; padding: 8px 12px; page-break-inside: avoid; }
       .terms-title { font-size: 0.85rem; margin: 0 0 6px; padding-bottom: 4px; }
-      .terms-list, .terms-list-right { font-size: 9px; }
+      .terms-list, .terms-list-right, .terms-list-title-right { font-size: 9px; }
       .terms-two-cols { gap: 12px 20px; }
       .callout, .terms-box { page-break-inside: avoid; }
     }
