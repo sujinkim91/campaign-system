@@ -102,13 +102,19 @@
     .form-guide strong { display: block; margin-bottom: 4px; }
     .list-guide { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
     .form-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; margin-left: 140px; }
-    /* 리워드 등급(소분류) 다중 추가 */
+    /* 리워드 등급(소분류) 다중 추가 + 등급별 적용 조건 */
     .form-row.so-single { display: flex; }
     .form-row.so-multi { display: none; align-items: flex-start; }
     .form-row.so-multi .grade-list { flex: 1; border: 1px solid var(--border); border-radius: 6px; padding: 12px; min-height: 60px; background: #fafafa; }
-    .grade-item { display: inline-flex; align-items: center; gap: 8px; margin: 4px; padding: 6px 10px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
-    .grade-item .rm { color: var(--text-muted); cursor: pointer; font-size: 16px; line-height: 1; }
-    .grade-item .rm:hover { color: #dc2626; }
+    .grade-block { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin-bottom: 12px; }
+    .grade-block:last-child { margin-bottom: 0; }
+    .grade-block-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 14px; }
+    .grade-block .rm { color: var(--text-muted); cursor: pointer; font-size: 18px; line-height: 1; }
+    .grade-block .rm:hover { color: #dc2626; }
+    .grade-block .cond-row { display: flex; align-items: center; margin-bottom: 8px; }
+    .grade-block .cond-row:last-child { margin-bottom: 0; }
+    .grade-block .cond-row label { width: 180px; flex-shrink: 0; font-size: 13px; font-weight: 500; }
+    .grade-block .cond-row input { flex: 1; padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; }
     .btn-add-grade { padding: 6px 12px; margin-top: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; cursor: pointer; }
     .btn-add-grade:hover { background: #f8fafc; }
   </style>
@@ -223,7 +229,7 @@
         <div id="screen-register" class="screen">
           <div class="form-guide">
             <strong>가이드</strong>
-            구분 → 대분류 → 적용 대상 → 소분류 순으로 선택하면 지급 방식과 적용 조건이 자동으로 설정됩니다. <strong>리워드·보너스</strong>는 하나의 캠페인에 등급(그린, 블루, 퍼플, 골드1, 골드2)을 여러 개 추가할 수 있습니다. 소진예산은 캠페인별 사용 상한(선택)입니다.
+            구분 → 대분류 → 적용 대상 → 소분류 순으로 선택하면 지급 방식과 적용 조건이 자동으로 설정됩니다. <strong>리워드·보너스</strong>는 하나의 캠페인에 등급(그린, 블루, 퍼플, 골드1, 골드2)을 여러 개 추가할 수 있으며, 등급별로 적용 조건을 다르게 설정할 수 있습니다. 소진예산은 캠페인별 사용 상한(선택)입니다.
           </div>
           <div class="form-section">
             <div class="form-row">
@@ -332,6 +338,7 @@
       function uniq(arr) { var u = {}; arr.forEach(function(x) { u[x] = true; }); return Object.keys(u); }
 
       var REWARD_GRADES = { '그린': '+7%', '블루': '+15%', '퍼플': '+20%', '골드1': '+25%', '골드2': '+30%' };
+      var REWARD_COND_LABELS = { c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' };
 
       var fGu = document.getElementById('f-gu');
       var fDae = document.getElementById('f-dae');
@@ -358,24 +365,41 @@
       var gradeSelect = document.getElementById('grade-select');
 
       var selectedGrades = [];
+      var gradeConditions = {};
 
       function isRewardBonus() { return fGu.value === '리워드' && fDae.value === '보너스'; }
 
       function renderGradeList() {
         gradeListEl.innerHTML = '';
+        if (!isRewardBonus()) return;
         selectedGrades.forEach(function(so) {
-          var tag = document.createElement('span');
-          tag.className = 'grade-item';
-          tag.innerHTML = so + ' ' + (REWARD_GRADES[so] || '') + ' <span class="rm" data-grade="' + so + '" title="제거">×</span>';
-          gradeListEl.appendChild(tag);
+          var data = gradeConditions[so] || { c1: '', c2: '', c3: '' };
+          var esc = function(s) { return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); };
+          var block = document.createElement('div');
+          block.className = 'grade-block';
+          block.innerHTML =
+            '<div class="grade-block-title">' + esc(so) + ' ' + (REWARD_GRADES[so] || '') + ' <span class="rm" data-grade="' + esc(so) + '" title="등급 제거">×</span></div>' +
+            '<div class="cond-row"><label>' + REWARD_COND_LABELS.c1 + '</label><input type="text" data-grade="' + esc(so) + '" data-cond="c1" placeholder="' + REWARD_COND_LABELS.c1 + '" value="' + esc(data.c1) + '" /></div>' +
+            '<div class="cond-row"><label>' + REWARD_COND_LABELS.c2 + '</label><input type="text" data-grade="' + esc(so) + '" data-cond="c2" placeholder="' + REWARD_COND_LABELS.c2 + '" value="' + esc(data.c2) + '" /></div>' +
+            '<div class="cond-row"><label>' + REWARD_COND_LABELS.c3 + '</label><input type="text" data-grade="' + esc(so) + '" data-cond="c3" placeholder="' + REWARD_COND_LABELS.c3 + '" value="' + esc(data.c3) + '" /></div>';
+          gradeListEl.appendChild(block);
         });
         gradeListEl.querySelectorAll('.rm').forEach(function(el) {
           el.addEventListener('click', function() {
             var g = el.getAttribute('data-grade');
             selectedGrades = selectedGrades.filter(function(x) { return x !== g; });
+            delete gradeConditions[g];
             renderGradeList();
             if (selectedGrades.length > 0) applyRewardConditions();
             else { rowPayment.style.display = 'none'; rowCond1.style.display = 'none'; rowCond2.style.display = 'none'; rowCond3.style.display = 'none'; rowRemark.style.display = 'none'; }
+          });
+        });
+        gradeListEl.querySelectorAll('.grade-block input[data-cond]').forEach(function(inp) {
+          inp.addEventListener('input', function() {
+            var g = inp.getAttribute('data-grade');
+            var c = inp.getAttribute('data-cond');
+            if (!gradeConditions[g]) gradeConditions[g] = { c1: '', c2: '', c3: '' };
+            gradeConditions[g][c] = inp.value;
           });
         });
       }
@@ -386,15 +410,9 @@
         rowPayment.style.display = 'flex';
         setSelect(fPayment, [one.payment], false);
         fPayment.value = one.payment;
-        lCond1.textContent = one.c1;
-        lCond2.textContent = one.c2;
-        lCond3.textContent = one.c3;
-        fCond1.placeholder = one.c1;
-        fCond2.placeholder = one.c2;
-        fCond3.placeholder = one.c3;
-        rowCond1.style.display = 'flex';
-        rowCond2.style.display = 'flex';
-        rowCond3.style.display = 'flex';
+        rowCond1.style.display = 'none';
+        rowCond2.style.display = 'none';
+        rowCond3.style.display = 'none';
         rowRemark.style.display = 'none';
       }
 
@@ -517,6 +535,7 @@
         var v = gradeSelect.value;
         if (!v || selectedGrades.indexOf(v) >= 0) return;
         selectedGrades.push(v);
+        gradeConditions[v] = { c1: '', c2: '', c3: '' };
         renderGradeList();
         applyRewardConditions();
       });
