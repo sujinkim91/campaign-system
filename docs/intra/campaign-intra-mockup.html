@@ -199,48 +199,64 @@
         </div>
         <!-- /화면 1 -->
 
-        <!-- 화면 2: 캠페인 등록 (신규 등록 폼) -->
+        <!-- 화면 2: 캠페인 등록 (신규 등록 폼) - 유형 통합표에 따라 동적 전환 -->
         <div id="screen-register" class="screen">
           <div class="form-section">
             <div class="form-row">
               <label>구분</label>
-              <select><option value="">선택</option><option>프로모션</option><option>미션</option><option>리워드</option></select>
+              <select id="f-gu"><option value="">선택</option><option value="프로모션">프로모션</option><option value="미션">미션</option><option value="리워드">리워드</option></select>
             </div>
             <div class="form-row">
               <label>대분류</label>
-              <select><option value="">선택</option><option>할인</option><option>쿠폰</option><option>지급</option><option>보너스</option></select>
+              <select id="f-dae"><option value="">선택</option></select>
             </div>
             <div class="form-row">
               <label>적용 대상</label>
-              <select><option value="">선택</option><option>상점</option><option>라이더</option></select>
+              <select id="f-target"><option value="">선택</option></select>
             </div>
-            <div class="form-row">
+            <div class="form-row" id="row-target-type" style="display:none;">
               <label>적용대상 유형</label>
-              <select><option value="">선택</option><option>전체</option><option>직영</option><option>프렌즈</option><option>지점</option></select>
+              <select id="f-target-type"><option value="">선택</option><option value="전체">전체</option><option value="직영">직영</option><option value="프렌즈">프렌즈</option><option value="지점">지점</option></select>
             </div>
             <div class="form-row">
               <label>소분류</label>
-              <select><option value="">선택</option><option>상점 일반</option><option>제로패스</option><option>라이더 프로모션</option><option>단계형</option><option>단일 목표형</option><option>복귀</option><option>그린</option><option>블루</option><option>퍼플</option><option>골드1</option><option>골드2</option></select>
+              <select id="f-so"><option value="">선택</option></select>
+            </div>
+            <div class="form-row" id="row-payment-method" style="display:none;">
+              <label>지급 방식</label>
+              <select id="f-payment"><option value="">선택</option><option value="정액">정액</option><option value="횟수">횟수</option><option value="정률(%)">정률(%)</option></select>
+            </div>
+            <div class="form-row" id="row-cond1" style="display:none;">
+              <label id="l-cond1">적용 조건 1</label>
+              <input type="text" id="f-cond1" placeholder="" />
+            </div>
+            <div class="form-row" id="row-cond2" style="display:none;">
+              <label id="l-cond2">적용 조건 2</label>
+              <input type="text" id="f-cond2" placeholder="" />
+            </div>
+            <div class="form-row" id="row-cond3" style="display:none;">
+              <label id="l-cond3">적용 조건 3</label>
+              <input type="text" id="f-cond3" placeholder="" />
+            </div>
+            <div class="form-row" id="row-remark" style="display:none;">
+              <label>비고</label>
+              <input type="text" id="f-remark" placeholder="해당 유형 비고" />
             </div>
             <div class="form-row">
               <label>캠페인명</label>
-              <input type="text" placeholder="35자 이내" maxlength="35" />
+              <input type="text" id="f-name" placeholder="35자 이내" maxlength="35" />
             </div>
             <div class="form-row">
               <label>캠페인 설명</label>
-              <div style="flex:1;"><div class="form-byte">0/1000 byte</div><textarea placeholder="캠페인 설명" maxlength="1000"></textarea></div>
+              <div style="flex:1;"><div class="form-byte">0/1000 byte</div><textarea id="f-desc" placeholder="캠페인 설명" maxlength="1000"></textarea></div>
             </div>
             <div class="form-row">
               <label>적용 기간 (GMT)</label>
-              <span style="flex:1; display:flex; gap:8px; align-items:center;"><input type="datetime-local" /><input type="datetime-local" /></span>
-            </div>
-            <div class="form-row">
-              <label>지급 방식</label>
-              <select><option value="">선택</option><option>정액</option><option>횟수</option><option>정률(%)</option></select>
+              <span style="flex:1; display:flex; gap:8px; align-items:center;"><input type="datetime-local" id="f-date1" /><input type="datetime-local" id="f-date2" /></span>
             </div>
             <div class="form-row">
               <label>등록자 ID</label>
-              <input type="text" placeholder="등록자 ID" />
+              <input type="text" id="f-registrant" placeholder="등록자 ID" />
             </div>
             <div class="form-actions">
               <button type="button" class="btn-submit">신규 캠페인 등록</button>
@@ -254,6 +270,139 @@
   </div>
   <script>
     (function() {
+      // 캠페인 유형 통합표 데이터 (구분, 대분류, 적용대상, 적용대상유형, 소분류, 지급방식, 적용조건1, 적용조건2, 적용조건3, 비고)
+      var TYPES = [
+        { gu: '프로모션', dae: '할인', target: '상점', targetType: '-', so: '상점 일반', payment: '정액', c1: '지역/ZONE 선택', c2: '특정 상점 선택', c3: '적용 기간', remark: '' },
+        { gu: '프로모션', dae: '쿠폰', target: '상점', targetType: '-', so: '제로패스', payment: '횟수', c1: '지역/ZONE 선택', c2: '특정 상점 선택', c3: '횟수 설정 (최대 5회)', remark: '기본판가만 적용' },
+        { gu: '프로모션', dae: '지급', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '라이더 프로모션', payment: '정액', c1: '지역/ZONE 선택', c2: '특정 라이더 선택', c3: '적용 기간', remark: '' },
+        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '단계형', payment: '정액', c1: '시간대 설정', c2: '특정 건수 단계 설정', c3: '등급 선택', remark: '예: 4/8/10건' },
+        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '단일 목표형', payment: '정액', c1: '날짜 지정', c2: '목표 건수', c3: '등급 선택', remark: '특정일 집중 유도' },
+        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '복귀', payment: '정액', c1: '비활성 기간 조건', c2: '복귀 후 목표 건수', c3: '등급 선택', remark: '이탈 라이더 복귀' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '그린', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수', remark: '+7%' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '블루', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수', remark: '+15%' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '퍼플', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수', remark: '+20%' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '골드1', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수', remark: '+25%' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '골드2', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수', remark: '+30%' }
+      ];
+
+      function uniq(arr) { var u = {}; arr.forEach(function(x) { u[x] = true; }); return Object.keys(u); }
+
+      var fGu = document.getElementById('f-gu');
+      var fDae = document.getElementById('f-dae');
+      var fTarget = document.getElementById('f-target');
+      var rowTargetType = document.getElementById('row-target-type');
+      var fSo = document.getElementById('f-so');
+      var rowPayment = document.getElementById('row-payment-method');
+      var fPayment = document.getElementById('f-payment');
+      var rowCond1 = document.getElementById('row-cond1');
+      var rowCond2 = document.getElementById('row-cond2');
+      var rowCond3 = document.getElementById('row-cond3');
+      var rowRemark = document.getElementById('row-remark');
+      var lCond1 = document.getElementById('l-cond1');
+      var lCond2 = document.getElementById('l-cond2');
+      var lCond3 = document.getElementById('l-cond3');
+      var fCond1 = document.getElementById('f-cond1');
+      var fCond2 = document.getElementById('f-cond2');
+      var fCond3 = document.getElementById('f-cond3');
+      var fRemark = document.getElementById('f-remark');
+
+      function setSelect(sel, options, keepFirst) {
+        var first = sel.options[0] ? sel.options[0].cloneNode(true) : null;
+        sel.innerHTML = '';
+        if (keepFirst && first) sel.appendChild(first);
+        options.forEach(function(v) {
+          var o = document.createElement('option');
+          o.value = v;
+          o.textContent = v;
+          sel.appendChild(o);
+        });
+      }
+
+      function onGuChange() {
+        var gu = fGu.value;
+        fDae.value = '';
+        fTarget.value = '';
+        fSo.value = '';
+        rowTargetType.style.display = 'none';
+        rowPayment.style.display = 'none';
+        rowCond1.style.display = 'none';
+        rowCond2.style.display = 'none';
+        rowCond3.style.display = 'none';
+        rowRemark.style.display = 'none';
+        if (!gu) { setSelect(fDae, [], true); setSelect(fTarget, [], true); setSelect(fSo, [], true); return; }
+        var list = TYPES.filter(function(t) { return t.gu === gu; });
+        setSelect(fDae, uniq(list.map(function(t) { return t.dae; })), true);
+        setSelect(fTarget, uniq(list.map(function(t) { return t.target; })), true);
+        setSelect(fSo, [], true);
+        onDaeChange();
+      }
+
+      function onDaeChange() {
+        var gu = fGu.value;
+        var dae = fDae.value;
+        fSo.value = '';
+        rowPayment.style.display = 'none';
+        rowCond1.style.display = 'none';
+        rowCond2.style.display = 'none';
+        rowCond3.style.display = 'none';
+        rowRemark.style.display = 'none';
+        if (!gu || !dae) { setSelect(fSo, [], true); return; }
+        var list = TYPES.filter(function(t) { return t.gu === gu && t.dae === dae; });
+        fTarget.value = '';
+        setSelect(fTarget, uniq(list.map(function(t) { return t.target; })), true);
+        setSelect(fSo, list.map(function(t) { return t.so; }), true);
+        onTargetChange();
+      }
+
+      function onTargetChange() {
+        var target = fTarget.value;
+        rowTargetType.style.display = target === '라이더' ? 'flex' : 'none';
+        onSoChange();
+      }
+
+      function onSoChange() {
+        var gu = fGu.value;
+        var dae = fDae.value;
+        var so = fSo.value;
+        if (!gu || !dae || !so) {
+          rowPayment.style.display = 'none';
+          rowCond1.style.display = 'none';
+          rowCond2.style.display = 'none';
+          rowCond3.style.display = 'none';
+          rowRemark.style.display = 'none';
+          return;
+        }
+        var one = TYPES.find(function(t) { return t.gu === gu && t.dae === dae && t.so === so; });
+        if (!one) return;
+        rowPayment.style.display = 'flex';
+        setSelect(fPayment, [one.payment], false);
+        fPayment.value = one.payment;
+
+        lCond1.textContent = one.c1;
+        lCond2.textContent = one.c2;
+        lCond3.textContent = one.c3;
+        fCond1.placeholder = one.c1;
+        fCond2.placeholder = one.c2;
+        fCond3.placeholder = one.c3;
+        rowCond1.style.display = 'flex';
+        rowCond2.style.display = 'flex';
+        rowCond3.style.display = 'flex';
+
+        if (one.remark) {
+          fRemark.placeholder = one.remark;
+          fRemark.value = '';
+          rowRemark.style.display = 'flex';
+        } else {
+          rowRemark.style.display = 'none';
+        }
+      }
+
+      fGu.addEventListener('change', onGuChange);
+      fDae.addEventListener('change', onDaeChange);
+      fTarget.addEventListener('change', onTargetChange);
+      fSo.addEventListener('change', onSoChange);
+
+      // 네비
       var navList = document.getElementById('nav-list');
       var navRegister = document.getElementById('nav-register');
       var screenList = document.getElementById('screen-list');
