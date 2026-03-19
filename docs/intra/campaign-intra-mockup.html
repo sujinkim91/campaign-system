@@ -117,6 +117,12 @@
     .grade-block .cond-row input { flex: 1; padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; }
     .btn-add-grade { padding: 6px 12px; margin-top: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; cursor: pointer; }
     .btn-add-grade:hover { background: #f8fafc; }
+    /* 미션 단계형: 건수 단계 */
+    .step-stage-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .step-stage-item input { width: 80px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; }
+    .step-stage-item input.amount { width: 120px; }
+    .step-stage-item .rm { color: var(--text-muted); cursor: pointer; font-size: 18px; }
+    .step-stage-item .rm:hover { color: #dc2626; }
   </style>
 </head>
 <body>
@@ -290,8 +296,20 @@
               <input type="text" id="f-cond3" placeholder="" />
             </div>
             <div class="form-row" id="row-remark" style="display:none;">
-              <label>비고</label>
-              <input type="text" id="f-remark" placeholder="해당 유형 비고" />
+              <label>메모</label>
+              <input type="text" id="f-remark" placeholder="메모 입력" />
+            </div>
+            <div class="form-row" id="row-step-stages" style="display:none;">
+              <label>건수 단계 설정</label>
+              <div style="flex:1;">
+                <div id="step-stages-list" class="grade-list"></div>
+                <button type="button" class="btn-add-grade" id="btn-add-step">+ 건수 단계 추가</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label>캠페인 코드</label>
+              <input type="text" id="f-campaign-code" readonly style="background:#f8fafc; color:#64748b;" value="" />
+              <span class="form-hint" style="margin-left:8px;">등록 시 자동 부여</span>
             </div>
             <div class="form-row">
               <label>캠페인명</label>
@@ -307,7 +325,7 @@
             </div>
             <div class="form-row">
               <label>등록자 ID</label>
-              <input type="text" id="f-registrant" placeholder="등록자 ID" />
+              <input type="text" id="f-registrant" readonly style="background:#f8fafc; color:#64748b;" value="로그인 사용자" />
             </div>
             <div class="form-actions">
               <button type="button" class="btn-submit">신규 캠페인 등록</button>
@@ -363,11 +381,44 @@
       var gradeListEl = document.getElementById('grade-list');
       var btnAddGrade = document.getElementById('btn-add-grade');
       var gradeSelect = document.getElementById('grade-select');
+      var rowStepStages = document.getElementById('row-step-stages');
+      var stepStagesListEl = document.getElementById('step-stages-list');
+      var btnAddStep = document.getElementById('btn-add-step');
+      var fCampaignCode = document.getElementById('f-campaign-code');
 
       var selectedGrades = [];
       var gradeConditions = {};
+      var stepStages = [];
+      var campaignCodeSeq = 4;
 
       function isRewardBonus() { return fGu.value === '리워드' && fDae.value === '보너스'; }
+      function isMissionStep() { return fGu.value === '미션' && fDae.value === '지급' && fSo.value === '단계형'; }
+
+      function renderStepStagesList() {
+        stepStagesListEl.innerHTML = '';
+        var esc = function(v) { return String(v || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); };
+        stepStages.forEach(function(s, i) {
+          var row = document.createElement('div');
+          row.className = 'step-stage-item';
+          row.innerHTML = '<input type="number" min="1" data-i="' + i + '" data-key="count" placeholder="건수" value="' + esc(s.count) + '" /> <span>건</span> - <input type="text" class="amount" data-i="' + i + '" data-key="amount" placeholder="금액(원)" value="' + esc(s.amount) + '" /> <span>원</span> <span class="rm" data-i="' + i + '" title="제거">×</span>';
+          stepStagesListEl.appendChild(row);
+        });
+        stepStagesListEl.querySelectorAll('input[data-key]').forEach(function(inp) {
+          inp.addEventListener('input', function() {
+            var i = parseInt(inp.getAttribute('data-i'), 10);
+            var k = inp.getAttribute('data-key');
+            if (!stepStages[i]) stepStages[i] = { count: '', amount: '' };
+            stepStages[i][k] = inp.value;
+          });
+        });
+        stepStagesListEl.querySelectorAll('.rm').forEach(function(el) {
+          el.addEventListener('click', function() {
+            var i = parseInt(el.getAttribute('data-i'), 10);
+            stepStages.splice(i, 1);
+            renderStepStagesList();
+          });
+        });
+      }
 
       function renderGradeList() {
         gradeListEl.innerHTML = '';
@@ -434,9 +485,11 @@
         fTarget.value = '';
         fSo.value = '';
         selectedGrades = [];
+        stepStages = [];
         renderGradeList();
         rowSoSingle.style.display = 'flex';
         rowSoMulti.style.display = 'none';
+        rowStepStages.style.display = 'none';
         rowTargetType.style.display = 'none';
         rowPayment.style.display = 'none';
         rowCond1.style.display = 'none';
@@ -504,6 +557,7 @@
           rowCond2.style.display = 'none';
           rowCond3.style.display = 'none';
           rowRemark.style.display = 'none';
+          rowStepStages.style.display = 'none';
           return;
         }
         var one = TYPES.find(function(t) { return t.gu === gu && t.dae === dae && t.so === so; });
@@ -522,12 +576,16 @@
         rowCond2.style.display = 'flex';
         rowCond3.style.display = 'flex';
 
-        if (one.remark) {
-          fRemark.placeholder = one.remark;
-          fRemark.value = '';
-          rowRemark.style.display = 'flex';
+        fRemark.placeholder = '메모 입력';
+        fRemark.value = '';
+        rowRemark.style.display = 'flex';
+
+        if (isMissionStep()) {
+          rowStepStages.style.display = 'flex';
+          if (stepStages.length === 0) stepStages = [{ count: '', amount: '' }];
+          renderStepStagesList();
         } else {
-          rowRemark.style.display = 'none';
+          rowStepStages.style.display = 'none';
         }
       }
 
@@ -539,6 +597,17 @@
         renderGradeList();
         applyRewardConditions();
       });
+
+      btnAddStep.addEventListener('click', function() {
+        stepStages.push({ count: '', amount: '' });
+        renderStepStagesList();
+      });
+
+      function updateCampaignCode() {
+        var y = new Date().getFullYear();
+        fCampaignCode.value = 'CP-' + y + '-' + String(campaignCodeSeq).padStart(3, '0');
+        campaignCodeSeq += 1;
+      }
 
       fGu.addEventListener('change', onGuChange);
       fDae.addEventListener('change', onDaeChange);
@@ -564,6 +633,7 @@
         screenList.classList.remove('active');
         screenRegister.classList.add('active');
         pageTitle.textContent = '신규 캠페인 등록';
+        updateCampaignCode();
       }
       navList.addEventListener('click', function(e) { e.preventDefault(); showList(); });
       navRegister.addEventListener('click', function(e) { e.preventDefault(); showRegister(); });
