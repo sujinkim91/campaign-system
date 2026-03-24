@@ -1,0 +1,26 @@
+{
+  "name": "campaign-system",
+  "version": "1.0.0",
+  "description": "캠페인 시스템 개요 문서 및 다이어그램입니다.",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "rm -rf public && mkdir -p public && cp -R docs/. public/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sujinkim91/campaign-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sujinkim91/campaign-system/issues"
+  },
+  "homepage": "https://github.com/sujinkim91/campaign-system#readme",
+  "devDependencies": {
+    "vercel": "^50.35.0"
+  }
+}
