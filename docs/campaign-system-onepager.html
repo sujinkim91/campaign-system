@@ -16,6 +16,9 @@
     h1 { font-size: 1.75rem; margin: 0 0 20px; font-weight: 700; color: var(--primary); }
     .callout { background: var(--primary-bg); border-left: 4px solid var(--accent); padding: 14px 18px; margin: 0 0 20px; border-radius: 0 8px 8px 0; font-size: 15px; }
     .callout p { margin: 0; }
+    .purpose-list { margin: 0; padding-left: 1.25em; }
+    .purpose-list li { margin-bottom: 10px; }
+    .purpose-list li:last-child { margin-bottom: 0; }
     section { margin-bottom: 16px; }
     section h2 { font-size: 1.15rem; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--primary); font-weight: 600; color: var(--primary); }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -71,6 +74,8 @@
       .terms-list, .terms-list-right, .terms-list-title-right { font-size: 9px; }
       .terms-two-cols { gap: 12px 20px; }
       .callout, .terms-box { page-break-inside: avoid; }
+      .purpose-list { font-size: 9px; margin: 0; padding-left: 1.1em; }
+      .purpose-list li { margin-bottom: 4px; }
     }
   </style>
 </head>
@@ -85,7 +90,18 @@
   </div>
 
   <section>
-    <h2>1. 캠페인 운영 방식</h2>
+    <h2>1. 목적</h2>
+    <ul class="purpose-list">
+      <li>NVP의 북극성 지표인 SLA의 실시간 판단을 기반으로, S&amp;OP에 따른 캠페인 운영이 가능하도록 하는 체계 구축이 목적입니다.</li>
+      <li>이를 위해 프로모션·리워드·미션 등 각 캠페인 유형을 상품(set) 단위로 정의하고 관리하는 체계가 필요합니다.</li>
+      <li>또한 S&amp;OP 및 AI 로직 기반으로 캠페인이 자동 활성화되는 운영 구조를 마련하는 것이 필요합니다.</li>
+      <li>이를 통해 인력 의존도를 줄이고 NVP 확장 및 운영 효율성을 강화하고자 합니다.</li>
+      <li>나아가 모든 캠페인을 통합 관리하는 마케팅 시스템으로 확장하는 것을 목표로 합니다.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>2. 캠페인 운영 방식</h2>
     <table>
       <thead><tr><th>구분</th><th>정의</th><th>적용 대상</th><th>지급 시점</th></tr></thead>
       <tbody>
@@ -97,14 +113,14 @@
   </section>
 
   <section>
-    <h2>2. 서비스 아키텍처</h2>
+    <h2>3. 서비스 아키텍처</h2>
     <div class="embed-wrap embed-full">
       <iframe title="서비스 아키텍처" src="appn/캠페인_아키텍처.html"></iframe>
     </div>
   </section>
 
   <section>
-    <h2>3. 캠페인 적용 흐름</h2>
+    <h2>4. 캠페인 적용 흐름</h2>
     <div class="diagram-wrap">
       <pre class="mermaid">
 flowchart LR
@@ -164,14 +180,14 @@ flowchart LR
   </section>
 
   <section>
-    <h2>4. 유저 플로우</h2>
+    <h2>5. 유저 플로우</h2>
     <div class="embed-wrap embed-full embed-full-flow">
       <iframe title="유저 플로우" src="appn/캠페인_유저플로우.html"></iframe>
     </div>
   </section>
 
   <section>
-    <h2>5. 캠페인 유형 통합표</h2>
+    <h2>6. 캠페인 유형 통합표</h2>
     <div class="table-scroll">
       <table class="compact-table">
         <thead>
@@ -216,7 +232,7 @@ flowchart LR
   </section>
 
   <section>
-    <h2>6. 구조도</h2>
+    <h2>7. 구조도</h2>
     <div class="embed-wrap embed-full-structure">
       <iframe title="캠페인 구조도" src="appn/캠페인_구조도.html" scrolling="no"></iframe>
     </div>
