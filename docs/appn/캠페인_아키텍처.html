@@ -41,27 +41,27 @@
 </defs>
 
 <!-- ================================================================
-     ROW 1: 마케팅 서버 (상단 중앙)
+     ROW 1: 마케팅 DB (상단) → 마케팅 서버 (중앙)
 ================================================================ -->
-<rect x="420" y="40" width="300" height="150" rx="8" fill="#e8f0fb" stroke="#1a3a6b" stroke-width="2"/>
-<text x="570" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a2e">마케팅 서버</text>
-<text x="570" y="84" text-anchor="middle" font-size="10" fill="#555">캠페인 시스템</text>
-<rect x="438" y="96" width="80" height="28" rx="4" fill="#1a3a6b"/>
-<text x="478" y="114" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">프로모션</text>
-<rect x="530" y="96" width="80" height="28" rx="4" fill="#1a3a6b"/>
-<text x="570" y="114" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">미션</text>
-<rect x="622" y="96" width="80" height="28" rx="4" fill="#1a3a6b"/>
-<text x="662" y="114" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">리워드</text>
-<text x="570" y="154" text-anchor="middle" font-size="9" fill="#777">상점·라이더 정보 주기 동기화 + 이벤트 트리거</text>
-<text x="570" y="170" text-anchor="middle" font-size="9" fill="#aaa">(프라임 서버 / 라스트마일 서버)</text>
+<!-- 마케팅 DB — 서버 박스 위에 배치 (우측 화살표·조회선과 겹침 방지) -->
+<rect x="458" y="12" width="224" height="56" rx="6" fill="#ede7f6" stroke="#5e35b1" stroke-width="1.8"/>
+<text x="570" y="36" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a2e">마케팅 DB</text>
+<text x="570" y="52" text-anchor="middle" font-size="9" fill="#555">캠페인·설정 영속화</text>
+<rect x="528" y="58" width="84" height="16" rx="3" fill="#fff" stroke="#d1c4e9" stroke-width="0.6"/>
+<text x="570" y="69" text-anchor="middle" font-size="8" fill="#5e35b1" font-weight="600">저장·조회</text>
+<line x1="570" y1="70" x2="570" y2="88" stroke="#5e35b1" stroke-width="1.6" marker-end="url(#mdb)"/>
 
-<!-- 마케팅 DB (마케팅 서버 우측 연동) -->
-<rect x="738" y="88" width="118" height="56" rx="6" fill="#ede7f6" stroke="#5e35b1" stroke-width="1.8"/>
-<text x="797" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a2e">마케팅 DB</text>
-<text x="797" y="128" text-anchor="middle" font-size="9" fill="#555">캠페인·설정 영속화</text>
-<line x1="720" y1="117" x2="738" y2="117" stroke="#5e35b1" stroke-width="1.6" marker-end="url(#mdb)"/>
-<rect x="752" y="104" width="72" height="16" rx="3" fill="#fff" stroke="#d1c4e9" stroke-width="0.6"/>
-<text x="788" y="115" text-anchor="middle" font-size="8" fill="#5e35b1" font-weight="600">저장·조회</text>
+<rect x="420" y="88" width="300" height="150" rx="8" fill="#e8f0fb" stroke="#1a3a6b" stroke-width="2"/>
+<text x="570" y="116" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a2e">마케팅 서버</text>
+<text x="570" y="132" text-anchor="middle" font-size="10" fill="#555">캠페인 시스템</text>
+<rect x="438" y="144" width="80" height="28" rx="4" fill="#1a3a6b"/>
+<text x="478" y="162" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">프로모션</text>
+<rect x="530" y="144" width="80" height="28" rx="4" fill="#1a3a6b"/>
+<text x="570" y="162" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">미션</text>
+<rect x="622" y="144" width="80" height="28" rx="4" fill="#1a3a6b"/>
+<text x="662" y="162" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">리워드</text>
+<text x="570" y="202" text-anchor="middle" font-size="9" fill="#777">상점·라이더 정보 주기 동기화 + 이벤트 트리거</text>
+<text x="570" y="218" text-anchor="middle" font-size="9" fill="#aaa">(프라임 서버 / 라스트마일 서버)</text>
 
 <!-- 관리자 -->
 <circle cx="60" cy="95" r="13" fill="none" stroke="#1a3a6b" stroke-width="1.8"/>
@@ -73,9 +73,9 @@
 <text x="60" y="175" text-anchor="middle" font-size="9" fill="#666">인트라</text>
 
 <!-- 관리자 → 마케팅 서버 -->
-<line x1="74" y1="108" x2="415" y2="108" stroke="#1a3a6b" stroke-width="1.6" marker-end="url(#mb)"/>
-<rect x="200" y="118" width="126" height="18" rx="3" fill="#fff" stroke="#d0dce8" stroke-width="0.8"/>
-<text x="263" y="131" text-anchor="middle" font-size="9.5" fill="#1a3a6b" font-weight="700">캠페인 등록 / 관리</text>
+<line x1="74" y1="108" x2="415" y2="132" stroke="#1a3a6b" stroke-width="1.6" marker-end="url(#mb)"/>
+<rect x="200" y="138" width="126" height="18" rx="3" fill="#fff" stroke="#d0dce8" stroke-width="0.8"/>
+<text x="263" y="151" text-anchor="middle" font-size="9.5" fill="#1a3a6b" font-weight="700">캠페인 등록 / 관리</text>
 
 <!-- ================================================================
      ROW 2: 프라임 서버 (좌) | 라스트마일 서버 (우)
@@ -122,42 +122,42 @@
      동기화 (회색 점선) — 경로 분리하여 겹침 방지
 ================================================================ -->
 <!-- 프라임 → 마케팅 (상점 정보) -->
-<path d="M245,278 L245,222 L392,222 L392,188 L418,188"
+<path d="M245,278 L245,228 L392,228 L392,232 L418,232"
   fill="none" stroke="#888" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#mg)"/>
-<rect x="258" y="202" width="52" height="28" rx="3" fill="#fff" stroke="#e0e0e0" stroke-width="0.6"/>
-<text x="284" y="214" text-anchor="middle" font-size="8" fill="#666">상점 정보</text>
-<text x="284" y="226" text-anchor="middle" font-size="8" fill="#666">동기화</text>
+<rect x="258" y="208" width="52" height="28" rx="3" fill="#fff" stroke="#e0e0e0" stroke-width="0.6"/>
+<text x="284" y="220" text-anchor="middle" font-size="8" fill="#666">상점 정보</text>
+<text x="284" y="232" text-anchor="middle" font-size="8" fill="#666">동기화</text>
 <!-- 마케팅 → 프라임 (동기화 반영) -->
-<path d="M418,168 L366,168 L366,278 L332,278"
+<path d="M418,108 L366,108 L366,278 L332,278"
   fill="none" stroke="#888" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#mg)"/>
 
 <!-- 라스트마일 → 마케팅 (라이더 정보) -->
-<path d="M922,258 L922,212 L752,212 L752,188 L722,188"
+<path d="M922,258 L922,218 L752,218 L752,232 L722,232"
   fill="none" stroke="#888" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#mg)"/>
-<rect x="818" y="216" width="52" height="28" rx="3" fill="#fff" stroke="#e0e0e0" stroke-width="0.6"/>
-<text x="844" y="228" text-anchor="middle" font-size="8" fill="#666">라이더 정보</text>
-<text x="844" y="240" text-anchor="middle" font-size="8" fill="#666">동기화</text>
+<rect x="818" y="222" width="52" height="28" rx="3" fill="#fff" stroke="#e0e0e0" stroke-width="0.6"/>
+<text x="844" y="234" text-anchor="middle" font-size="8" fill="#666">라이더 정보</text>
+<text x="844" y="246" text-anchor="middle" font-size="8" fill="#666">동기화</text>
 <!-- 마케팅 → 라스트마일 (동기화 반영) -->
-<path d="M722,168 L766,168 L766,268 L830,268"
+<path d="M722,108 L766,108 L766,268 L830,268"
   fill="none" stroke="#888" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#mg)"/>
 
 <!-- ================================================================
      오더 접수/제안 시 캠페인 조회 (파란 실선) — 경로 분리
 ================================================================ -->
-<!-- 라스트마일 → 마케팅 (캠페인 조회) -->
-<path d="M830,267 L800,267 L800,76 L720,76"
+<!-- 라스트마일 → 마케팅 (캠페인 조회) — 서버 상단(y=88)으로 진입 -->
+<path d="M830,267 L800,267 L800,88 L720,88"
   fill="none" stroke="#1a3a6b" stroke-width="1.8" marker-end="url(#mb)"/>
-<rect x="802" y="158" width="88" height="18" rx="3" fill="#e8f0fb" stroke="#b8d0e8" stroke-width="0.6"/>
-<text x="846" y="170" text-anchor="middle" font-size="9.5" fill="#1a3a6b" font-weight="700">캠페인 조회</text>
+<rect x="802" y="168" width="88" height="18" rx="3" fill="#e8f0fb" stroke="#b8d0e8" stroke-width="0.6"/>
+<text x="846" y="180" text-anchor="middle" font-size="9.5" fill="#1a3a6b" font-weight="700">캠페인 조회</text>
 
 <!-- 마케팅 → 라스트마일 (원가 반영) -->
-<path d="M720,100 L778,100 L778,276 L830,276"
+<path d="M720,108 L778,108 L778,276 L830,276"
   fill="none" stroke="#1a3a6b" stroke-width="1.8" marker-end="url(#mb)"/>
-<rect x="782" y="182" width="90" height="18" rx="3" fill="#e8f0fb" stroke="#b8d0e8" stroke-width="0.6"/>
-<text x="827" y="194" text-anchor="middle" font-size="9.5" fill="#1a3a6b" font-weight="700">원가 계산 반영</text>
+<rect x="782" y="192" width="90" height="18" rx="3" fill="#e8f0fb" stroke="#b8d0e8" stroke-width="0.6"/>
+<text x="827" y="204" text-anchor="middle" font-size="9.5" fill="#1a3a6b" font-weight="700">원가 계산 반영</text>
 
 <!-- 마케팅 → 프라임 (판가 반영) -->
-<path d="M456,188 L456,252 L250,252 L250,278"
+<path d="M456,232 L456,252 L250,252 L250,278"
   fill="none" stroke="#1a3a6b" stroke-width="1.8" marker-end="url(#mb)"/>
 <rect x="308" y="256" width="90" height="18" rx="3" fill="#e8f0fb" stroke="#b8d0e8" stroke-width="0.6"/>
 <text x="353" y="268" text-anchor="middle" font-size="9.5" fill="#1a3a6b" font-weight="700">판가 계산 반영</text>
@@ -199,16 +199,16 @@
      정산 주기 후정산 (빨간 점선) — 세로선 분리
 ================================================================ -->
 <!-- 라스트마일 → 마케팅 (배치 오더 카운트) -->
-<path d="M868,345 L868,418 L564,418 L564,188"
+<path d="M868,345 L868,418 L564,418 L564,200"
   fill="none" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="6,4" marker-end="url(#mr)"/>
 <rect x="664" y="428" width="120" height="18" rx="3" fill="#fdecea" stroke="#e8b4b4" stroke-width="0.6"/>
 <text x="724" y="440" text-anchor="middle" font-size="9.5" fill="#c0392b" font-weight="700">배치 오더 카운트</text>
 
 <!-- 마케팅 → 포인트서버 (조건 달성 여부 확인) -->
-<path d="M576,188 L576,528"
+<path d="M576,200 L576,528"
   fill="none" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="6,4" marker-end="url(#mr)"/>
-<rect x="582" y="358" width="126" height="18" rx="3" fill="#fdecea" stroke="#e8b4b4" stroke-width="0.6"/>
-<text x="645" y="370" text-anchor="middle" font-size="9.5" fill="#c0392b" font-weight="700">조건 달성 여부 확인</text>
+<rect x="582" y="368" width="126" height="18" rx="3" fill="#fdecea" stroke="#e8b4b4" stroke-width="0.6"/>
+<text x="645" y="380" text-anchor="middle" font-size="9.5" fill="#c0392b" font-weight="700">조건 달성 여부 확인</text>
 
 <!-- ================================================================
      포인트서버 → 라이더 / 상점주 — 좌우 경로 분리
