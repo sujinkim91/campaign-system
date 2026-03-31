@@ -53,14 +53,14 @@ const DT = 52;   // data top
 function rc(r) { return DT + r*RP + RP/2; }
 function gc(s,e) { return (rc(s)+rc(e))/2; }
 
-// 컬럼 정의 (라이더만 적용대상 유형 경유)
+// 컬럼 정의 (Reward Type → Target 순; 라이더는 적용대상 유형 경유)
 const C = {
   cam: { lbl:'Campaign',              x:10,  w:80  },
   typ: { lbl:'Campaign Type',         x:104, w:90  },
-  tgt: { lbl:'Target',               x:208, w:72  },
-  ttp: { lbl:'Target Type\n(적용대상 유형)', x:292, w:96 },
-  rwt: { lbl:'Reward Type',          x:396, w:72  },
-  mtd: { lbl:'Method\n(소분류)',      x:482, w:100 },
+  rwt: { lbl:'Reward Type',          x:208, w:72  },
+  tgt: { lbl:'Target',               x:292, w:72  },
+  ttp: { lbl:'Target Type\n(적용대상 유형)', x:376, w:96 },
+  mtd: { lbl:'Method\n(소분류)',      x:484, w:100 },
   pm1: { lbl:'Payment Method\nDetails (1)', x:596, w:90 },
   pm2: { lbl:'Payment Method\nDetails (2)', x:700, w:90 },
   pyt: { lbl:'Payout Method',        x:806, w:80  },
@@ -115,13 +115,14 @@ const G = {
 };
 
 const CLS = ['c0','c1','c2','c2','c3','c4','c5','c6','c6'];
-const KEYS = ['cam','typ','tgt','ttp','rwt','mtd','pm1','pm2','pyt'];
+const KEYS = ['cam','typ','rwt','tgt','ttp','mtd','pm1','pm2','pyt'];
 
 function fgs(key, s) { return G[key] ? G[key].find(g => g.s === s) : null; }
 function fgr(key, r) { return G[key] ? G[key].find(g => g.s <= r && r <= g.e) : null; }
 
-// 헤더
-Object.entries(C).forEach(([k, col]) => {
+// 헤더 (표시 순서 고정)
+KEYS.forEach((k) => {
+  const col = C[k];
   const el = document.createElement('div');
   el.className = 'hdr';
   el.style.cssText = `left:${col.x}px; width:${col.w}px;`;
