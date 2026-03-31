@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>캠페인 관리 시스템 - Mockup</title>
   <style>
-    /* ZONE 요금제 관리 시스템(https://meshkorea.github.io/zone_delivery_plan/) UI 동일 톤 */
     :root {
       --bg: #f8f9fa;
       --card: #ffffff;
@@ -17,13 +16,14 @@
       --sidebar: #1e293b;
       --sidebar-hover: #334155;
       --sidebar-active: #334155;
+      --danger: #dc2626;
+      --ok: #059669;
+      --shadow: 0 10px 30px rgba(2, 6, 23, .08);
     }
     * { box-sizing: border-box; }
     body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); line-height: 1.5; }
-
     .app-wrap { display: flex; min-height: 100vh; overflow: hidden; }
 
-    /* ===== 사이드바 (ZONE 스타일) ===== */
     .sidebar { width: 240px; min-width: 240px; background: var(--sidebar); color: #e2e8f0; display: flex; flex-direction: column; flex-shrink: 0; }
     .sidebar-logo { padding: 24px; font-size: 15px; font-weight: 700; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.08); }
     .sidebar-nav { padding: 16px 0; }
@@ -31,102 +31,93 @@
     .sidebar-nav a:hover { background: var(--sidebar-hover); color: #fff; }
     .sidebar-nav a.active { background: var(--sidebar-active); color: #fff; font-weight: 600; }
 
-    /* ===== 메인 ===== */
     .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
     .header { padding: 20px 32px; background: var(--card); border-bottom: 1px solid var(--border); flex-shrink: 0; }
     .header h1 { margin: 0; font-size: 20px; font-weight: 600; color: var(--text); }
-
     .content { flex: 1; padding: 32px; overflow: auto; }
 
-    /* ===== 필터 (ZONE: 필수 입력 사항 + 검색) ===== */
-    .filter-section { background: var(--card); border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; border: 1px solid var(--border); }
-    .filter-required { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
-    .filter-required::before { content: '●'; color: var(--primary); margin-right: 6px; }
-    .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
-    .filter-row label { font-size: 14px; color: var(--text); font-weight: 500; margin-right: 4px; }
-    .filter-row select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; min-width: 160px; background: var(--card); }
-    .filter-row input[type="text"] { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; min-width: 200px; }
-    .btn-search { padding: 8px 20px; background: var(--primary); color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; }
-    .btn-search:hover { background: var(--primary-hover); }
-
-    /* ===== 리스트 헤더 (총 N건 + 추가 버튼) ===== */
-    .list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-    .list-count { font-size: 14px; color: var(--text-muted); }
-    .btn-add { padding: 10px 20px; background: var(--primary); color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; }
-    .btn-add:hover { background: var(--primary-hover); }
-
-    /* ===== 테이블 (ZONE 스타일: 미니멀) ===== */
-    .table-wrap { background: var(--card); border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
-    .data-table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
-    .data-table th { background: #f8fafc; font-weight: 600; color: var(--text); text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border); }
-    .data-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--text); overflow: hidden; text-overflow: ellipsis; }
-    .data-table tbody tr:hover { background: #f8fafc; }
-    .data-table tbody tr:last-child td { border-bottom: none; }
-    .data-table .status { font-size: 13px; }
-    .data-table .status.active { color: #059669; }
-    .data-table .status.inactive { color: var(--text-muted); }
-    .data-table .status.blocked { color: #dc2626; }
-    .data-table .link { color: var(--primary); text-decoration: none; margin-right: 12px; font-size: 13px; }
-    .data-table .link:hover { text-decoration: underline; }
-
-    .data-table col:nth-child(1) { width: 9%; }
-    .data-table col:nth-child(2) { width: 14%; }
-    .data-table col:nth-child(3) { width: 7%; }
-    .data-table col:nth-child(4) { width: 9%; }
-    .data-table col:nth-child(5) { width: 7%; }
-    .data-table col:nth-child(6) { width: 7%; }
-    .data-table col:nth-child(7) { width: 8%; }
-    .data-table col:nth-child(8) { width: 8%; }
-    .data-table col:nth-child(9) { width: 18%; }
-
-    /* ===== 푸터 안내 ===== */
-    .page-note { margin-top: 20px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-
-    /* ===== 화면 전환 (메뉴별) ===== */
     .screen { display: none; }
     .screen.active { display: block; }
 
-    /* ===== 신규 캠페인 등록 폼 ===== */
-    .form-section { background: var(--card); border-radius: 8px; border: 1px solid var(--border); padding: 24px; max-width: 640px; }
-    .form-row { display: flex; align-items: center; margin-bottom: 16px; }
-    .form-row label { width: 140px; flex-shrink: 0; font-weight: 500; font-size: 14px; }
-    .form-row input, .form-row select, .form-row textarea { flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
-    .form-row textarea { min-height: 80px; resize: vertical; }
-    .form-byte { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-    .form-actions { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
-    .form-actions .btn-submit { padding: 10px 24px; background: var(--primary); color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; }
-    .form-actions .btn-submit:hover { background: var(--primary-hover); }
-    .form-note { margin-top: 16px; font-size: 13px; color: #dc2626; }
-    /* 가이드 */
-    .form-guide { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: #0c4a6e; line-height: 1.5; }
-    .form-guide strong { display: block; margin-bottom: 4px; }
+    .filter-section { background: var(--card); border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; border: 1px solid var(--border); }
+    .filter-required { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+    .filter-required::before { content: '●'; color: var(--primary); margin-right: 6px; }
+    .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+    .filter-row label { font-size: 14px; color: var(--text); font-weight: 500; margin-right: 4px; }
+    .filter-row select, .filter-row input[type="text"] { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; background: var(--card); }
+    .filter-row select { min-width: 160px; }
+    .filter-row input[type="text"] { min-width: 220px; }
+    .btn { padding: 10px 20px; border: 1px solid transparent; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn.primary { background: var(--primary); color: #fff; }
+    .btn.primary:hover { background: var(--primary-hover); }
+    .btn.ghost { background: #fff; border-color: var(--border); color: var(--text); }
+    .btn.ghost:hover { background: #f8fafc; }
+
+    .list-header { display: flex; align-items: center; justify-content: space-between; margin: 10px 0 16px; }
+    .list-count { font-size: 14px; color: var(--text-muted); }
+    .table-wrap { background: var(--card); border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
+    .data-table th { background: #f8fafc; font-weight: 700; color: var(--text); text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+    .data-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--text); overflow: hidden; text-overflow: ellipsis; }
+    .data-table tbody tr:hover { background: #f8fafc; }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .link { color: var(--primary); text-decoration: none; margin-right: 12px; font-size: 13px; font-weight: 600; }
+    .link:hover { text-decoration: underline; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: #fff; }
+    .badge.ok { color: var(--ok); border-color: rgba(5,150,105,.25); background: rgba(5,150,105,.08); }
+    .badge.muted { color: var(--text-muted); }
+    .badge.danger { color: var(--danger); border-color: rgba(220,38,38,.25); background: rgba(220,38,38,.08); }
+
+    .page-note { margin-top: 16px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
     .list-guide { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
-    .form-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; margin-left: 140px; }
-    .form-guide-inline { font-size: 13px; color: var(--text-muted); margin: -8px 0 12px 140px; line-height: 1.5; }
-    /* 리워드 등급(소분류) 다중 추가 + 등급별 적용 조건 */
-    .form-row.so-single { display: flex; }
-    .form-row.so-multi { display: none; align-items: flex-start; }
-    .form-row.so-multi .grade-list { flex: 1; border: 1px solid var(--border); border-radius: 6px; padding: 12px; min-height: 60px; background: #fafafa; }
-    .grade-block { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin-bottom: 12px; }
-    .grade-block:last-child { margin-bottom: 0; }
-    .grade-block-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 14px; }
-    .grade-block .rm { color: var(--text-muted); cursor: pointer; font-size: 18px; line-height: 1; }
-    .grade-block .rm:hover { color: #dc2626; }
-    .grade-block .cond-row { display: flex; align-items: center; margin-bottom: 8px; }
-    .grade-block .cond-row:last-child { margin-bottom: 0; }
-    .grade-block .cond-row label { width: 180px; flex-shrink: 0; font-size: 13px; font-weight: 500; }
-    .grade-block .cond-row input { flex: 1; padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; }
-    .btn-add-grade { padding: 6px 12px; margin-top: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; cursor: pointer; }
-    .btn-add-grade:hover { background: #f8fafc; }
-    /* 미션 단계형: 건수 단계 */
-    .step-stage-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .step-stage-item input { width: 80px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; }
-    .step-stage-item input.amount { width: 120px; }
-    .step-stage-item .rm { color: var(--text-muted); cursor: pointer; font-size: 18px; }
-    .step-stage-item .rm:hover { color: #dc2626; }
-    /* 미션 전용 필드 */
-    .form-row.mission-only { display: none; }
-    .form-row.mission-only .hint { font-size: 12px; color: var(--text-muted); margin-left: 8px; }
+
+    /* Stepper */
+    .stepper { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .step { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:#fff; cursor: pointer; user-select:none; }
+    .step .n { width: 22px; height: 22px; border-radius: 999px; background: #e2e8f0; color:#0f172a; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; }
+    .step.active { border-color: rgba(37,99,235,.35); background: rgba(37,99,235,.06); }
+    .step.active .n { background: rgba(37,99,235,.2); color: #1d4ed8; }
+    .step.done .n { background: rgba(5,150,105,.18); color: #047857; }
+    .step .t { font-weight: 700; font-size: 13px; }
+    .step .s { font-size: 12px; color: var(--text-muted); }
+
+    .form-shell { background: var(--card); border-radius: 8px; border: 1px solid var(--border); padding: 22px; max-width: 720px; }
+    .form-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .form-row label { width: 150px; flex-shrink: 0; font-weight: 600; font-size: 14px; }
+    .req { color: var(--danger); font-weight: 900; margin-left: 4px; }
+    .field { flex: 1; min-width: 0; }
+    .field input, .field select, .field textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: #fff; }
+    .field textarea { min-height: 84px; resize: vertical; }
+    .row-inline { display:flex; gap: 10px; align-items:center; }
+    .row-inline > * { flex: 1; }
+    .help { margin-top: 6px; font-size: 12px; color: var(--text-muted); }
+
+    .radio-group, .check-group { display:flex; gap: 14px; flex-wrap: wrap; }
+    .pill { display:flex; align-items:center; gap: 8px; border: 1px solid var(--border); background: #fff; padding: 8px 10px; border-radius: 999px; cursor: pointer; }
+    .pill input { width: 16px; height: 16px; }
+
+    .invalid input, .invalid select, .invalid textarea { border-color: rgba(220,38,38,.65); background: rgba(220,38,38,.04); }
+    .warn { margin-top: 12px; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(220,38,38,.25); background: rgba(220,38,38,.06); color: #991b1b; font-size: 13px; display:none; }
+
+    /* Step3 단계형 */
+    .stage-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff; }
+    .stage-table th, .stage-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .stage-table th { background: #f8fafc; text-align: left; font-weight: 800; }
+    .stage-table tr:last-child td { border-bottom: none; }
+    .stage-actions { display:flex; gap: 10px; margin-top: 10px; }
+    .btn-mini { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: #fff; font-weight: 700; cursor: pointer; }
+    .btn-mini:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-mini.primary { border-color: rgba(37,99,235,.35); color: #1d4ed8; background: rgba(37,99,235,.06); }
+    .btn-mini.danger { border-color: rgba(220,38,38,.25); color:#b91c1c; background: rgba(220,38,38,.06); }
+
+    .actions { display:flex; justify-content: space-between; gap: 10px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .toast { position: fixed; right: 18px; bottom: 18px; background: #0f172a; color: #fff; padding: 12px 14px; border-radius: 10px; box-shadow: var(--shadow); font-size: 13px; opacity: 0; transform: translateY(8px); transition: .18s ease; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,.45); display:none; align-items: center; justify-content: center; padding: 20px; }
+    .modal { width: 100%; max-width: 520px; background: #fff; border-radius: 14px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .modal .hd { padding: 14px 16px; border-bottom: 1px solid var(--border); font-weight: 800; }
+    .modal .bd { padding: 14px 16px; color: var(--text); font-size: 14px; }
+    .modal .ft { padding: 14px 16px; border-top: 1px solid var(--border); display:flex; justify-content: flex-end; gap: 10px; }
   </style>
 </head>
 <body>
@@ -135,7 +126,6 @@
       <div class="sidebar-logo">캠페인 관리 시스템</div>
       <nav class="sidebar-nav">
         <a href="#" id="nav-list" class="active">캠페인 현황</a>
-        <a href="#" id="nav-set">캠페인 세트 관리</a>
       </nav>
     </aside>
 
@@ -145,40 +135,42 @@
       </header>
 
       <div class="content">
-        <!-- 화면 1: 미션 목록 -->
-        <div id="screen-list" class="screen active">
-          <p class="list-guide">등록된 <strong>라이더 미션 캠페인</strong>을 조회·관리할 수 있습니다.</p>
+        <!-- 화면 1: 캠페인 목록 -->
+        <section id="screen-list" class="screen active">
+          <p class="list-guide">미션 캠페인을 등록·조회하고 on/off로 제어합니다.</p>
+
           <div class="filter-section">
             <div class="filter-required">필수 입력 사항</div>
             <div class="filter-row">
               <label>상태</label>
-              <select>
+              <select id="flt-status">
                 <option value="">전체</option>
-                <option>진행 중</option>
-                <option>예정</option>
-                <option>종료</option>
+                <option value="예정">예정</option>
+                <option value="진행">진행</option>
+                <option value="완료">완료</option>
+                <option value="중단">중단</option>
               </select>
               <label>소분류</label>
-              <select>
+              <select id="flt-subtype">
                 <option value="">전체</option>
-                <option>단계형</option>
-                <option>단일목표형</option>
+                <option value="단계형">단계형</option>
+                <option value="단일목표형">단일목표형</option>
               </select>
               <label>미션명</label>
-              <input type="text" placeholder="미션명 입력" />
-              <button type="button" class="btn-search">검색</button>
+              <input id="flt-name" type="text" placeholder="미션명 입력" />
+              <button type="button" class="btn primary" id="btn-search">검색</button>
             </div>
           </div>
 
           <div class="list-header">
-            <span class="list-count">총 3건</span>
-            <button type="button" class="btn-add">캠페인 추가</button>
+            <span class="list-count" id="list-count">총 0건</span>
+            <button type="button" class="btn primary" id="btn-open-register">등록</button>
           </div>
 
           <div class="table-wrap">
             <table class="data-table">
               <colgroup>
-                <col style="width:14%"><col style="width:14%"><col style="width:10%"><col style="width:12%"><col style="width:12%"><col style="width:12%"><col style="width:12%"><col style="width:8%"><col style="width:6%">
+                <col style="width:20%"><col style="width:12%"><col style="width:10%"><col style="width:16%"><col style="width:12%"><col style="width:14%"><col style="width:10%"><col style="width:6%">
               </colgroup>
               <thead>
                 <tr>
@@ -189,400 +181,654 @@
                   <th>적용 대상</th>
                   <th>지역/ZONE</th>
                   <th>상태</th>
-                  <th>등록일</th>
                   <th>관리</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>라이더 점심 피크 단계형 미션</td>
-                  <td>단계형</td>
-                  <td>정적</td>
-                  <td>04/01~04/07</td>
-                  <td>전체</td>
-                  <td>서울/강남 Z1</td>
-                  <td><span class="status active">진행 중</span></td>
-                  <td>03/31</td>
-                  <td><a href="#" class="link">OFF</a></td>
-                </tr>
-                <tr>
-                  <td>주말 단일목표 미션</td>
-                  <td>단일목표형</td>
-                  <td>정적</td>
-                  <td>04/06~04/06</td>
-                  <td>프렌즈</td>
-                  <td>부산/해운대 Z2</td>
-                  <td><span class="status inactive">예정</span></td>
-                  <td>03/31</td>
-                  <td><a href="#" class="link">OFF</a></td>
-                </tr>
-                <tr>
-                  <td>야간 피크 단계형(동적) 미션</td>
-                  <td>단계형</td>
-                  <td>동적</td>
-                  <td>03/15~03/31</td>
-                  <td>직영</td>
-                  <td>대구 Z3</td>
-                  <td><span class="status inactive">종료</span></td>
-                  <td>03/10</td>
-                  <td><a href="#" class="link">ON</a></td>
-                </tr>
-              </tbody>
+              <tbody id="tbody-list"></tbody>
             </table>
           </div>
 
-          <p class="page-note">* 등록된 미션은 내용 수정 불가. on/off 제어만 가능 (PRD v0.3). 기간 종료 시 자동 비활성화.</p>
-        </div>
-        <!-- /화면 1 -->
+          <p class="page-note">* 상태는 시작일/종료일 기준 자동 판단(예정/진행/완료). 관리자 off 시 중단.</p>
+        </section>
 
-        <!-- 화면 2: 미션 등록 -->
-        <div id="screen-register" class="screen">
-          <div class="form-section">
-            <div class="form-row">
-              <label>미션명<span style="color:#dc2626;"> *</span></label>
-              <input type="text" id="f-mission-name" placeholder="내부 식별용 이름" />
-            </div>
+        <!-- 화면 2: 미션 캠페인 등록 (스텝) -->
+        <section id="screen-register" class="screen">
+          <div class="stepper" id="stepper"></div>
 
-            <div class="form-row">
-              <label>소분류 선택<span style="color:#dc2626;"> *</span></label>
-              <select id="f-mission-subtype">
-                <option value="">선택</option>
-                <option value="단계형">단계형</option>
-                <option value="단일목표형">단일목표형</option>
-              </select>
-            </div>
+          <div class="form-shell">
+            <div class="warn" id="warn-box"></div>
 
-            <div class="form-row">
-              <label>운영 방식<span style="color:#dc2626;"> *</span></label>
-              <select id="f-mission-mode">
-                <option value="">선택</option>
-                <option value="정적">정적</option>
-                <option value="동적">동적</option>
-              </select>
-            </div>
+            <!-- Step 1 -->
+            <div class="step-page" data-step="1">
+              <div class="form-row" data-key="name">
+                <label>미션명<span class="req">*</span></label>
+                <div class="field">
+                  <input id="f-name" type="text" maxlength="50" placeholder="최대 50자, 공백 불가" />
+                </div>
+              </div>
 
-            <div class="form-row">
-              <label>기간 설정<span style="color:#dc2626;"> *</span></label>
-              <span style="flex:1; display:flex; gap:8px; align-items:center;">
-                <input type="date" id="f-start" />
-                <input type="date" id="f-end" />
-              </span>
-            </div>
+              <div class="form-row" data-key="subtype">
+                <label>소분류<span class="req">*</span></label>
+                <div class="field">
+                  <div class="radio-group">
+                    <label class="pill"><input type="radio" name="subtype" value="단계형" /> 단계형</label>
+                    <label class="pill"><input type="radio" name="subtype" value="단일목표형" /> 단일목표형</label>
+                  </div>
+                </div>
+              </div>
 
-            <div class="form-row">
-              <label>시간대 설정</label>
-              <select id="f-times" multiple style="height:92px;">
-                <option>11:00~13:00</option>
-                <option>18:00~20:00</option>
-                <option>22:00~01:00</option>
-              </select>
-            </div>
-
-            <div class="form-row">
-              <label>미션 공개일<span style="color:#dc2626;"> *</span></label>
-              <input type="date" id="f-publish" style="max-width:200px;" />
-            </div>
-
-            <div class="form-row">
-              <label>예산<span style="color:#dc2626;"> *</span></label>
-              <input type="text" id="f-budget" placeholder="캠페인 총 예산 (원)" style="max-width:200px;" />
-            </div>
-
-            <div class="form-row">
-              <label>적용 대상<span style="color:#dc2626;"> *</span></label>
-              <select id="f-target-type">
-                <option value="">선택</option>
-                <option>전체</option>
-                <option>직영</option>
-                <option>프렌즈</option>
-                <option>지점</option>
-              </select>
-            </div>
-
-            <div class="form-row" id="row-target-detail" style="display:none;">
-              <label>세부 유형</label>
-              <select id="f-target-detail">
-                <option value="">선택</option>
-                <option>풀타임</option>
-                <option>파트타임</option>
-              </select>
-            </div>
-
-            <div class="form-row">
-              <label>지역/ZONE<span style="color:#dc2626;"> *</span></label>
-              <input type="text" id="f-zone" placeholder="예: 서울/강남 Z1" />
-            </div>
-
-            <div class="form-row">
-              <label>휴무 조건</label>
-              <input type="text" id="f-offday" placeholder="예: 주 1회 이하" />
-            </div>
-
-            <div class="form-row">
-              <label>취소건수 조건</label>
-              <input type="text" id="f-cancel" placeholder="예: 주 N건 이하" />
-            </div>
-
-            <div class="form-row">
-              <label>지급 방식</label>
-              <input type="text" value="정액" readonly style="background:#f8fafc; color:#64748b; max-width:200px;" />
-            </div>
-
-            <div class="form-row" id="row-step" style="display:none;">
-              <label>단계 설정<span style="color:#dc2626;"> *</span></label>
-              <div style="flex:1;">
-                <div id="step-stages-list" class="grade-list"></div>
-                <button type="button" class="btn-add-grade" id="btn-add-step">+ 단계 추가</button>
-                <div class="form-note" id="step-note" style="display:none;">* 최대 10단계까지 설정할 수 있습니다. 단계는 오름차순으로만 설정 가능합니다.</div>
+              <div class="form-row" data-key="mode">
+                <label>운영 방식<span class="req">*</span></label>
+                <div class="field">
+                  <div class="radio-group">
+                    <label class="pill"><input type="radio" name="mode" value="정적" /> 정적</label>
+                    <label class="pill"><input type="radio" name="mode" value="동적" /> 동적</label>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="form-row" id="row-single" style="display:none;">
-              <label>목표/지급<span style="color:#dc2626;"> *</span></label>
-              <div style="flex:1; display:flex; gap:8px; align-items:center;">
-                <input type="number" min="1" id="f-single-count" placeholder="목표 건수" style="max-width:140px;" />
-                <input type="text" id="f-single-amount" placeholder="지급 금액(원)" style="max-width:180px;" />
+            <!-- Step 2 -->
+            <div class="step-page" data-step="2" style="display:none;">
+              <div class="form-row" data-key="period">
+                <label>기간 설정<span class="req">*</span></label>
+                <div class="field">
+                  <div class="row-inline">
+                    <input id="f-start" type="date" />
+                    <input id="f-end" type="date" />
+                  </div>
+                  <div class="help">시작일 ≥ 오늘, 종료일 &gt; 시작일</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="times">
+                <label>시간대 설정</label>
+                <div class="field">
+                  <select id="f-times" multiple style="height:110px;">
+                    <option>11:00~13:00</option>
+                    <option>18:00~20:00</option>
+                    <option>22:00~01:00</option>
+                  </select>
+                  <div class="help">다중 선택 가능 (시간대 중복 불가)</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="publish">
+                <label>미션 공개일<span class="req">*</span></label>
+                <div class="field">
+                  <input id="f-publish" type="date" />
+                  <div class="help">시작일 이전이어야 함</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="budget">
+                <label>예산<span class="req">*</span></label>
+                <div class="field">
+                  <input id="f-budget" type="number" min="1" step="1" placeholder="0원 초과" />
+                  <div class="help">예산 소진 시 지급 중단</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="targets">
+                <label>적용 대상<span class="req">*</span></label>
+                <div class="field">
+                  <div class="check-group" id="targets">
+                    <label class="pill"><input type="checkbox" value="전체" /> 전체</label>
+                    <label class="pill"><input type="checkbox" value="직영" /> 직영</label>
+                    <label class="pill"><input type="checkbox" value="프렌즈" id="chk-friends" /> 프렌즈</label>
+                    <label class="pill"><input type="checkbox" value="지점" /> 지점</label>
+                  </div>
+                  <div class="help">1개 이상 선택</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="detail" id="row-detail" style="display:none;">
+                <label>세부 유형</label>
+                <div class="field">
+                  <div class="check-group" id="details">
+                    <label class="pill"><input type="checkbox" value="풀타임" /> 풀타임</label>
+                    <label class="pill"><input type="checkbox" value="파트타임" /> 파트타임</label>
+                  </div>
+                  <div class="help">프렌즈 선택 시에만 노출 (해제 시 선택값 초기화)</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="zones">
+                <label>지역/ZONE<span class="req">*</span></label>
+                <div class="field">
+                  <select id="f-zones" multiple style="height:110px;">
+                    <option value="서울/강남 Z1">서울/강남 Z1</option>
+                    <option value="부산/해운대 Z2">부산/해운대 Z2</option>
+                    <option value="대구 Z3">대구 Z3</option>
+                  </select>
+                  <div class="help">1개 이상 선택</div>
+                </div>
               </div>
             </div>
 
-            <div class="form-row">
-              <label>캠페인 코드</label>
-              <input type="text" id="f-campaign-code" readonly style="background:#f8fafc; color:#64748b;" value="" />
-              <span class="form-hint" style="margin-left:8px;">등록 시 자동 부여</span>
-            </div>
+            <!-- Step 3 -->
+            <div class="step-page" data-step="3" style="display:none;">
+              <div id="dyn-note" class="warn" style="display:none;">달성 조건은 S&OP 연동 후 자동 설정됩니다</div>
 
-            <div class="form-actions">
-              <button type="button" class="btn-submit">미션 등록</button>
-            </div>
-          </div>
-        </div>
-        <!-- /화면 2 -->
-
-        <!-- 화면 3: 캠페인 세트 관리 -->
-        <div id="screen-set" class="screen">
-          <div id="screen-set-list" class="screen active">
-            <p class="list-guide">캠페인 세트는 여러 캠페인을 묶어 세트 단위로 활성화/비활성화할 수 있습니다.</p>
-
-            <div class="list-header">
-              <span class="list-count">총 2건</span>
-              <button type="button" class="btn-add" id="btn-open-set-create">세트 추가</button>
-            </div>
-
-            <div class="table-wrap" style="margin-bottom:16px;">
-              <table class="data-table">
-                <colgroup>
-                  <col style="width:22%"><col style="width:38%"><col style="width:16%"><col style="width:12%"><col style="width:12%">
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th>세트명</th>
-                    <th>목적</th>
-                    <th>포함 캠페인</th>
-                    <th>상태</th>
-                    <th>관리</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>4월 점심 피크 운영</td>
-                    <td>점심 피크 공급 확보</td>
-                    <td>2개</td>
-                    <td><span class="status active">활성화</span></td>
-                    <td><a href="#" class="link">OFF</a></td>
-                  </tr>
-                  <tr>
-                    <td>주말 단일목표 운영</td>
-                    <td>주말 배달 건수 증대</td>
-                    <td>1개</td>
-                    <td><span class="status inactive">비활성화</span></td>
-                    <td><a href="#" class="link">ON</a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div id="screen-set-create" class="screen">
-            <div class="list-header" style="margin-bottom:12px;">
-              <span class="list-count">세트 등록</span>
-              <button type="button" class="btn-add" id="btn-back-set-list" style="background:#fff; color:var(--primary); border:1px solid var(--border);">목록으로</button>
-            </div>
-
-            <div class="form-section">
-              <div class="form-row">
-                <label>세트명<span style="color:#dc2626;"> *</span></label>
-                <input type="text" id="f-set-name" placeholder="예: 4월 라이더 미션 세트" />
+              <div class="form-row" data-key="offday">
+                <label>휴무 조건</label>
+                <div class="field">
+                  <input id="f-offday" type="number" min="0" step="1" placeholder="0 이상 정수 (회/주)" />
+                </div>
               </div>
-              <div class="form-row">
-                <label>목적(설명)<span style="color:#dc2626;"> *</span></label>
-                <input type="text" id="f-set-purpose" placeholder="운영 목적" />
+
+              <div class="form-row" data-key="cancel">
+                <label>취소건수 조건</label>
+                <div class="field">
+                  <input id="f-cancel" type="number" min="0" step="1" placeholder="0 이상 정수 (건/주)" />
+                </div>
               </div>
-              <div class="form-row">
-                <label>포함 캠페인<span style="color:#dc2626;"> *</span></label>
-                <select id="f-set-campaigns" multiple style="height:120px;">
-                  <option>MS-2026-100 | 라이더 점심 피크 단계형 미션</option>
-                  <option>MS-2026-101 | 주말 단일목표 미션</option>
-                  <option>MS-2026-102 | 야간 피크 단계형(동적) 미션</option>
-                </select>
+
+              <div id="block-step">
+                <div class="form-row" style="align-items:flex-start;" data-key="stages">
+                  <label>단계형 조건<span class="req">*</span></label>
+                  <div class="field">
+                    <table class="stage-table">
+                      <thead>
+                        <tr><th style="width:16%;">단계</th><th style="width:32%;">목표 건수</th><th style="width:32%;">지급 금액</th><th style="width:20%;">삭제</th></tr>
+                      </thead>
+                      <tbody id="stages-body"></tbody>
+                    </table>
+                    <div class="stage-actions">
+                      <button type="button" class="btn-mini primary" id="btn-add-stage">단계 추가</button>
+                    </div>
+                    <div class="help">최소 1단계, 최대 10단계. 목표 건수는 오름차순.</div>
+                  </div>
+                </div>
               </div>
-              <div class="form-row">
-                <label>상태</label>
-                <select id="f-set-status">
-                  <option value="활성화">활성화</option>
-                  <option value="비활성화">비활성화</option>
-                </select>
+
+              <div id="block-single" style="display:none;">
+                <div class="form-row" data-key="single">
+                  <label>단일목표형 조건<span class="req">*</span></label>
+                  <div class="field">
+                    <div class="row-inline">
+                      <input id="f-single-count" type="number" min="1" step="1" placeholder="목표 건수" />
+                      <input id="f-single-amount" type="number" min="1" step="1" placeholder="지급 금액(원)" />
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="form-actions">
-                <button type="button" class="btn-submit">세트 저장</button>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-page" data-step="4" style="display:none;">
+              <div class="list-guide">입력 내용을 확인하고 최종 제출합니다.</div>
+              <div class="table-wrap">
+                <table class="data-table" style="table-layout:auto;">
+                  <colgroup><col style="width:25%"><col style="width:55%"><col style="width:20%"></colgroup>
+                  <thead><tr><th>항목</th><th>값</th><th>수정</th></tr></thead>
+                  <tbody id="summary-body"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="actions">
+              <div>
+                <button type="button" class="btn ghost" id="btn-prev">이전</button>
+              </div>
+              <div style="display:flex; gap:10px;">
+                <button type="button" class="btn ghost" id="btn-cancel">취소</button>
+                <button type="button" class="btn primary" id="btn-next">다음</button>
+                <button type="button" class="btn primary" id="btn-submit" style="display:none;">최종 제출</button>
               </div>
             </div>
           </div>
-        </div>
-        <!-- /화면 3 -->
+        </section>
       </div>
     </main>
   </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="modal-backdrop" id="modal">
+    <div class="modal">
+      <div class="hd" id="modal-title">등록 실패</div>
+      <div class="bd" id="modal-body"></div>
+      <div class="ft">
+        <button class="btn ghost" id="modal-close" type="button">확인</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     (function() {
-      var navList = document.getElementById('nav-list');
-      var navSet = document.getElementById('nav-set');
-      var screenList = document.getElementById('screen-list');
-      var screenRegister = document.getElementById('screen-register');
-      var screenSet = document.getElementById('screen-set');
-      var pageTitle = document.getElementById('page-title');
-      var btnAdd = document.querySelector('#screen-list .btn-add');
-      var btnOpenSetCreate = document.getElementById('btn-open-set-create');
-      var screenSetList = document.getElementById('screen-set-list');
-      var screenSetCreate = document.getElementById('screen-set-create');
-      var btnBackSetList = document.getElementById('btn-back-set-list');
+      const $ = (id) => document.getElementById(id);
+      const todayISO = () => new Date().toISOString().slice(0,10);
 
+      // ===== 화면 전환 =====
+      const navList = $('nav-list');
+      const screenList = $('screen-list');
+      const screenRegister = $('screen-register');
+      const pageTitle = $('page-title');
       function showList() {
         navList.classList.add('active');
-        navSet.classList.remove('active');
         screenList.classList.add('active');
         screenRegister.classList.remove('active');
-        screenSet.classList.remove('active');
-        pageTitle.textContent = '미션 목록';
+        pageTitle.textContent = '캠페인 목록';
       }
       function showRegister() {
         navList.classList.remove('active');
-        navSet.classList.remove('active');
         screenList.classList.remove('active');
         screenRegister.classList.add('active');
-        screenSet.classList.remove('active');
-        pageTitle.textContent = '미션 등록';
-        updateCampaignCode();
-        syncMissionForm();
+        pageTitle.textContent = '미션 캠페인 등록';
+        goStep(1, true);
       }
-      function showSet() {
-        navList.classList.remove('active');
-        navSet.classList.add('active');
-        screenList.classList.remove('active');
-        screenRegister.classList.remove('active');
-        screenSet.classList.add('active');
-        pageTitle.textContent = '캠페인 세트 관리';
-        if (screenSetList) screenSetList.classList.add('active');
-        if (screenSetCreate) screenSetCreate.classList.remove('active');
-      }
+      navList.addEventListener('click', (e) => { e.preventDefault(); showList(); });
+      $('btn-open-register').addEventListener('click', showRegister);
 
-      function showSetCreate() {
-        showSet();
-        if (screenSetList) screenSetList.classList.remove('active');
-        if (screenSetCreate) screenSetCreate.classList.add('active');
-        pageTitle.textContent = '세트 등록';
-      }
+      // ===== 데이터(목록) =====
+      let CAMPAIGNS = [
+        { id: 'MS-2026-001', name: '점심 피크 단계형 미션', subtype: '단계형', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['전체'], zones: ['서울/강남 Z1'], createdAt: '2026-03-31', off: false },
+        { id: 'MS-2026-002', name: '주말 단일목표 미션', subtype: '단일목표형', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['프렌즈'], zones: ['부산/해운대 Z2'], createdAt: '2026-03-31', off: true },
+        { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', subtype: '단계형', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['직영'], zones: ['대구 Z3'], createdAt: '2026-03-10', off: false },
+      ];
 
-      navList.addEventListener('click', function(e) { e.preventDefault(); showList(); });
-      navSet.addEventListener('click', function(e) { e.preventDefault(); showSet(); });
-      if (btnAdd) btnAdd.addEventListener('click', function() { showRegister(); });
-      if (btnOpenSetCreate) btnOpenSetCreate.addEventListener('click', function() { showSetCreate(); });
-      if (btnBackSetList) btnBackSetList.addEventListener('click', function() { showSet(); });
-
-      // === 미션 등록 폼 로직 (PRD v0.3 기준) ===
-      var fTargetType = document.getElementById('f-target-type');
-      var rowTargetDetail = document.getElementById('row-target-detail');
-      var fSubtype = document.getElementById('f-mission-subtype');
-      var fMode = document.getElementById('f-mission-mode');
-      var rowStep = document.getElementById('row-step');
-      var rowSingle = document.getElementById('row-single');
-      var stepStagesListEl = document.getElementById('step-stages-list');
-      var btnAddStep = document.getElementById('btn-add-step');
-      var fCampaignCode = document.getElementById('f-campaign-code');
-
-      var stepStages = [];
-      var campaignCodeSeq = 100;
-      var STEP_MAX = 10;
-
-      function updateCampaignCode() {
-        var y = new Date().getFullYear();
-        fCampaignCode.value = 'MS-' + y + '-' + String(campaignCodeSeq).padStart(3, '0');
-        campaignCodeSeq += 1;
+      function statusOf(c) {
+        const now = new Date();
+        const s = new Date(c.start + 'T00:00:00');
+        const e = new Date(c.end + 'T23:59:59');
+        if (now > e) return { key: '완료', cls: 'muted' };
+        const base = (now < s) ? '예정' : '진행';
+        if (c.off) return { key: '중단', cls: 'danger' };
+        return { key: base, cls: base === '진행' ? 'ok' : 'muted' };
       }
 
-      function setDisabledForDynamic(disabled) {
-        // TBD: 동적 운영은 자동 조정 대상 확정 전이라, 입력은 허용하되 UI 힌트만 주는 수준으로 둠
-        // 추후 disabled 처리 필요 시 여기에서 통제
-      }
+      function fmtPeriod(c) { return c.start.slice(5).replace('-', '/') + '~' + c.end.slice(5).replace('-', '/'); }
 
-      function renderStepStages() {
-        if (!stepStagesListEl) return;
-        stepStagesListEl.innerHTML = '';
-        if (btnAddStep) btnAddStep.disabled = stepStages.length >= STEP_MAX;
-        var stepNote = document.getElementById('step-note');
-        if (stepNote) stepNote.style.display = stepStages.length >= STEP_MAX ? 'block' : 'none';
-        var esc = function(v) { return String(v || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); };
-        stepStages.forEach(function(s, i) {
-          var row = document.createElement('div');
-          row.className = 'step-stage-item';
-          row.innerHTML =
-            '<input type="number" min="1" data-i="' + i + '" data-key="count" placeholder="목표 건수" value="' + esc(s.count) + '" />' +
-            '<span>건</span>' +
-            '<input type="text" class="amount" data-i="' + i + '" data-key="amount" placeholder="지급 금액(원)" value="' + esc(s.amount) + '" />' +
-            '<span class="rm" data-i="' + i + '" title="제거">×</span>';
-          stepStagesListEl.appendChild(row);
+      function renderList() {
+        const fltStatus = $('flt-status').value;
+        const fltSubtype = $('flt-subtype').value;
+        const fltName = $('flt-name').value.trim();
+        let rows = CAMPAIGNS.slice();
+        rows = rows.filter((c) => {
+          const st = statusOf(c).key;
+          if (fltStatus && st !== fltStatus) return false;
+          if (fltSubtype && c.subtype !== fltSubtype) return false;
+          if (fltName && !c.name.includes(fltName)) return false;
+          return true;
         });
-        stepStagesListEl.querySelectorAll('input[data-key]').forEach(function(inp) {
-          inp.addEventListener('input', function() {
-            var i = parseInt(inp.getAttribute('data-i'), 10);
-            var k = inp.getAttribute('data-key');
-            if (!stepStages[i]) stepStages[i] = { count: '', amount: '' };
-            stepStages[i][k] = inp.value;
-          });
+        $('list-count').textContent = '총 ' + rows.length + '건';
+        const tb = $('tbody-list');
+        tb.innerHTML = '';
+        rows.forEach((c) => {
+          const st = statusOf(c);
+          const tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td title="' + c.id + '">' + c.name + '</td>' +
+            '<td>' + c.subtype + '</td>' +
+            '<td>' + c.mode + '</td>' +
+            '<td>' + fmtPeriod(c) + '</td>' +
+            '<td>' + c.targets.join(', ') + '</td>' +
+            '<td>' + c.zones.join(', ') + '</td>' +
+            '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>' +
+            '<td>' + (st.key === '완료' ? '' : '<a href="#" class="link btn-toggle" data-id="' + c.id + '">' + (c.off ? 'ON' : 'OFF') + '</a>') + '</td>';
+          tb.appendChild(tr);
         });
-        stepStagesListEl.querySelectorAll('.rm').forEach(function(el) {
-          el.addEventListener('click', function() {
-            var i = parseInt(el.getAttribute('data-i'), 10);
-            stepStages.splice(i, 1);
-            renderStepStages();
+        tb.querySelectorAll('.btn-toggle').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const id = a.getAttribute('data-id');
+            CAMPAIGNS = CAMPAIGNS.map((c) => c.id === id ? ({ ...c, off: !c.off }) : c);
+            renderList();
           });
         });
       }
 
-      function syncMissionForm() {
-        if (fTargetType && rowTargetDetail) {
-          rowTargetDetail.style.display = (fTargetType.value === '프렌즈') ? 'flex' : 'none';
+      $('btn-search').addEventListener('click', renderList);
+      $('flt-status').addEventListener('change', renderList);
+      $('flt-subtype').addEventListener('change', renderList);
+      renderList();
+
+      // ===== Stepper / Form state =====
+      const state = {
+        step: 1,
+        name: '',
+        subtype: '',
+        mode: '',
+        start: '',
+        end: '',
+        times: [],
+        publish: '',
+        budget: '',
+        targets: [],
+        details: [],
+        zones: [],
+        offday: '',
+        cancel: '',
+        stages: [{ count: '', amount: '' }],
+        singleCount: '',
+        singleAmount: '',
+      };
+
+      const STEP_TITLES = [
+        { n: 1, t: '기본 정보', s: '미션명/소분류/운영' },
+        { n: 2, t: '적용 조건', s: '기간/대상/ZONE' },
+        { n: 3, t: '달성 조건', s: '휴무/취소/특성' },
+        { n: 4, t: '확인', s: '요약/제출' },
+      ];
+
+      function renderStepper() {
+        const el = $('stepper');
+        el.innerHTML = '';
+        STEP_TITLES.forEach((x) => {
+          const d = document.createElement('div');
+          d.className = 'step' + (x.n === state.step ? ' active' : '') + (x.n < state.step ? ' done' : '');
+          d.innerHTML = '<div class="n">' + x.n + '</div><div><div class="t">' + x.t + '</div><div class="s">' + x.s + '</div></div>';
+          d.addEventListener('click', () => {
+            // 스펙: Step4 요약의 수정 버튼으로 이동. 스텝바는 현재/이전까지만 이동 허용.
+            if (x.n <= state.step) goStep(x.n);
+          });
+          el.appendChild(d);
+        });
+      }
+
+      function showToast(msg) {
+        const t = $('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 1700);
+      }
+
+      function showFailModal(msg) {
+        $('modal-title').textContent = '제출 실패';
+        $('modal-body').textContent = msg;
+        $('modal').style.display = 'flex';
+      }
+      $('modal-close').addEventListener('click', () => $('modal').style.display = 'none');
+      $('modal').addEventListener('click', (e) => { if (e.target === $('modal')) $('modal').style.display = 'none'; });
+
+      function clearInvalid() {
+        document.querySelectorAll('.invalid').forEach((x) => x.classList.remove('invalid'));
+        $('warn-box').style.display = 'none';
+        $('warn-box').textContent = '';
+      }
+      function warn(msg) {
+        const w = $('warn-box');
+        w.textContent = msg;
+        w.style.display = 'block';
+      }
+      function markInvalid(key, msg) {
+        const row = document.querySelector('.step-page[data-step="' + state.step + '"] [data-key="' + key + '"]');
+        if (row) row.classList.add('invalid');
+        if (msg) warn(msg);
+      }
+
+      function readStep1() {
+        state.name = $('f-name').value;
+        state.subtype = (document.querySelector('input[name="subtype"]:checked') || {}).value || '';
+        state.mode = (document.querySelector('input[name="mode"]:checked') || {}).value || '';
+      }
+      function readStep2() {
+        state.start = $('f-start').value;
+        state.end = $('f-end').value;
+        state.publish = $('f-publish').value;
+        state.budget = $('f-budget').value;
+        state.times = Array.from($('f-times').selectedOptions).map(o => o.value);
+        state.zones = Array.from($('f-zones').selectedOptions).map(o => o.value);
+        state.targets = Array.from(document.querySelectorAll('#targets input[type="checkbox"]:checked')).map(i => i.value);
+        state.details = Array.from(document.querySelectorAll('#details input[type="checkbox"]:checked')).map(i => i.value);
+      }
+      function readStep3() {
+        state.offday = $('f-offday').value;
+        state.cancel = $('f-cancel').value;
+        if (state.subtype === '단계형') {
+          // state.stages already bound by inputs
+        } else {
+          state.singleCount = $('f-single-count').value;
+          state.singleAmount = $('f-single-amount').value;
         }
-        if (fSubtype && rowStep && rowSingle) {
-          rowStep.style.display = fSubtype.value === '단계형' ? 'flex' : 'none';
-          rowSingle.style.display = fSubtype.value === '단일목표형' ? 'flex' : 'none';
-          if (fSubtype.value === '단계형') {
-            if (stepStages.length === 0) stepStages = [{ count: '', amount: '' }];
-            renderStepStages();
+      }
+
+      function validateStep1() {
+        readStep1();
+        if (!state.name) return { ok:false, key:'name', msg:'미션명은 필수입니다.' };
+        if (/\s/.test(state.name)) return { ok:false, key:'name', msg:'미션명은 공백 없이 입력해 주세요.' };
+        if (!state.subtype) return { ok:false, key:'subtype', msg:'소분류를 선택해 주세요.' };
+        if (!state.mode) return { ok:false, key:'mode', msg:'운영 방식을 선택해 주세요.' };
+        return { ok:true };
+      }
+
+      function validateStep2() {
+        readStep2();
+        const today = todayISO();
+        if (!state.start || !state.end) return { ok:false, key:'period', msg:'기간 설정은 필수입니다.' };
+        if (state.start < today) return { ok:false, key:'period', msg:'시작일은 오늘 이후(또는 오늘)여야 합니다.' };
+        if (state.end <= state.start) return { ok:false, key:'period', msg:'종료일은 시작일보다 이후여야 합니다.' };
+        if (!state.publish) return { ok:false, key:'publish', msg:'미션 공개일은 필수입니다.' };
+        if (state.publish > state.start) return { ok:false, key:'publish', msg:'미션 공개일은 시작일 이전이어야 합니다.' };
+        if (!state.budget || Number(state.budget) <= 0) return { ok:false, key:'budget', msg:'예산은 0원 초과로 입력해 주세요.' };
+        if (state.targets.length === 0) return { ok:false, key:'targets', msg:'적용 대상은 1개 이상 선택해 주세요.' };
+        if (!document.getElementById('chk-friends').checked) {
+          // 프렌즈 해제 시 세부유형 초기화
+          state.details = [];
+          document.querySelectorAll('#details input[type="checkbox"]').forEach(i => i.checked = false);
+        }
+        if (state.zones.length === 0) return { ok:false, key:'zones', msg:'지역/ZONE은 1개 이상 선택해 주세요.' };
+        return { ok:true };
+      }
+
+      function intOrEmpty(v) {
+        if (v === '' || v === null || v === undefined) return { ok:true, val:'' };
+        if (!/^\d+$/.test(String(v))) return { ok:false };
+        return { ok:true, val: Number(v) };
+      }
+
+      function validateStagesAscending() {
+        // 최소 1단계
+        if (!state.stages || state.stages.length === 0) return { ok:false, msg:'단계형은 최소 1단계를 설정해야 합니다.' };
+        if (state.stages.length > 10) return { ok:false, msg:'단계는 최대 10단계까지 가능합니다.' };
+        let prev = 0;
+        for (let i=0;i<state.stages.length;i++) {
+          const c = state.stages[i].count;
+          const a = state.stages[i].amount;
+          if (!/^\d+$/.test(String(c)) || Number(c) <= 0) return { ok:false, msg:'목표 건수는 0 초과 정수로 입력해 주세요.' };
+          if (Number(c) <= prev) return { ok:false, msg:'목표 건수는 이전 단계보다 커야 합니다.' };
+          prev = Number(c);
+          if (!/^\d+$/.test(String(a)) || Number(a) <= 0) return { ok:false, msg:'지급 금액은 0원 초과로 입력해 주세요.' };
+        }
+        return { ok:true };
+      }
+
+      function validateStep3() {
+        readStep3();
+        if (state.mode === '동적') {
+          // 동적은 Step3 자동 설정 안내 (입력은 허용)
+        }
+        const o = intOrEmpty(state.offday);
+        if (!o.ok) return { ok:false, key:'offday', msg:'휴무 조건은 0 이상 정수로 입력해 주세요.' };
+        const c = intOrEmpty(state.cancel);
+        if (!c.ok) return { ok:false, key:'cancel', msg:'취소건수 조건은 0 이상 정수로 입력해 주세요.' };
+
+        if (state.subtype === '단계형') {
+          const st = validateStagesAscending();
+          if (!st.ok) return { ok:false, key:'stages', msg: st.msg };
+        } else {
+          if (!/^\d+$/.test(String(state.singleCount)) || Number(state.singleCount) <= 0) return { ok:false, key:'single', msg:'목표 건수는 0 초과 정수로 입력해 주세요.' };
+          if (!/^\d+$/.test(String(state.singleAmount)) || Number(state.singleAmount) <= 0) return { ok:false, key:'single', msg:'지급 금액은 0원 초과로 입력해 주세요.' };
+        }
+        return { ok:true };
+      }
+
+      function buildSummary() {
+        const rows = [];
+        rows.push(['미션명', state.name, 1]);
+        rows.push(['소분류', state.subtype, 1]);
+        rows.push(['운영 방식', state.mode, 1]);
+        rows.push(['기간 설정', state.start + ' ~ ' + state.end, 2]);
+        rows.push(['시간대 설정', state.times.length ? state.times.join(', ') : '-', 2]);
+        rows.push(['미션 공개일', state.publish, 2]);
+        rows.push(['예산', state.budget + '원', 2]);
+        rows.push(['적용 대상', state.targets.join(', '), 2]);
+        rows.push(['세부 유형', (state.targets.includes('프렌즈') ? (state.details.length ? state.details.join(', ') : '-') : '-'), 2]);
+        rows.push(['지역/ZONE', state.zones.join(', '), 2]);
+        rows.push(['휴무 조건', state.offday === '' ? '-' : (state.offday + '회/주'), 3]);
+        rows.push(['취소건수 조건', state.cancel === '' ? '-' : (state.cancel + '건/주'), 3]);
+        if (state.subtype === '단계형') {
+          rows.push(['단계 설정', state.stages.map((s,i) => (i+1)+'단계: '+s.count+'건 / '+s.amount+'원').join(' · '), 3]);
+        } else {
+          rows.push(['목표/지급', state.singleCount + '건 / ' + state.singleAmount + '원', 3]);
+        }
+
+        const tb = $('summary-body');
+        tb.innerHTML = '';
+        rows.forEach(([k,v,step]) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = '<td>' + k + '</td><td>' + String(v).replace(/</g,'&lt;') + '</td><td><a href="#" class="link sum-edit" data-step="' + step + '">수정</a></td>';
+          tb.appendChild(tr);
+        });
+        tb.querySelectorAll('.sum-edit').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            goStep(Number(a.getAttribute('data-step')));
+          });
+        });
+      }
+
+      function syncUIBySubtype() {
+        // Step2 friends detail
+        const friendsChecked = document.getElementById('chk-friends').checked;
+        $('row-detail').style.display = friendsChecked ? 'flex' : 'none';
+
+        // Step3 blocks
+        const isStep = state.subtype === '단계형';
+        $('block-step').style.display = isStep ? 'block' : 'none';
+        $('block-single').style.display = isStep ? 'none' : 'block';
+
+        // dynamic note
+        $('dyn-note').style.display = state.mode === '동적' ? 'block' : 'none';
+      }
+
+      // Step3 stage rows
+      const stagesBody = $('stages-body');
+      const btnAddStage = $('btn-add-stage');
+      function renderStages() {
+        stagesBody.innerHTML = '';
+        btnAddStage.disabled = state.stages.length >= 10;
+        state.stages.forEach((s, idx) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td>' + (idx+1) + '단계</td>' +
+            '<td><input type="number" min="1" step="1" data-i="' + idx + '" data-k="count" value="' + (s.count ?? '') + '" /></td>' +
+            '<td><input type="number" min="1" step="1" data-i="' + idx + '" data-k="amount" value="' + (s.amount ?? '') + '" /></td>' +
+            '<td><button type="button" class="btn-mini danger" data-i="' + idx + '"' + (state.stages.length === 1 ? ' disabled' : '') + '>삭제</button></td>';
+          stagesBody.appendChild(tr);
+        });
+        stagesBody.querySelectorAll('input[data-k]').forEach((inp) => {
+          inp.addEventListener('input', () => {
+            const i = Number(inp.getAttribute('data-i'));
+            const k = inp.getAttribute('data-k');
+            state.stages[i][k] = inp.value;
+          });
+        });
+        stagesBody.querySelectorAll('button[data-i]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const i = Number(btn.getAttribute('data-i'));
+            if (state.stages.length === 1) return;
+            state.stages.splice(i, 1);
+            renderStages();
+          });
+        });
+      }
+      btnAddStage.addEventListener('click', () => {
+        if (state.stages.length >= 10) return;
+        state.stages.push({ count:'', amount:'' });
+        renderStages();
+      });
+      renderStages();
+
+      // Friends detail toggle
+      document.querySelectorAll('#targets input[type="checkbox"]').forEach((c) => {
+        c.addEventListener('change', () => {
+          if (!document.getElementById('chk-friends').checked) {
+            document.querySelectorAll('#details input[type="checkbox"]').forEach(i => i.checked = false);
           }
-        }
-        if (fMode) setDisabledForDynamic(fMode.value === '동적');
-      }
-
-      if (fTargetType) fTargetType.addEventListener('change', syncMissionForm);
-      if (fSubtype) fSubtype.addEventListener('change', syncMissionForm);
-      if (fMode) fMode.addEventListener('change', syncMissionForm);
-      if (btnAddStep) btnAddStep.addEventListener('click', function() {
-        if (stepStages.length >= STEP_MAX) return;
-        stepStages.push({ count: '', amount: '' });
-        renderStepStages();
+          syncUIBySubtype();
+        });
       });
 
-      // 초기
+      // Step buttons
+      const btnPrev = $('btn-prev');
+      const btnNext = $('btn-next');
+      const btnCancel = $('btn-cancel');
+      const btnSubmit = $('btn-submit');
+
+      function goStep(n, resetInvalid) {
+        if (resetInvalid) clearInvalid();
+        state.step = n;
+        renderStepper();
+        document.querySelectorAll('.step-page').forEach((p) => {
+          p.style.display = (Number(p.getAttribute('data-step')) === n) ? 'block' : 'none';
+        });
+        btnPrev.style.visibility = (n === 1) ? 'hidden' : 'visible';
+        btnNext.style.display = (n === 4) ? 'none' : 'inline-flex';
+        btnSubmit.style.display = (n === 4) ? 'inline-flex' : 'none';
+        if (n === 3 || n === 4) syncUIBySubtype();
+        if (n === 4) buildSummary();
+      }
+
+      btnPrev.addEventListener('click', () => goStep(Math.max(1, state.step - 1), true));
+      btnCancel.addEventListener('click', () => { showList(); });
+
+      btnNext.addEventListener('click', () => {
+        clearInvalid();
+        let v = { ok:true };
+        if (state.step === 1) v = validateStep1();
+        if (state.step === 2) v = validateStep2();
+        if (state.step === 3) v = validateStep3();
+        if (!v.ok) { markInvalid(v.key, v.msg); return; }
+        // subtype/mode update for step3 UI
+        if (state.step === 1) syncUIBySubtype();
+        goStep(state.step + 1, true);
+      });
+
+      btnSubmit.addEventListener('click', () => {
+        clearInvalid();
+        // final validate all
+        const v1 = validateStep1(); if (!v1.ok) { goStep(1,true); markInvalid(v1.key,v1.msg); return; }
+        const v2 = validateStep2(); if (!v2.ok) { goStep(2,true); markInvalid(v2.key,v2.msg); return; }
+        const v3 = validateStep3(); if (!v3.ok) { goStep(3,true); markInvalid(v3.key,v3.msg); return; }
+
+        // mock submit: sometimes fail if budget too huge (just for demo)
+        if (Number(state.budget) > 999999999) {
+          showFailModal('예산 최대값(TBD)을 초과했습니다.');
+          return;
+        }
+
+        // append to list
+        const nextId = 'MS-2026-' + String(100 + CAMPAIGNS.length + 1).padStart(3,'0');
+        CAMPAIGNS.unshift({
+          id: nextId,
+          name: state.name,
+          subtype: state.subtype,
+          mode: state.mode,
+          start: state.start,
+          end: state.end,
+          targets: state.targets,
+          zones: state.zones,
+          createdAt: todayISO(),
+          off: false
+        });
+        showList();
+        renderList();
+        showToast('등록 완료: ' + state.name);
+      });
+
+      // change listeners for step1
+      document.querySelectorAll('input[name="subtype"]').forEach(r => r.addEventListener('change', () => { readStep1(); syncUIBySubtype(); }));
+      document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener('change', () => { readStep1(); syncUIBySubtype(); }));
+
+      // default dates for UX
+      $('f-start').value = todayISO();
+      $('f-end').value = todayISO();
+      $('f-publish').value = todayISO();
+
+      // init
+      renderStepper();
+      goStep(1, true);
       showList();
     })();
   </script>
