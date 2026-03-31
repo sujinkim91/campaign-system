@@ -34,7 +34,7 @@
     color:#fff; font-weight:600;
   }
   .nd-cond { font-size:9.5px; line-height:1.2; padding:2px 3px; }
-  .nd-note { font-size:9px; color:#1a1a2e; background:#e8eef5; border:1px solid #1e4a72; font-weight:600; }
+  .nd-sub { font-size:9px; line-height:1.2; padding:3px 4px; }
   .c0 { background:#1a3a6b; border:1px solid #0d2244; }
   .c1 { background:#1e4b8a; border:1px solid #1a3a6b; }
   .c2 { background:#2e5fa3; border:1px solid #1e4b8a; }
@@ -50,7 +50,7 @@
 </head>
 <body>
 <h2>캠페인 구조도</h2>
-<p class="sub">6절 <strong>항목 설명</strong>의 분류 계층을 왼쪽에서 오른쪽으로 나열했습니다. 통합표와 동일한 11개 유형(행)을 잇되, <strong>표가 아니라 구조·연결 관계</strong>를 보여 줍니다.</p>
+<p class="sub">6절 통합표와 같은 분기 순서(구분→대분류→적용 대상→<strong>적용대상 유형→세부 유형</strong>→소분류→지급 방식→조건)를 연결선으로 표시합니다. 지점은 <strong>세트</strong> 단위, 프렌즈는 <strong>하위 유형</strong>(풀타임·파트타임 등)이 붙을 수 있는 구조입니다.</p>
 <div id="diagram">
 <svg id="svg"></svg>
 </div>
@@ -64,19 +64,18 @@ const DT = 52;
 function rc(r) { return DT + r*RP + RP/2; }
 function gc(s,e) { return (rc(s)+rc(e))/2; }
 
-/* 열 순서 = 통합표 헤더(캠페인 구조): 구분 → 대분류 → 적용 대상 → 적용대상 유형 → 소분류 → 지급 방식 → 조건 → 비고 */
 const C = {
-  cam:  { lbl:'캠페인',           x:8,   w:68  },
-  typ:  { lbl:'구분',             x:82,  w:72  },
-  rwt:  { lbl:'대분류',           x:160, w:60  },
-  tgt:  { lbl:'적용 대상',        x:226, w:64  },
-  ttp:  { lbl:'적용대상 유형',    x:296, w:80  },
-  mtd:  { lbl:'소분류',           x:382, w:88  },
-  pyt:  { lbl:'지급 방식',        x:476, w:60  },
-  pm1:  { lbl:'적용 조건 1',      x:542, w:76  },
-  pm2:  { lbl:'적용 조건 2',      x:624, w:76  },
-  pm3:  { lbl:'적용 조건 3',      x:706, w:76  },
-  note: { lbl:'비고',             x:788, w:72  },
+  cam:  { lbl:'캠페인',           x:8,   w:64  },
+  typ:  { lbl:'구분',             x:76,  w:68  },
+  rwt:  { lbl:'대분류',           x:148, w:56  },
+  tgt:  { lbl:'적용 대상',        x:208, w:60  },
+  ttp:  { lbl:'적용대상 유형',    x:272, w:72  },
+  sub:  { lbl:'세부 유형',        x:348, w:88  },
+  mtd:  { lbl:'소분류',           x:440, w:82  },
+  pyt:  { lbl:'지급 방식',        x:526, w:56  },
+  pm1:  { lbl:'적용 조건 1',      x:586, w:72  },
+  pm2:  { lbl:'적용 조건 2',      x:662, w:72  },
+  pm3:  { lbl:'적용 조건 3',      x:738, w:72  },
 };
 
 const G = {
@@ -97,8 +96,12 @@ const G = {
     { v:'라이더', s:2, e:10 },
   ],
   ttp: [
-    { v:'전체·직영·프렌즈·지점', s:2, e:5 },
-    { v:'전체·직영·프렌즈·지점', s:6, e:10 },
+    { v:'전체·직영·\n프렌즈·지점(세트)', s:2, e:5 },
+    { v:'전체·직영·\n프렌즈·지점(세트)', s:6, e:10 },
+  ],
+  sub: [
+    { v:'프렌즈: 풀타임·파트타임…\n지점: 세트 단위', s:2, e:5 },
+    { v:'프렌즈: 풀타임·파트타임…\n지점: 세트 단위', s:6, e:10 },
   ],
   mtd: [
     { v:'상점 일반',       s:0,  e:0, cls:'mtd-promo' },
@@ -142,19 +145,10 @@ const G = {
     { v:'등급 선택', s:5, e:5 },
     { v:'매주 배달\n최소 건수', s:6, e:10 },
   ],
-  note: [
-    { v:'—', s:0, e:0 },
-    { v:'기본판가\n만 적용', s:1, e:1 },
-    { v:'—', s:2, e:2 },
-    { v:'예: 4/8/10건', s:3, e:3 },
-    { v:'특정일\n집중 유도', s:4, e:4 },
-    { v:'이탈 라이더\n복귀', s:5, e:5 },
-    { v:'+7% ~ +30%', s:6, e:10 },
-  ],
 };
 
-const CLS = ['c0','c1','c2','c3','c4','c5','c5','c5','c6','c6'];
-const KEYS = ['cam','typ','rwt','tgt','ttp','mtd','pyt','pm1','pm2','pm3','note'];
+const CLS = ['c0','c1','c2','c3','c4','c4','c5','c5','c5','c6'];
+const KEYS = ['cam','typ','rwt','tgt','ttp','sub','mtd','pyt','pm1','pm2','pm3'];
 
 function fgs(key, s) { return G[key] ? G[key].find(g => g.s === s) : null; }
 function fgr(key, r) { return G[key] ? G[key].find(g => g.s <= r && r <= g.e) : null; }
@@ -175,8 +169,8 @@ KEYS.forEach((key, ki) => {
     const cy = gc(grp.s, grp.e);
     const el = document.createElement('div');
     const condCol = key === 'pm1' || key === 'pm2' || key === 'pm3';
-    const isNote = key === 'note';
-    el.className = 'nd ' + (condCol ? 'nd-cond ' : '') + (isNote ? 'nd-note ' : '') + (grp.cls || CLS[ki]);
+    const isSub = key === 'sub';
+    el.className = 'nd ' + (condCol ? 'nd-cond ' : '') + (isSub ? 'nd-sub ' : '') + (grp.cls || CLS[ki]);
     el.style.cssText = `left:${col.x}px; top:${cy-NH/2}px; width:${col.w}px; height:${NH}px;`;
     if (/\n/.test(grp.v)) el.style.whiteSpace = 'pre-line';
     el.textContent = grp.v;
@@ -204,46 +198,35 @@ function connG(fkey, fs, tkey, ts) {
   line(fc.x+fc.w, gc(fg.s,fg.e), tc.x, gc(tg.s,tg.e));
 }
 
-/* 캠페인 → 구분 */
 connG('cam',0,'typ',0); connG('cam',0,'typ',3); connG('cam',0,'typ',6);
-
-/* 구분 → 대분류 */
 connG('typ',0,'rwt',0); connG('typ',0,'rwt',1); connG('typ',0,'rwt',2);
 connG('typ',3,'rwt',2);
 connG('typ',6,'rwt',6);
-
-/* 대분류 → 적용 대상 */
 connG('rwt',0,'tgt',0); connG('rwt',1,'tgt',0);
 connG('rwt',2,'tgt',2);
 connG('rwt',6,'tgt',2);
-
-/* 적용 대상 → 소분류(상점 경로, 적용대상 유형 없음) */
 connG('tgt',0,'mtd',0); connG('tgt',0,'mtd',1);
-
-/* 적용 대상 → 적용대상 유형 → 소분류(라이더) */
 connG('tgt',2,'ttp',2); connG('tgt',2,'ttp',6);
-connG('ttp',2,'mtd',2); connG('ttp',2,'mtd',3); connG('ttp',2,'mtd',4); connG('ttp',2,'mtd',5);
-connG('ttp',6,'mtd',6);
+connG('ttp',2,'sub',2); connG('ttp',6,'sub',6);
+connG('sub',2,'mtd',2); connG('sub',2,'mtd',3); connG('sub',2,'mtd',4); connG('sub',2,'mtd',5);
+connG('sub',6,'mtd',6);
 
-/* 소분류 행별: 지급 방식 → 적용 조건 1→2→3 → 비고 */
 function connectTail(mtdStart) {
   const m = fgs('mtd', mtdStart);
   const py = fgr('pyt', mtdStart);
   const a = fgs('pm1', mtdStart);
   const b = fgs('pm2', mtdStart);
   const c = fgs('pm3', mtdStart);
-  const n = fgr('note', mtdStart);
   if (!m || !py || !a || !b || !c) return;
   line(C.mtd.x + C.mtd.w, gc(m.s, m.e), C.pyt.x, gc(py.s, py.e));
   line(C.pyt.x + C.pyt.w, gc(py.s, py.e), C.pm1.x, gc(a.s, a.e));
   line(C.pm1.x + C.pm1.w, gc(a.s, a.e), C.pm2.x, gc(b.s, b.e));
   line(C.pm2.x + C.pm2.w, gc(b.s, b.e), C.pm3.x, gc(c.s, c.e));
-  if (n) line(C.pm3.x + C.pm3.w, gc(c.s, c.e), C.note.x, gc(n.s, n.e));
 }
 [0, 1, 2, 3, 4, 5, 6].forEach(connectTail);
 
 const totalH = DT + 11*RP + 36;
-const totalW = C.note.x + C.note.w + 24;
+const totalW = C.pm3.x + C.pm3.w + 24;
 D.style.cssText = `width:${totalW}px; min-height:${totalH}px; height:${totalH}px;`;
 SVG.setAttribute('width', totalW);
 SVG.setAttribute('height', totalH);

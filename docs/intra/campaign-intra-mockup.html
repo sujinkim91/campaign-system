@@ -269,7 +269,16 @@
             </div>
             <div class="form-row" id="row-target-type" style="display:none;">
               <label>적용대상 유형</label>
-              <select id="f-target-type"><option value="">선택</option><option value="전체">전체</option><option value="직영">직영</option><option value="프렌즈">프렌즈</option><option value="지점">지점</option></select>
+              <select id="f-target-type"><option value="">선택</option><option value="전체">전체</option><option value="직영">직영</option><option value="프렌즈">프렌즈</option><option value="지점">지점 (세트)</option></select>
+            </div>
+            <div class="form-row" id="row-friends-sub" style="display:none;">
+              <label>프렌즈 세부</label>
+              <select id="f-friends-sub"><option value="">선택</option><option value="풀타임">풀타임</option><option value="파트타임">파트타임</option><option value="기타">기타 (확장)</option></select>
+              <span class="form-hint" style="margin-left:8px; flex:1;">향후 유형 추가 가능</span>
+            </div>
+            <div class="form-row" id="row-branch-set-hint" style="display:none;">
+              <label>지점 세트</label>
+              <span style="flex:1; font-size:13px; color:var(--text-muted);">복수 지점을 한 세트로 묶어 캠페인에 지정 (목업)</span>
             </div>
             <div class="form-row so-single" id="row-so-single">
               <label>소분류</label>
@@ -351,19 +360,19 @@
   </div>
   <script>
     (function() {
-      // 캠페인 유형 통합표 데이터 (구분, 대분류, 적용대상, 적용대상유형, 소분류, 지급방식, 적용조건1, 적용조건2, 적용조건3, 비고)
+      // 캠페인 유형 통합표 데이터 (비고 열 제거 · 적용대상 유형/세부 유형은 개요 6절과 동일 개념)
       var TYPES = [
-        { gu: '프로모션', dae: '할인', target: '상점', targetType: '-', so: '상점 일반', payment: '정액', c1: '지역/ZONE 선택', c2: '특정 상점 선택', c3: '적용 기간', remark: '' },
-        { gu: '프로모션', dae: '쿠폰', target: '상점', targetType: '-', so: '제로패스', payment: '횟수', c1: '지역/ZONE 선택', c2: '특정 상점 선택', c3: '횟수 설정 (최대 5회)', remark: '기본판가만 적용' },
-        { gu: '프로모션', dae: '지급', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '라이더 프로모션', payment: '정액', c1: '지역/ZONE 선택', c2: '특정 라이더 선택', c3: '적용 기간', remark: '' },
-        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '단계형', payment: '정액', c1: '시간대 설정', c2: '특정 건수 단계 설정', c3: '등급 선택', remark: '예: 4/8/10건' },
-        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '단일 목표형', payment: '정액', c1: '날짜 지정', c2: '목표 건수', c3: '등급 선택', remark: '특정일 집중 유도' },
-        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '복귀', payment: '정액', c1: '비활성 기간 조건', c2: '복귀 후 목표 건수', c3: '등급 선택', remark: '이탈 라이더 복귀' },
-        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '그린', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수', remark: '+7%' },
-        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '블루', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수', remark: '+15%' },
-        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '퍼플', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수', remark: '+20%' },
-        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '골드1', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수', remark: '+25%' },
-        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '골드2', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수', remark: '+30%' }
+        { gu: '프로모션', dae: '할인', target: '상점', targetType: '-', targetSub: '-', so: '상점 일반', payment: '정액', c1: '지역/ZONE 선택', c2: '특정 상점 선택', c3: '적용 기간' },
+        { gu: '프로모션', dae: '쿠폰', target: '상점', targetType: '-', targetSub: '-', so: '제로패스', payment: '횟수', c1: '지역/ZONE 선택', c2: '특정 상점 선택', c3: '횟수 설정 (최대 5회)' },
+        { gu: '프로모션', dae: '지급', target: '라이더', targetType: '전체·직영·프렌즈·지점(세트)', targetSub: '프렌즈 하위·지점 세트', so: '라이더 프로모션', payment: '정액', c1: '지역/ZONE 선택', c2: '특정 라이더 선택', c3: '적용 기간' },
+        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체·직영·프렌즈·지점(세트)', targetSub: '프렌즈 하위·지점 세트', so: '단계형', payment: '정액', c1: '시간대 설정', c2: '특정 건수 단계 설정', c3: '등급 선택' },
+        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체·직영·프렌즈·지점(세트)', targetSub: '프렌즈 하위·지점 세트', so: '단일 목표형', payment: '정액', c1: '날짜 지정', c2: '목표 건수', c3: '등급 선택' },
+        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체·직영·프렌즈·지점(세트)', targetSub: '프렌즈 하위·지점 세트', so: '복귀', payment: '정액', c1: '비활성 기간 조건', c2: '복귀 후 목표 건수', c3: '등급 선택' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·지점(세트)', targetSub: '프렌즈 하위·지점 세트', so: '그린', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·지점(세트)', targetSub: '프렌즈 하위·지점 세트', so: '블루', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·지점(세트)', targetSub: '프렌즈 하위·지점 세트', so: '퍼플', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·지점(세트)', targetSub: '프렌즈 하위·지점 세트', so: '골드1', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·지점(세트)', targetSub: '프렌즈 하위·지점 세트', so: '골드2', payment: '정률(%)', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' }
       ];
 
       function uniq(arr) { var u = {}; arr.forEach(function(x) { u[x] = true; }); return Object.keys(u); }
@@ -375,6 +384,10 @@
       var fDae = document.getElementById('f-dae');
       var fTarget = document.getElementById('f-target');
       var rowTargetType = document.getElementById('row-target-type');
+      var fTargetType = document.getElementById('f-target-type');
+      var rowFriendsSub = document.getElementById('row-friends-sub');
+      var rowBranchHint = document.getElementById('row-branch-set-hint');
+      var fFriendsSub = document.getElementById('f-friends-sub');
       var fSo = document.getElementById('f-so');
       var rowPayment = document.getElementById('row-payment-method');
       var fPayment = document.getElementById('f-payment');
@@ -504,6 +517,10 @@
         rowSoMulti.style.display = 'none';
         rowStepStages.style.display = 'none';
         rowTargetType.style.display = 'none';
+        fTargetType.value = '';
+        fFriendsSub.value = '';
+        rowFriendsSub.style.display = 'none';
+        rowBranchHint.style.display = 'none';
         rowPayment.style.display = 'none';
         rowCond1.style.display = 'none';
         rowCond2.style.display = 'none';
@@ -544,9 +561,25 @@
         onTargetChange();
       }
 
+      function syncTargetTypeSubRows() {
+        if (fTarget.value !== '라이더' || rowTargetType.style.display === 'none') {
+          rowFriendsSub.style.display = 'none';
+          rowBranchHint.style.display = 'none';
+          return;
+        }
+        var tt = fTargetType.value;
+        rowFriendsSub.style.display = tt === '프렌즈' ? 'flex' : 'none';
+        rowBranchHint.style.display = tt === '지점' ? 'flex' : 'none';
+      }
+
       function onTargetChange() {
         var target = fTarget.value;
         rowTargetType.style.display = target === '라이더' ? 'flex' : 'none';
+        if (target !== '라이더') {
+          fTargetType.value = '';
+          fFriendsSub.value = '';
+        }
+        syncTargetTypeSubRows();
         onSoChange();
       }
 
@@ -625,6 +658,7 @@
       fGu.addEventListener('change', onGuChange);
       fDae.addEventListener('change', onDaeChange);
       fTarget.addEventListener('change', onTargetChange);
+      fTargetType.addEventListener('change', syncTargetTypeSubRows);
       fSo.addEventListener('change', onSoChange);
 
       // 네비
