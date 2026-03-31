@@ -136,6 +136,7 @@
       <nav class="sidebar-nav">
         <a href="#" id="nav-list" class="active">캠페인 현황</a>
         <a href="#" id="nav-register">캠페인 등록</a>
+        <a href="#" id="nav-set">캠페인 세트 관리</a>
       </nav>
     </aside>
 
@@ -363,6 +364,29 @@
           </div>
         </div>
         <!-- /화면 2 -->
+
+        <!-- 화면 3: 캠페인 세트 관리 (placeholder) -->
+        <div id="screen-set" class="screen">
+          <p class="list-guide">캠페인 세트(묶음) 생성·편집·노출 순서 관리를 위한 화면입니다. (목업)</p>
+          <div class="form-section">
+            <div class="form-row">
+              <label>세트명</label>
+              <input type="text" placeholder="예: 4월 라이더 미션 세트" />
+            </div>
+            <div class="form-row">
+              <label>세트 설명</label>
+              <input type="text" placeholder="노출/운영 목적" />
+            </div>
+            <div class="form-row">
+              <label>포함 캠페인</label>
+              <input type="text" placeholder="캠페인 코드/이름으로 검색 후 추가 (추후)" />
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn-submit">세트 저장</button>
+            </div>
+          </div>
+        </div>
+        <!-- /화면 3 -->
       </div>
     </main>
   </div>
@@ -657,26 +681,44 @@
       // 네비
       var navList = document.getElementById('nav-list');
       var navRegister = document.getElementById('nav-register');
+      var navSet = document.getElementById('nav-set');
       var screenList = document.getElementById('screen-list');
       var screenRegister = document.getElementById('screen-register');
+      var screenSet = document.getElementById('screen-set');
       var pageTitle = document.getElementById('page-title');
+      var btnAdd = document.querySelector('#screen-list .btn-add');
       function showList() {
         navList.classList.add('active');
         navRegister.classList.remove('active');
+        navSet.classList.remove('active');
         screenList.classList.add('active');
         screenRegister.classList.remove('active');
+        screenSet.classList.remove('active');
         pageTitle.textContent = '캠페인 목록';
       }
       function showRegister() {
         navList.classList.remove('active');
         navRegister.classList.add('active');
+        navSet.classList.remove('active');
         screenList.classList.remove('active');
         screenRegister.classList.add('active');
+        screenSet.classList.remove('active');
         pageTitle.textContent = '신규 캠페인 등록';
         updateCampaignCode();
       }
+      function showSet() {
+        navList.classList.remove('active');
+        navRegister.classList.remove('active');
+        navSet.classList.add('active');
+        screenList.classList.remove('active');
+        screenRegister.classList.remove('active');
+        screenSet.classList.add('active');
+        pageTitle.textContent = '캠페인 세트 관리';
+      }
       navList.addEventListener('click', function(e) { e.preventDefault(); showList(); });
       navRegister.addEventListener('click', function(e) { e.preventDefault(); showRegister(); });
+      navSet.addEventListener('click', function(e) { e.preventDefault(); showSet(); });
+      if (btnAdd) btnAdd.addEventListener('click', function() { showRegister(); });
     })();
   </script>
 </body>
