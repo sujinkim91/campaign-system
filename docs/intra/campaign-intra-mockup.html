@@ -203,7 +203,7 @@
                   <td>서울/강남 Z1</td>
                   <td><span class="status active">진행 중</span></td>
                   <td>03/31</td>
-                  <td><a href="#" class="link">수정</a><a href="#" class="link">종료</a></td>
+                  <td><a href="#" class="link">OFF</a></td>
                 </tr>
                 <tr>
                   <td>주말 단일목표 미션</td>
@@ -214,7 +214,7 @@
                   <td>부산/해운대 Z2</td>
                   <td><span class="status inactive">예정</span></td>
                   <td>03/31</td>
-                  <td><a href="#" class="link">수정</a><a href="#" class="link">종료</a></td>
+                  <td><a href="#" class="link">OFF</a></td>
                 </tr>
                 <tr>
                   <td>야간 피크 단계형(동적) 미션</td>
@@ -225,13 +225,13 @@
                   <td>대구 Z3</td>
                   <td><span class="status inactive">종료</span></td>
                   <td>03/10</td>
-                  <td><a href="#" class="link">상세</a></td>
+                  <td><a href="#" class="link">ON</a></td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <p class="page-note">* 종료된 미션은 재활성화할 수 없습니다. (PRD 기준)</p>
+          <p class="page-note">* 등록된 미션은 내용 수정 불가. on/off 제어만 가능 (PRD v0.3). 기간 종료 시 자동 비활성화.</p>
         </div>
         <!-- /화면 1 -->
 
@@ -333,6 +333,7 @@
               <div style="flex:1;">
                 <div id="step-stages-list" class="grade-list"></div>
                 <button type="button" class="btn-add-grade" id="btn-add-step">+ 단계 추가</button>
+                <div class="form-note" id="step-note" style="display:none;">* 최대 10단계까지 설정할 수 있습니다. 단계는 오름차순으로만 설정 가능합니다.</div>
               </div>
             </div>
 
@@ -386,14 +387,14 @@
                   <td>점심 피크 공급 확보</td>
                   <td>2개</td>
                   <td><span class="status active">활성화</span></td>
-                  <td><a href="#" class="link">편집</a><a href="#" class="link">비활성화</a></td>
+                  <td><a href="#" class="link">OFF</a></td>
                 </tr>
                 <tr>
                   <td>주말 단일목표 운영</td>
                   <td>주말 배달 건수 증대</td>
                   <td>1개</td>
                   <td><span class="status inactive">비활성화</span></td>
-                  <td><a href="#" class="link">편집</a><a href="#" class="link">활성화</a></td>
+                  <td><a href="#" class="link">ON</a></td>
                 </tr>
               </tbody>
             </table>
@@ -479,7 +480,7 @@
         if (setCreatePanel) setCreatePanel.style.display = 'block';
       });
 
-      // === 미션 등록 폼 로직 (PRD v0.2 기준) ===
+      // === 미션 등록 폼 로직 (PRD v0.3 기준) ===
       var fTargetType = document.getElementById('f-target-type');
       var rowTargetDetail = document.getElementById('row-target-detail');
       var fSubtype = document.getElementById('f-mission-subtype');
@@ -492,6 +493,7 @@
 
       var stepStages = [];
       var campaignCodeSeq = 100;
+      var STEP_MAX = 10;
 
       function updateCampaignCode() {
         var y = new Date().getFullYear();
@@ -507,6 +509,9 @@
       function renderStepStages() {
         if (!stepStagesListEl) return;
         stepStagesListEl.innerHTML = '';
+        if (btnAddStep) btnAddStep.disabled = stepStages.length >= STEP_MAX;
+        var stepNote = document.getElementById('step-note');
+        if (stepNote) stepNote.style.display = stepStages.length >= STEP_MAX ? 'block' : 'none';
         var esc = function(v) { return String(v || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); };
         stepStages.forEach(function(s, i) {
           var row = document.createElement('div');
@@ -554,6 +559,7 @@
       if (fSubtype) fSubtype.addEventListener('change', syncMissionForm);
       if (fMode) fMode.addEventListener('change', syncMissionForm);
       if (btnAddStep) btnAddStep.addEventListener('click', function() {
+        if (stepStages.length >= STEP_MAX) return;
         stepStages.push({ count: '', amount: '' });
         renderStepStages();
       });
