@@ -21,6 +21,9 @@
     .purpose-list li:last-child { margin-bottom: 0; }
     section { margin-bottom: 16px; }
     section h2 { font-size: 1.15rem; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--primary); font-weight: 600; color: var(--primary); }
+    section h3 { font-size: 1.02rem; margin: 18px 0 8px; font-weight: 600; color: var(--primary); }
+    section h3:first-of-type { margin-top: 4px; }
+    .section-lead { margin: 0 0 12px; font-size: 14px; color: var(--muted); line-height: 1.55; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; }
     th { background: var(--primary-bg); font-weight: 600; color: var(--primary); }
@@ -63,6 +66,8 @@
       .callout { padding: 8px 12px; margin: 0 0 10px; font-size: 10px; }
       section { margin-bottom: 8px; page-break-inside: avoid; }
       section h2 { font-size: 0.95rem; margin: 0 0 6px; padding-bottom: 4px; }
+      section h3 { font-size: 0.88rem; margin: 8px 0 4px; }
+      .section-lead { font-size: 9px; margin-bottom: 6px; }
       .diagram-wrap, .embed-wrap, .table-scroll { overflow: visible !important; page-break-inside: avoid; padding: 6px; margin: 4px 0; min-height: 0; }
       .embed-wrap iframe { height: 420px; min-height: 420px; }
       .embed-wrap.embed-full iframe { height: 480px; min-height: 480px; }
@@ -238,7 +243,53 @@ flowchart LR
   <section>
     <h2>7. 구조도</h2>
     <div class="embed-wrap embed-full-structure">
-      <iframe title="캠페인 구조도" src="appn/캠페인_구조도.html?v=no-friends-sub" scrolling="auto"></iframe>
+      <iframe title="캠페인 구조도" src="appn/캠페인_구조도.html?v=cond-colors" scrolling="auto"></iframe>
+    </div>
+  </section>
+
+  <section>
+    <h2>8. 분류 항목 설명</h2>
+    <p class="section-lead">통합표·구조도에서 쓰는 <strong>구분</strong>, <strong>대분류</strong>, <strong>소분류</strong> 항목별 의미를 표로 정리했습니다.</p>
+
+    <h3>구분</h3>
+    <div class="table-scroll">
+      <table class="compact-table">
+        <thead><tr><th>구분</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>프로모션</td><td>관리자가 대상과 기간을 직접 지정하여 혜택을 부여하는 방식</td></tr>
+          <tr><td>미션</td><td>특정 조건을 설정하고 달성 시 보상을 지급하는 방식</td></tr>
+          <tr><td>리워드</td><td>고정 주기별 실적을 기반으로 등급을 산정하여 보상을 지급하는 방식</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>대분류</h3>
+    <div class="table-scroll">
+      <table class="compact-table">
+        <thead><tr><th>대분류</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>할인</td><td>오더 발생 시 판가에서 지정 금액을 즉시 차감하여 적용</td></tr>
+          <tr><td>쿠폰</td><td>지정 횟수 내 사용 가능한 혜택을 부여, 차감 방식으로 관리</td></tr>
+          <tr><td>지급</td><td>조건 달성 또는 오더 수행에 따라 대상에게 보상을 지급</td></tr>
+          <tr><td>보너스</td><td>실적 기반 등급 산정 후 배달건당 추가 지급</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>소분류</h3>
+    <div class="table-scroll">
+      <table class="compact-table">
+        <thead><tr><th>소분류</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>상점 일반</td><td>지역/기간 조건으로 상점에 할인을 적용</td></tr>
+          <tr><td>제로패스</td><td>횟수 한정 쿠폰 혜택, 기본판가에만 적용</td></tr>
+          <tr><td>라이더 프로모션</td><td>지역/기간 조건으로 라이더에게 보상을 지급</td></tr>
+          <tr><td>단계형</td><td>시간대 내 건수 단계별 달성 시 보상 지급</td></tr>
+          <tr><td>단일 목표형</td><td>특정일 단일 목표건수 달성 시 보상 지급</td></tr>
+          <tr><td>복귀</td><td>비활성 라이더가 복귀 후 목표건수 달성 시 보상 지급</td></tr>
+          <tr><td>등급형</td><td>실적 기반으로 등급을 산정하여 등급별 정률 보너스를 지급 (그린 / 블루 / 퍼플 / 골드1 / 골드2)</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
   </div>
