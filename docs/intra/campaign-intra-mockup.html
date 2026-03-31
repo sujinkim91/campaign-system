@@ -293,7 +293,7 @@
             </div>
             <div class="form-row" id="row-payment-method" style="display:none;">
               <label>지급 방식</label>
-              <select id="f-payment"><option value="">선택</option><option value="정액">정액</option><option value="정률">정률</option></select>
+              <select id="f-payment"><option value="">선택</option><option value="횟수">횟수</option><option value="정액/정률">정액/정률</option><option value="정액">정액</option><option value="정률">정률</option></select>
             </div>
             <div class="form-row" id="row-cond1" style="display:none;">
               <label id="l-cond1">적용 조건 1</label>
@@ -354,16 +354,16 @@
       // 캠페인 유형 통합표 데이터 (개요 6절 적용대상 유형 문구와 맞춤)
       var TYPES = [
         { gu: '프로모션', dae: '할인', target: '상점', targetType: '-', targetSub: '-', so: '상점 일반', payment: '정액', c1: '지역/ZONE 선택', c2: '특정 상점 선택', c3: '적용 기간' },
-        { gu: '프로모션', dae: '쿠폰', target: '상점', targetType: '-', targetSub: '-', so: '제로패스', payment: '정액', c1: '지역/ZONE 선택', c2: '특정 상점 선택', c3: '횟수 설정 (최대 5회)' },
-        { gu: '프로모션', dae: '지급', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '라이더 프로모션', payment: '정액', c1: '지역/ZONE 선택', c2: '특정 라이더 선택', c3: '적용 기간' },
-        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '단계형', payment: '정액', c1: '시간대 설정', c2: '특정 건수 단계 설정', c3: '등급 선택' },
-        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '단일 목표형', payment: '정액', c1: '날짜 지정', c2: '목표 건수', c3: '등급 선택' },
-        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '복귀', payment: '정액', c1: '비활성 기간 조건', c2: '복귀 후 목표 건수', c3: '등급 선택' },
-        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '그린', payment: '정률', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' },
-        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '블루', payment: '정률', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' },
-        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '퍼플', payment: '정률', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' },
-        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '골드1', payment: '정률', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' },
-        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '골드2', payment: '정률', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' }
+        { gu: '프로모션', dae: '쿠폰', target: '상점', targetType: '-', targetSub: '-', so: '제로패스', payment: '횟수', c1: '지역/ZONE 선택', c2: '특정 상점 선택', c3: '횟수 설정 (최대 5회)' },
+        { gu: '프로모션', dae: '지급', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '라이더 프로모션', payment: '정액/정률', c1: '지역/ZONE 선택', c2: '특정 라이더 선택', c3: '적용 기간' },
+        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '단계형', payment: '정액/정률', c1: '시간대 설정', c2: '특정 건수 단계 설정', c3: '등급 선택' },
+        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '단일 목표형', payment: '정액/정률', c1: '날짜 지정', c2: '목표 건수', c3: '등급 선택' },
+        { gu: '미션', dae: '지급', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '복귀', payment: '정액/정률', c1: '비활성 기간 조건', c2: '복귀 후 목표 건수', c3: '등급 선택' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '그린', payment: '정액/정률', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '블루', payment: '정액/정률', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '퍼플', payment: '정액/정률', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '골드1', payment: '정액/정률', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' },
+        { gu: '리워드', dae: '보너스', target: '라이더', targetType: '전체·직영·프렌즈·세트', targetSub: '프렌즈: 풀타임/파트타임', so: '골드2', payment: '정액/정률', c1: '직전 2주 배달 누적 건수', c2: '배차 수락률 기준', c3: '매주 배달 최소 건수' }
       ];
 
       function uniq(arr) { var u = {}; arr.forEach(function(x) { u[x] = true; }); return Object.keys(u); }
