@@ -135,7 +135,6 @@
       <div class="sidebar-logo">캠페인 관리 시스템</div>
       <nav class="sidebar-nav">
         <a href="#" id="nav-list" class="active">캠페인 현황</a>
-        <a href="#" id="nav-register">캠페인 등록</a>
         <a href="#" id="nav-set">캠페인 세트 관리</a>
       </nav>
     </aside>
@@ -680,7 +679,6 @@
 
       // 네비
       var navList = document.getElementById('nav-list');
-      var navRegister = document.getElementById('nav-register');
       var navSet = document.getElementById('nav-set');
       var screenList = document.getElementById('screen-list');
       var screenRegister = document.getElementById('screen-register');
@@ -689,7 +687,6 @@
       var btnAdd = document.querySelector('#screen-list .btn-add');
       function showList() {
         navList.classList.add('active');
-        navRegister.classList.remove('active');
         navSet.classList.remove('active');
         screenList.classList.add('active');
         screenRegister.classList.remove('active');
@@ -698,7 +695,6 @@
       }
       function showRegister() {
         navList.classList.remove('active');
-        navRegister.classList.add('active');
         navSet.classList.remove('active');
         screenList.classList.remove('active');
         screenRegister.classList.add('active');
@@ -708,7 +704,6 @@
       }
       function showSet() {
         navList.classList.remove('active');
-        navRegister.classList.remove('active');
         navSet.classList.add('active');
         screenList.classList.remove('active');
         screenRegister.classList.remove('active');
@@ -716,7 +711,6 @@
         pageTitle.textContent = '캠페인 세트 관리';
       }
       navList.addEventListener('click', function(e) { e.preventDefault(); showList(); });
-      navRegister.addEventListener('click', function(e) { e.preventDefault(); showRegister(); });
       navSet.addEventListener('click', function(e) { e.preventDefault(); showSet(); });
       if (btnAdd) btnAdd.addEventListener('click', function() { showRegister(); });
     })();
