@@ -17,26 +17,7 @@
     font-size:18px; font-weight:700; color:#1e4a72;
     margin-bottom:6px; padding-bottom:8px; border-bottom:2px solid #1e4a72;
   }
-  /* 적용 조건 3 열이 뷰포트에서 잘려 보이도록(연속성·다음 단계 암시) */
-  .diagram-frame {
-    position: relative;
-    margin-top: 8px;
-    max-width: 728px;
-    overflow: hidden;
-    border-radius: 0 0 4px 4px;
-  }
-  .diagram-frame::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 36px;
-    height: 100%;
-    min-height: 200px;
-    background: linear-gradient(to left, #f8f9fa 0%, rgba(248,249,250,0.92) 35%, transparent 100%);
-    pointer-events: none;
-  }
-  #diagram { position:relative; }
+  #diagram { position:relative; margin-top:8px; }
   .hdr {
     position:absolute; top:8px;
     font-size:10px; font-weight:700; color:#fff;
@@ -67,10 +48,8 @@
 </head>
 <body>
 <h2>캠페인 구조도</h2>
-<div class="diagram-frame">
 <div id="diagram">
 <svg id="svg"></svg>
-</div>
 </div>
 <script>
 const D = document.getElementById('diagram');
@@ -113,8 +92,8 @@ const G = {
     { v:'라이더', s:2, e:10 },
   ],
   ttp: [
-    { v:'전체·직영·\n프렌즈(풀타임·파트타임)\n·지점=세트', s:2, e:5 },
-    { v:'전체·직영·\n프렌즈(풀타임·파트타임)\n·지점=세트', s:6, e:10 },
+    { v:'전체·직영·\n프렌즈(풀타임·파트타임)\n·세트', s:2, e:5 },
+    { v:'전체·직영·\n프렌즈(풀타임·파트타임)\n·세트', s:6, e:10 },
   ],
   mtd: [
     { v:'상점 일반',       s:0,  e:0, cls:'mtd-promo' },
