@@ -32,6 +32,10 @@
   .c6 { background:#6ba3e0; border:1px solid #5a8fd4; }
   .pre  { background:#2e7d32; border:1px solid #1b5e20; }
   .post { background:#1565c0; border:1px solid #0d47a1; }
+  /* Method(소분류): 프로모션 / 미션 / 리워드 시각 구분 */
+  .mtd-promo  { background:#2e7d32; border:1px solid #1b5e20; }
+  .mtd-mission { background:#0d47a1; border:1px solid #082c5a; }
+  .mtd-reward  { background:#6a1b9a; border:1px solid #4a148c; }
   svg { position:absolute; top:0; left:0; pointer-events:none; overflow:visible; }
 </style>
 </head>
@@ -56,7 +60,7 @@ const C = {
   tgt: { lbl:'Target',               x:208, w:72  },
   ttp: { lbl:'Target Type\n(적용대상 유형)', x:292, w:96 },
   rwt: { lbl:'Reward Type',          x:396, w:72  },
-  mtd: { lbl:'Method',               x:482, w:100 },
+  mtd: { lbl:'Method\n(소분류)',      x:482, w:100 },
   pm1: { lbl:'Payment Method\nDetails (1)', x:596, w:90 },
   pm2: { lbl:'Payment Method\nDetails (2)', x:700, w:90 },
   pyt: { lbl:'Payout Method',        x:806, w:80  },
@@ -85,13 +89,13 @@ const G = {
     {v:'보너스', s:6, e:10},
   ],
   mtd: [
-    {v:'상점 일반',       s:0,  e:0},
-    {v:'제로패스',        s:1,  e:1},
-    {v:'라이더 프로모션', s:2,  e:2},
-    {v:'단계형',          s:3,  e:3},
-    {v:'단일 목표형',     s:4,  e:4},
-    {v:'복귀',            s:5,  e:5},
-    {v:'등급별',           s:6,  e:10},
+    {v:'상점 일반',       s:0,  e:0, cls:'mtd-promo'},
+    {v:'제로패스',        s:1,  e:1, cls:'mtd-promo'},
+    {v:'즉시 정액(프로모션)', s:2,  e:2, cls:'mtd-promo'},
+    {v:'단계형',          s:3,  e:3, cls:'mtd-mission'},
+    {v:'단일 목표형',     s:4,  e:4, cls:'mtd-mission'},
+    {v:'복귀',            s:5,  e:5, cls:'mtd-mission'},
+    {v:'등급별',           s:6,  e:10, cls:'mtd-reward'},
   ],
   pm1: [
     {v:'지역 선택',  s:0, e:2},
@@ -134,6 +138,7 @@ KEYS.forEach((key, ki) => {
     const el = document.createElement('div');
     el.className = 'nd ' + (grp.cls || CLS[ki]);
     el.style.cssText = `left:${col.x}px; top:${cy-NH/2}px; width:${col.w}px; height:${NH}px;`;
+    if (/\n/.test(grp.v)) el.style.whiteSpace = 'pre-line';
     el.textContent = grp.v;
     D.appendChild(el);
   });

@@ -168,7 +168,7 @@
         </div>
 
         <div class="list-header">
-          <span class="list-count">총 3건</span>
+          <span class="list-count">총 4건</span>
           <button type="button" class="btn-add">캠페인 추가</button>
         </div>
 
@@ -199,6 +199,17 @@
                 <td>할인</td>
                 <td>상점</td>
                 <td>상점 일반</td>
+                <td><span class="status active">활성화</span></td>
+                <td><a href="#" class="link">상세</a><a href="#" class="link">수정</a></td>
+              </tr>
+              <tr>
+                <td>CP-2024-001B</td>
+                <td>라이더 정액 프로모션</td>
+                <td>프로모션</td>
+                <td>300만 원</td>
+                <td>지급</td>
+                <td>라이더</td>
+                <td>즉시 정액(프로모션)</td>
                 <td><span class="status active">활성화</span></td>
                 <td><a href="#" class="link">상세</a><a href="#" class="link">수정</a></td>
               </tr>
@@ -236,7 +247,7 @@
         <div id="screen-register" class="screen">
           <div class="form-guide">
             <strong>가이드</strong>
-            구분 → 대분류 → 적용 대상 → 소분류 순으로 선택하면 지급 방식과 적용 조건이 자동으로 설정됩니다. <strong>리워드·보너스</strong>는 하나의 캠페인에 등급(그린, 블루, 퍼플, 골드1, 골드2)을 여러 개 추가할 수 있으며, 등급별로 적용 조건을 다르게 설정할 수 있습니다. 소진예산은 캠페인별 사용 상한(선택)입니다.
+            구분 → 대분류 → 적용 대상 → 소분류 순으로 선택하면 지급 방식과 적용 조건이 자동으로 설정됩니다. 라이더 대상 <strong>프로모션</strong>은 소분류 <strong>즉시 정액(프로모션)</strong>으로, <strong>미션</strong>(단계형·목표형·복귀 등)과 구분됩니다. <strong>리워드·보너스</strong>는 하나의 캠페인에 등급(그린, 블루, 퍼플, 골드1, 골드2)을 여러 개 추가할 수 있으며, 등급별로 적용 조건을 다르게 설정할 수 있습니다. 소진예산은 캠페인별 사용 상한(선택)입니다.
           </div>
           <div class="form-section">
             <div class="form-row">
@@ -344,7 +355,7 @@
       var TYPES = [
         { gu: '프로모션', dae: '할인', target: '상점', targetType: '-', so: '상점 일반', payment: '정액', c1: '지역/ZONE 선택', c2: '특정 상점 선택', c3: '적용 기간', remark: '' },
         { gu: '프로모션', dae: '쿠폰', target: '상점', targetType: '-', so: '제로패스', payment: '횟수', c1: '지역/ZONE 선택', c2: '특정 상점 선택', c3: '횟수 설정 (최대 5회)', remark: '기본판가만 적용' },
-        { gu: '프로모션', dae: '지급', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '라이더 프로모션', payment: '정액', c1: '지역/ZONE 선택', c2: '특정 라이더 선택', c3: '적용 기간', remark: '' },
+        { gu: '프로모션', dae: '지급', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '즉시 정액(프로모션)', payment: '정액', c1: '지역/ZONE 선택', c2: '특정 라이더 선택', c3: '적용 기간', remark: '' },
         { gu: '미션', dae: '지급', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '단계형', payment: '정액', c1: '시간대 설정', c2: '특정 건수 단계 설정', c3: '등급 선택', remark: '예: 4/8/10건' },
         { gu: '미션', dae: '지급', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '단일 목표형', payment: '정액', c1: '날짜 지정', c2: '목표 건수', c3: '등급 선택', remark: '특정일 집중 유도' },
         { gu: '미션', dae: '지급', target: '라이더', targetType: '전체/직영/프렌즈/지점', so: '복귀', payment: '정액', c1: '비활성 기간 조건', c2: '복귀 후 목표 건수', c3: '등급 선택', remark: '이탈 라이더 복귀' },
