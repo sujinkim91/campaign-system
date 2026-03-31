@@ -202,21 +202,21 @@ function line(x1,y1,x2,y2) {
   SVG.appendChild(p);
 }
 
-/* 프로모션(구분) ↔ 라이더 프로모션(소분류) 연계 강조용 선 (라벨/설명 없이 선만) */
+/* 프로모션(구분) → 라이더 프로모션(소분류) ㄴ자 직선 연결 (설명/라벨 없이 선만) */
 function promoLink() {
-  const x1 = C.typ.x + C.typ.w + 2;
-  const y1 = rc(2);
-  const x2 = C.mtd.x - 2;
-  const y2 = rc(2);
-  const midX = (x1 + x2) / 2;
-  const bumpY = y1 - 22;
+  const x1 = C.typ.x + C.typ.w;
+  const y1 = gc(0, 2);      // '프로모션' 박스 중심
+  const x2 = C.mtd.x;
+  const y2 = rc(2);         // '라이더 프로모션' 행 중심
+  const mx = x1 + 18;       // ㄴ 꺾임을 typ 바로 옆에 두기
   const p = document.createElementNS('http://www.w3.org/2000/svg','path');
-  p.setAttribute('d', `M${x1},${y1} Q ${midX},${bumpY} ${x2},${y2}`);
+  p.setAttribute('d', `M${x1},${y1} L${mx},${y1} L${mx},${y2} L${x2},${y2}`);
   p.setAttribute('fill', 'none');
   p.setAttribute('stroke', '#2e7d32');
-  p.setAttribute('stroke-width', '2.1');
+  p.setAttribute('stroke-width', '2.2');
   p.setAttribute('stroke-linecap', 'round');
-  p.setAttribute('opacity', '0.95');
+  p.setAttribute('stroke-linejoin', 'round');
+  p.setAttribute('opacity', '0.96');
   SVG.appendChild(p);
 }
 
