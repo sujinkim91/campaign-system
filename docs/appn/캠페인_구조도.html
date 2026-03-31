@@ -34,7 +34,6 @@
     color:#fff; font-weight:600;
   }
   .nd-cond { font-size:9.5px; line-height:1.2; padding:2px 3px; }
-  .nd-sub { font-size:9px; line-height:1.2; padding:3px 4px; }
   .c0 { background:#1a3a6b; border:1px solid #0d2244; }
   .c1 { background:#1e4b8a; border:1px solid #1a3a6b; }
   .c2 { background:#2e5fa3; border:1px solid #1e4b8a; }
@@ -50,7 +49,7 @@
 </head>
 <body>
 <h2>캠페인 구조도</h2>
-<p class="sub">6절 통합표와 같은 분기 순서(구분→대분류→적용 대상→<strong>적용대상 유형→세부 유형</strong>→소분류→지급 방식→조건)를 연결선으로 표시합니다. 지점은 <strong>세트</strong> 단위, 프렌즈는 <strong>하위 유형</strong>(풀타임·파트타임 등)이 붙을 수 있는 구조입니다.</p>
+<p class="sub">6절 통합표와 같은 분기 순서(구분→대분류→적용 대상→적용대상 유형→소분류→지급 방식→조건)를 연결선으로 표시합니다.</p>
 <div id="diagram">
 <svg id="svg"></svg>
 </div>
@@ -69,13 +68,12 @@ const C = {
   typ:  { lbl:'구분',             x:76,  w:68  },
   rwt:  { lbl:'대분류',           x:148, w:56  },
   tgt:  { lbl:'적용 대상',        x:208, w:60  },
-  ttp:  { lbl:'적용대상 유형',    x:272, w:72  },
-  sub:  { lbl:'세부 유형',        x:348, w:88  },
-  mtd:  { lbl:'소분류',           x:440, w:82  },
-  pyt:  { lbl:'지급 방식',        x:526, w:56  },
-  pm1:  { lbl:'적용 조건 1',      x:586, w:72  },
-  pm2:  { lbl:'적용 조건 2',      x:662, w:72  },
-  pm3:  { lbl:'적용 조건 3',      x:738, w:72  },
+  ttp:  { lbl:'적용대상 유형',    x:272, w:100 },
+  mtd:  { lbl:'소분류',           x:378, w:82  },
+  pyt:  { lbl:'지급 방식',        x:464, w:56  },
+  pm1:  { lbl:'적용 조건 1',      x:524, w:72  },
+  pm2:  { lbl:'적용 조건 2',      x:600, w:72  },
+  pm3:  { lbl:'적용 조건 3',      x:676, w:72  },
 };
 
 const G = {
@@ -96,12 +94,8 @@ const G = {
     { v:'라이더', s:2, e:10 },
   ],
   ttp: [
-    { v:'전체·직영·\n프렌즈·지점(세트)', s:2, e:5 },
-    { v:'전체·직영·\n프렌즈·지점(세트)', s:6, e:10 },
-  ],
-  sub: [
-    { v:'프렌즈: 풀타임·파트타임…\n지점: 세트 단위', s:2, e:5 },
-    { v:'프렌즈: 풀타임·파트타임…\n지점: 세트 단위', s:6, e:10 },
+    { v:'전체·직영·\n프렌즈(풀타임·파트타임)\n·지점=세트', s:2, e:5 },
+    { v:'전체·직영·\n프렌즈(풀타임·파트타임)\n·지점=세트', s:6, e:10 },
   ],
   mtd: [
     { v:'상점 일반',       s:0,  e:0, cls:'mtd-promo' },
@@ -147,8 +141,8 @@ const G = {
   ],
 };
 
-const CLS = ['c0','c1','c2','c3','c4','c4','c5','c5','c5','c6'];
-const KEYS = ['cam','typ','rwt','tgt','ttp','sub','mtd','pyt','pm1','pm2','pm3'];
+const CLS = ['c0','c1','c2','c3','c4','c5','c5','c5','c6'];
+const KEYS = ['cam','typ','rwt','tgt','ttp','mtd','pyt','pm1','pm2','pm3'];
 
 function fgs(key, s) { return G[key] ? G[key].find(g => g.s === s) : null; }
 function fgr(key, r) { return G[key] ? G[key].find(g => g.s <= r && r <= g.e) : null; }
@@ -169,8 +163,7 @@ KEYS.forEach((key, ki) => {
     const cy = gc(grp.s, grp.e);
     const el = document.createElement('div');
     const condCol = key === 'pm1' || key === 'pm2' || key === 'pm3';
-    const isSub = key === 'sub';
-    el.className = 'nd ' + (condCol ? 'nd-cond ' : '') + (isSub ? 'nd-sub ' : '') + (grp.cls || CLS[ki]);
+    el.className = 'nd ' + (condCol ? 'nd-cond ' : '') + (grp.cls || CLS[ki]);
     el.style.cssText = `left:${col.x}px; top:${cy-NH/2}px; width:${col.w}px; height:${NH}px;`;
     if (/\n/.test(grp.v)) el.style.whiteSpace = 'pre-line';
     el.textContent = grp.v;
@@ -207,9 +200,8 @@ connG('rwt',2,'tgt',2);
 connG('rwt',6,'tgt',2);
 connG('tgt',0,'mtd',0); connG('tgt',0,'mtd',1);
 connG('tgt',2,'ttp',2); connG('tgt',2,'ttp',6);
-connG('ttp',2,'sub',2); connG('ttp',6,'sub',6);
-connG('sub',2,'mtd',2); connG('sub',2,'mtd',3); connG('sub',2,'mtd',4); connG('sub',2,'mtd',5);
-connG('sub',6,'mtd',6);
+connG('ttp',2,'mtd',2); connG('ttp',2,'mtd',3); connG('ttp',2,'mtd',4); connG('ttp',2,'mtd',5);
+connG('ttp',6,'mtd',6);
 
 function connectTail(mtdStart) {
   const m = fgs('mtd', mtdStart);
