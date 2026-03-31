@@ -360,72 +360,81 @@
 
         <!-- 화면 3: 캠페인 세트 관리 -->
         <div id="screen-set" class="screen">
-          <p class="list-guide">캠페인 세트는 여러 캠페인을 묶어 세트 단위로 활성화/비활성화할 수 있습니다.</p>
+          <div id="screen-set-list" class="screen active">
+            <p class="list-guide">캠페인 세트는 여러 캠페인을 묶어 세트 단위로 활성화/비활성화할 수 있습니다.</p>
 
-          <div class="list-header">
-            <span class="list-count">총 2건</span>
-            <button type="button" class="btn-add" id="btn-open-set-create">세트 추가</button>
+            <div class="list-header">
+              <span class="list-count">총 2건</span>
+              <button type="button" class="btn-add" id="btn-open-set-create">세트 추가</button>
+            </div>
+
+            <div class="table-wrap" style="margin-bottom:16px;">
+              <table class="data-table">
+                <colgroup>
+                  <col style="width:22%"><col style="width:38%"><col style="width:16%"><col style="width:12%"><col style="width:12%">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>세트명</th>
+                    <th>목적</th>
+                    <th>포함 캠페인</th>
+                    <th>상태</th>
+                    <th>관리</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>4월 점심 피크 운영</td>
+                    <td>점심 피크 공급 확보</td>
+                    <td>2개</td>
+                    <td><span class="status active">활성화</span></td>
+                    <td><a href="#" class="link">OFF</a></td>
+                  </tr>
+                  <tr>
+                    <td>주말 단일목표 운영</td>
+                    <td>주말 배달 건수 증대</td>
+                    <td>1개</td>
+                    <td><span class="status inactive">비활성화</span></td>
+                    <td><a href="#" class="link">ON</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div class="table-wrap" style="margin-bottom:16px;">
-            <table class="data-table">
-              <colgroup>
-                <col style="width:22%"><col style="width:38%"><col style="width:16%"><col style="width:12%"><col style="width:12%">
-              </colgroup>
-              <thead>
-                <tr>
-                  <th>세트명</th>
-                  <th>목적</th>
-                  <th>포함 캠페인</th>
-                  <th>상태</th>
-                  <th>관리</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>4월 점심 피크 운영</td>
-                  <td>점심 피크 공급 확보</td>
-                  <td>2개</td>
-                  <td><span class="status active">활성화</span></td>
-                  <td><a href="#" class="link">OFF</a></td>
-                </tr>
-                <tr>
-                  <td>주말 단일목표 운영</td>
-                  <td>주말 배달 건수 증대</td>
-                  <td>1개</td>
-                  <td><span class="status inactive">비활성화</span></td>
-                  <td><a href="#" class="link">ON</a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <div id="screen-set-create" class="screen">
+            <div class="list-header" style="margin-bottom:12px;">
+              <span class="list-count">세트 등록</span>
+              <button type="button" class="btn-add" id="btn-back-set-list" style="background:#fff; color:var(--primary); border:1px solid var(--border);">목록으로</button>
+            </div>
 
-          <div class="form-section" id="set-create-panel" style="display:none;">
-            <div class="form-row">
-              <label>세트명<span style="color:#dc2626;"> *</span></label>
-              <input type="text" id="f-set-name" placeholder="예: 4월 라이더 미션 세트" />
-            </div>
-            <div class="form-row">
-              <label>목적(설명)<span style="color:#dc2626;"> *</span></label>
-              <input type="text" id="f-set-purpose" placeholder="운영 목적" />
-            </div>
-            <div class="form-row">
-              <label>포함 캠페인<span style="color:#dc2626;"> *</span></label>
-              <select id="f-set-campaigns" multiple style="height:120px;">
-                <option>MS-2026-100 | 라이더 점심 피크 단계형 미션</option>
-                <option>MS-2026-101 | 주말 단일목표 미션</option>
-                <option>MS-2026-102 | 야간 피크 단계형(동적) 미션</option>
-              </select>
-            </div>
-            <div class="form-row">
-              <label>상태</label>
-              <select id="f-set-status">
-                <option value="활성화">활성화</option>
-                <option value="비활성화">비활성화</option>
-              </select>
-            </div>
-            <div class="form-actions">
-              <button type="button" class="btn-submit">세트 저장</button>
+            <div class="form-section">
+              <div class="form-row">
+                <label>세트명<span style="color:#dc2626;"> *</span></label>
+                <input type="text" id="f-set-name" placeholder="예: 4월 라이더 미션 세트" />
+              </div>
+              <div class="form-row">
+                <label>목적(설명)<span style="color:#dc2626;"> *</span></label>
+                <input type="text" id="f-set-purpose" placeholder="운영 목적" />
+              </div>
+              <div class="form-row">
+                <label>포함 캠페인<span style="color:#dc2626;"> *</span></label>
+                <select id="f-set-campaigns" multiple style="height:120px;">
+                  <option>MS-2026-100 | 라이더 점심 피크 단계형 미션</option>
+                  <option>MS-2026-101 | 주말 단일목표 미션</option>
+                  <option>MS-2026-102 | 야간 피크 단계형(동적) 미션</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label>상태</label>
+                <select id="f-set-status">
+                  <option value="활성화">활성화</option>
+                  <option value="비활성화">비활성화</option>
+                </select>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn-submit">세트 저장</button>
+              </div>
             </div>
           </div>
         </div>
@@ -443,7 +452,9 @@
       var pageTitle = document.getElementById('page-title');
       var btnAdd = document.querySelector('#screen-list .btn-add');
       var btnOpenSetCreate = document.getElementById('btn-open-set-create');
-      var setCreatePanel = document.getElementById('set-create-panel');
+      var screenSetList = document.getElementById('screen-set-list');
+      var screenSetCreate = document.getElementById('screen-set-create');
+      var btnBackSetList = document.getElementById('btn-back-set-list');
 
       function showList() {
         navList.classList.add('active');
@@ -470,15 +481,22 @@
         screenRegister.classList.remove('active');
         screenSet.classList.add('active');
         pageTitle.textContent = '캠페인 세트 관리';
-        if (setCreatePanel) setCreatePanel.style.display = 'none';
+        if (screenSetList) screenSetList.classList.add('active');
+        if (screenSetCreate) screenSetCreate.classList.remove('active');
+      }
+
+      function showSetCreate() {
+        showSet();
+        if (screenSetList) screenSetList.classList.remove('active');
+        if (screenSetCreate) screenSetCreate.classList.add('active');
+        pageTitle.textContent = '세트 등록';
       }
 
       navList.addEventListener('click', function(e) { e.preventDefault(); showList(); });
       navSet.addEventListener('click', function(e) { e.preventDefault(); showSet(); });
       if (btnAdd) btnAdd.addEventListener('click', function() { showRegister(); });
-      if (btnOpenSetCreate) btnOpenSetCreate.addEventListener('click', function() {
-        if (setCreatePanel) setCreatePanel.style.display = 'block';
-      });
+      if (btnOpenSetCreate) btnOpenSetCreate.addEventListener('click', function() { showSetCreate(); });
+      if (btnBackSetList) btnBackSetList.addEventListener('click', function() { showSet(); });
 
       // === 미션 등록 폼 로직 (PRD v0.3 기준) ===
       var fTargetType = document.getElementById('f-target-type');
