@@ -399,7 +399,7 @@
             </table>
           </div>
 
-          <div class="form-section" id="set-create-panel">
+          <div class="form-section" id="set-create-panel" style="display:none;">
             <div class="form-row">
               <label>세트명<span style="color:#dc2626;"> *</span></label>
               <input type="text" id="f-set-name" placeholder="예: 4월 라이더 미션 세트" />
@@ -441,6 +441,8 @@
       var screenSet = document.getElementById('screen-set');
       var pageTitle = document.getElementById('page-title');
       var btnAdd = document.querySelector('#screen-list .btn-add');
+      var btnOpenSetCreate = document.getElementById('btn-open-set-create');
+      var setCreatePanel = document.getElementById('set-create-panel');
 
       function showList() {
         navList.classList.add('active');
@@ -467,11 +469,15 @@
         screenRegister.classList.remove('active');
         screenSet.classList.add('active');
         pageTitle.textContent = '캠페인 세트 관리';
+        if (setCreatePanel) setCreatePanel.style.display = 'none';
       }
 
       navList.addEventListener('click', function(e) { e.preventDefault(); showList(); });
       navSet.addEventListener('click', function(e) { e.preventDefault(); showSet(); });
       if (btnAdd) btnAdd.addEventListener('click', function() { showRegister(); });
+      if (btnOpenSetCreate) btnOpenSetCreate.addEventListener('click', function() {
+        if (setCreatePanel) setCreatePanel.style.display = 'block';
+      });
 
       // === 미션 등록 폼 로직 (PRD v0.2 기준) ===
       var fTargetType = document.getElementById('f-target-type');
