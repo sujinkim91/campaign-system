@@ -51,15 +51,10 @@
   .mtd-mission { background:#0d47a1; border:1px solid #082c5a; }
   .mtd-reward  { background:#6a1b9a; border:1px solid #4a148c; }
   svg { position:absolute; top:0; left:0; pointer-events:none; overflow:visible; }
-  .note-diagram {
-    font-size:11px; color:#37474f; margin-top:10px; max-width:920px; line-height:1.45;
-  }
-  .note-diagram strong { color:#1b5e20; }
 </style>
 </head>
 <body>
 <h2>캠페인 구조도</h2>
-<p class="note-diagram"><strong>녹색 곡선</strong>은 구분 <strong>프로모션</strong> 아래 대분류 <strong>지급</strong>·적용 대상 <strong>라이더</strong>를 거쳐 소분류 <strong>라이더 프로모션</strong>으로 이어지는 흐름을 한눈에 보여 줍니다. 나머지 연결은 통합표와 동일한 단계 순서입니다.</p>
 <div id="diagram">
 <svg id="svg"></svg>
 </div>
@@ -110,7 +105,11 @@ const G = {
   ],
   tst: [
     { v:'-', s:0, e:1 },
-    { v:'프렌즈: 풀타임/파트타임\n· 그 외 -', s:2, e:10 },
+    { v:'프렌즈: 풀타임/파트타임\n· 그 외 -', s:2, e:2 },
+    { v:'프렌즈: 풀타임/파트타임\n· 그 외 -', s:3, e:3 },
+    { v:'프렌즈: 풀타임/파트타임\n· 그 외 -', s:4, e:4 },
+    { v:'프렌즈: 풀타임/파트타임\n· 그 외 -', s:5, e:5 },
+    { v:'프렌즈: 풀타임/파트타임\n· 그 외 -', s:6, e:10 },
   ],
   mtd: [
     { v:'상점 일반',       s:0,  e:0, cls:'mtd-promo' },
@@ -203,34 +202,6 @@ function line(x1,y1,x2,y2) {
   SVG.appendChild(p);
 }
 
-/** 프로모션(구분) → 라이더 프로모션(소분류) 의미 연결 — 기존 단계별 선과 겹치지 않게 위로 볼록한 곡선 */
-function curvePromoToRiderPromotion() {
-  const x1 = C.typ.x + C.typ.w + 3;
-  const y1 = gc(0, 2);
-  const x2 = C.mtd.x - 3;
-  const y2 = rc(2);
-  const midX = (x1 + x2) / 2;
-  const bumpY = Math.min(y1, y2) - 56;
-  const p = document.createElementNS('http://www.w3.org/2000/svg','path');
-  p.setAttribute('d', `M${x1},${y1} Q ${midX},${bumpY} ${x2},${y2}`);
-  p.setAttribute('fill', 'none');
-  p.setAttribute('stroke', '#2e7d32');
-  p.setAttribute('stroke-width', '2.25');
-  p.setAttribute('stroke-linecap', 'round');
-  p.setAttribute('opacity', '0.95');
-  SVG.appendChild(p);
-  const t = document.createElementNS('http://www.w3.org/2000/svg','text');
-  t.setAttribute('x', String(midX));
-  t.setAttribute('y', String(bumpY - 5));
-  t.setAttribute('text-anchor', 'middle');
-  t.setAttribute('fill', '#1b5e20');
-  t.setAttribute('font-size', '9');
-  t.setAttribute('font-weight', '700');
-  t.setAttribute('font-family', "'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif");
-  t.textContent = '프로모션 → 라이더 프로모션';
-  SVG.appendChild(t);
-}
-
 function connG(fkey, fs, tkey, ts) {
   const fg = fgs(fkey, fs);
   const tg = fgs(tkey, ts);
@@ -249,9 +220,11 @@ connG('rwt',6,'tgt',2);
 connG('tgt',0,'tst',0);
 connG('tst',0,'mtd',0); connG('tst',0,'mtd',1);
 connG('tgt',2,'ttp',2); connG('tgt',2,'ttp',6);
-connG('ttp',2,'tst',2);
-connG('ttp',6,'tst',2);
-connG('tst',2,'mtd',2); connG('tst',2,'mtd',3); connG('tst',2,'mtd',4); connG('tst',2,'mtd',5); connG('tst',2,'mtd',6);
+connG('ttp',2,'tst',2); connG('tst',2,'mtd',2);
+connG('ttp',2,'tst',3); connG('tst',3,'mtd',3);
+connG('ttp',2,'tst',4); connG('tst',4,'mtd',4);
+connG('ttp',2,'tst',5); connG('tst',5,'mtd',5);
+connG('ttp',6,'tst',6); connG('tst',6,'mtd',6);
 
 function connectTail(mtdStart) {
   const m = fgs('mtd', mtdStart);
@@ -266,8 +239,6 @@ function connectTail(mtdStart) {
   line(C.pm2.x + C.pm2.w, gc(b.s, b.e), C.pm3.x, gc(c.s, c.e));
 }
 [0, 1, 2, 3, 4, 5, 6].forEach(connectTail);
-
-curvePromoToRiderPromotion();
 
 const totalH = DT + 11*RP + 44;
 const totalW = C.pm3.x + C.pm3.w + 28;
