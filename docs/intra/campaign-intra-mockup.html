@@ -248,11 +248,6 @@
 
         <!-- 화면 2: 캠페인 등록 (신규 등록 폼) - 유형 통합표에 따라 동적 전환 -->
         <div id="screen-register" class="screen">
-          <div class="form-guide">
-            <strong>가이드</strong>
-            구분 → 대분류 → 적용 대상 → 소분류 순으로 선택하면 지급 방식과 적용 조건이 자동으로 설정됩니다. <strong>구분</strong>에서 <strong>프로모션</strong>을 고른 경우 소분류 <strong>라이더 프로모션</strong>은 프로모션 계열이며, <strong>미션</strong>의 단계형·목표형·복귀와는 다른 유형입니다. <strong>리워드·보너스</strong>는 하나의 캠페인에 등급(그린, 블루, 퍼플, 골드1, 골드2)을 여러 개 추가할 수 있으며, 등급별로 적용 조건을 다르게 설정할 수 있습니다. 소진예산은 캠페인별 사용 상한(선택)입니다.
-          </div>
-
           <div class="form-section">
             <div class="form-row">
               <label>구분</label>
@@ -324,10 +319,7 @@
               <label id="l-cond3">적용 조건 3</label>
               <input type="text" id="f-cond3" placeholder="" />
             </div>
-            <div class="form-row" id="row-remark" style="display:none;">
-              <label>메모</label>
-              <input type="text" id="f-remark" placeholder="메모 입력" />
-            </div>
+            <!-- row-remark 제거(구조화 기준) -->
             <div class="form-row" id="row-step-stages" style="display:none;">
               <label>건수 단계 설정</label>
               <div style="flex:1;">
@@ -422,14 +414,12 @@
       var rowCond1 = document.getElementById('row-cond1');
       var rowCond2 = document.getElementById('row-cond2');
       var rowCond3 = document.getElementById('row-cond3');
-      var rowRemark = document.getElementById('row-remark');
       var lCond1 = document.getElementById('l-cond1');
       var lCond2 = document.getElementById('l-cond2');
       var lCond3 = document.getElementById('l-cond3');
       var fCond1 = document.getElementById('f-cond1');
       var fCond2 = document.getElementById('f-cond2');
       var fCond3 = document.getElementById('f-cond3');
-      var fRemark = document.getElementById('f-remark');
       var rowSoSingle = document.getElementById('row-so-single');
       var rowSoMulti = document.getElementById('row-so-multi');
       var gradeListEl = document.getElementById('grade-list');
@@ -496,7 +486,7 @@
             delete gradeConditions[g];
             renderGradeList();
             if (selectedGrades.length > 0) applyRewardConditions();
-            else { rowPayment.style.display = 'none'; rowCond1.style.display = 'none'; rowCond2.style.display = 'none'; rowCond3.style.display = 'none'; rowRemark.style.display = 'none'; }
+            else { rowPayment.style.display = 'none'; rowCond1.style.display = 'none'; rowCond2.style.display = 'none'; rowCond3.style.display = 'none'; }
           });
         });
         gradeListEl.querySelectorAll('.grade-block input[data-cond]').forEach(function(inp) {
@@ -518,7 +508,6 @@
         rowCond1.style.display = 'none';
         rowCond2.style.display = 'none';
         rowCond3.style.display = 'none';
-        rowRemark.style.display = 'none';
       }
 
       function setSelect(sel, options, keepFirst) {
@@ -555,7 +544,6 @@
         rowCond1.style.display = 'none';
         rowCond2.style.display = 'none';
         rowCond3.style.display = 'none';
-        rowRemark.style.display = 'none';
         if (!gu) { setSelect(fDae, [], true); setSelect(fTarget, [], true); setSelect(fSo, [], true); return; }
         var list = TYPES.filter(function(t) { return t.gu === gu; });
         setSelect(fDae, uniq(list.map(function(t) { return t.dae; })), true);
@@ -572,7 +560,6 @@
         rowCond1.style.display = 'none';
         rowCond2.style.display = 'none';
         rowCond3.style.display = 'none';
-        rowRemark.style.display = 'none';
         if (!gu || !dae) { setSelect(fSo, [], true); rowSoSingle.style.display = 'flex'; rowSoMulti.style.display = 'none'; selectedGrades = []; renderGradeList(); return; }
         var list = TYPES.filter(function(t) { return t.gu === gu && t.dae === dae; });
         fTarget.value = '';
@@ -607,7 +594,6 @@
             rowCond1.style.display = 'none';
             rowCond2.style.display = 'none';
             rowCond3.style.display = 'none';
-            rowRemark.style.display = 'none';
           }
           return;
         }
@@ -619,7 +605,6 @@
           rowCond1.style.display = 'none';
           rowCond2.style.display = 'none';
           rowCond3.style.display = 'none';
-          rowRemark.style.display = 'none';
           rowStepStages.style.display = 'none';
           return;
         }
@@ -638,10 +623,6 @@
         rowCond1.style.display = 'flex';
         rowCond2.style.display = 'flex';
         rowCond3.style.display = 'flex';
-
-        fRemark.placeholder = '메모 입력';
-        fRemark.value = '';
-        rowRemark.style.display = 'flex';
 
         if (isMissionStep()) {
           rowStepStages.style.display = 'flex';
