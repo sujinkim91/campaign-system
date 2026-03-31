@@ -20,9 +20,10 @@
     position:absolute;
     display:flex; align-items:center; justify-content:center;
     text-align:center; border-radius:3px;
-    font-size:11px; line-height:1.3; padding:2px 4px;
+    font-size:11px; line-height:1.25; padding:2px 4px;
     color:#fff; font-weight:600;
   }
+  .nd-cond { font-size:9.5px; line-height:1.2; padding:2px 3px; }
   .c0 { background:#1a3a6b; border:1px solid #0d2244; }
   .c1 { background:#1e4b8a; border:1px solid #1a3a6b; }
   .c2 { background:#2e5fa3; border:1px solid #1e4b8a; }
@@ -53,17 +54,18 @@ const DT = 52;   // data top
 function rc(r) { return DT + r*RP + RP/2; }
 function gc(s,e) { return (rc(s)+rc(e))/2; }
 
-// 컬럼 정의 — 왼→오른 = 데이터 흐름(연결선이 역방향으로 꺾이지 않게)
+// 컬럼 정의 — 왼→오른 = 데이터 흐름 · 적용 조건은 캠페인 유형 통합표와 동일 문구(행별)
 const C = {
-  cam: { lbl:'Campaign',              x:10,  w:80  },
-  typ: { lbl:'Campaign Type',         x:104, w:90  },
-  tgt: { lbl:'Target',               x:208, w:72  },
-  ttp: { lbl:'Target Type\n(적용대상 유형)', x:292, w:96 },
-  rwt: { lbl:'Reward Type',          x:396, w:72  },
-  mtd: { lbl:'Method\n(소분류)',      x:482, w:100 },
-  pm1: { lbl:'Payment Method\nDetails (1)', x:596, w:90 },
-  pm2: { lbl:'Payment Method\nDetails (2)', x:700, w:90 },
-  pyt: { lbl:'Payout Method',        x:806, w:80  },
+  cam: { lbl:'Campaign',              x:10,  w:78  },
+  typ: { lbl:'Campaign Type',         x:96,  w:86  },
+  tgt: { lbl:'Target',               x:190, w:68  },
+  ttp: { lbl:'Target Type\n(적용대상 유형)', x:266, w:88 },
+  rwt: { lbl:'Reward Type',          x:362, w:68  },
+  mtd: { lbl:'Method\n(소분류)',      x:436, w:92  },
+  pm1: { lbl:'Condition 1\n(적용 조건 1)', x:534, w:84 },
+  pm2: { lbl:'Condition 2\n(적용 조건 2)', x:624, w:84 },
+  pm3: { lbl:'Condition 3\n(적용 조건 3)', x:714, w:84 },
+  pyt: { lbl:'Payout Method\n(지급 방식)', x:804, w:70  },
 };
 
 // 그룹 데이터
@@ -97,15 +99,33 @@ const G = {
     {v:'복귀',            s:5,  e:5, cls:'mtd-mission'},
     {v:'등급별',           s:6,  e:10, cls:'mtd-reward'},
   ],
+  /* 통합표 적용 조건 1~3 — 소분류(mtd) 행(s)과 1:1 */
   pm1: [
-    {v:'지역 선택',  s:0, e:2},
-    {v:'기간 선택',  s:3, e:5},
-    {v:'목표 건수',  s:6, e:10},
+    {v:'지역/ZONE 선택', s:0, e:0},
+    {v:'지역/ZONE 선택', s:1, e:1},
+    {v:'지역/ZONE 선택', s:2, e:2},
+    {v:'시간대 설정', s:3, e:3},
+    {v:'날짜 지정', s:4, e:4},
+    {v:'비활성 기간 조건', s:5, e:5},
+    {v:'직전 2주 배달\n누적 건수', s:6, e:10},
   ],
   pm2: [
-    {v:'특정 상점/라이더 선택', s:0, e:2},
-    {v:'목표 건수',             s:3, e:5},
-    {v:'배차 수락률',           s:6, e:10},
+    {v:'특정 상점 선택', s:0, e:0},
+    {v:'특정 상점 선택', s:1, e:1},
+    {v:'특정 라이더 선택', s:2, e:2},
+    {v:'특정 건수 단계\n설정', s:3, e:3},
+    {v:'목표 건수', s:4, e:4},
+    {v:'복귀 후 목표 건수', s:5, e:5},
+    {v:'배차 수락률 기준', s:6, e:10},
+  ],
+  pm3: [
+    {v:'적용 기간', s:0, e:0},
+    {v:'횟수 설정\n(최대 5회)', s:1, e:1},
+    {v:'적용 기간', s:2, e:2},
+    {v:'등급 선택', s:3, e:3},
+    {v:'등급 선택', s:4, e:4},
+    {v:'등급 선택', s:5, e:5},
+    {v:'매주 배달\n최소 건수', s:6, e:10},
   ],
   pyt: [
     {v:'정액',     s:0, e:2},
@@ -114,8 +134,8 @@ const G = {
   ],
 };
 
-const CLS = ['c0','c1','c2','c2','c3','c4','c5','c6','c6'];
-const KEYS = ['cam','typ','tgt','ttp','rwt','mtd','pm1','pm2','pyt'];
+const CLS = ['c0','c1','c2','c2','c3','c4','c5','c5','c5','c6'];
+const KEYS = ['cam','typ','tgt','ttp','rwt','mtd','pm1','pm2','pm3','pyt'];
 
 function fgs(key, s) { return G[key] ? G[key].find(g => g.s === s) : null; }
 function fgr(key, r) { return G[key] ? G[key].find(g => g.s <= r && r <= g.e) : null; }
@@ -137,7 +157,8 @@ KEYS.forEach((key, ki) => {
     if (!grp.v) return;
     const cy = gc(grp.s, grp.e);
     const el = document.createElement('div');
-    el.className = 'nd ' + (grp.cls || CLS[ki]);
+    const condCol = key === 'pm1' || key === 'pm2' || key === 'pm3';
+    el.className = 'nd ' + (condCol ? 'nd-cond ' : '') + (grp.cls || CLS[ki]);
     el.style.cssText = `left:${col.x}px; top:${cy-NH/2}px; width:${col.w}px; height:${NH}px;`;
     if (/\n/.test(grp.v)) el.style.whiteSpace = 'pre-line';
     el.textContent = grp.v;
@@ -188,38 +209,20 @@ connG('rwt',0,'mtd',0); connG('rwt',1,'mtd',1); connG('rwt',2,'mtd',2);
 connG('rwt',2,'mtd',3); connG('rwt',2,'mtd',4); connG('rwt',2,'mtd',5);
 connG('rwt',6,'mtd',6);
 
-// mtd → pm1
-[0,1,2].forEach(s => {
-  const mg = fgs('mtd',s), pg = fgr('pm1',s);
-  if(mg&&pg) line(C.mtd.x+C.mtd.w, gc(mg.s,mg.e), C.pm1.x, gc(pg.s,pg.e));
-});
-[3,4,5].forEach(s => {
-  const mg = fgs('mtd',s), pg = fgr('pm1',s);
-  if(mg&&pg) line(C.mtd.x+C.mtd.w, gc(mg.s,mg.e), C.pm1.x, gc(pg.s,pg.e));
-});
-// 리워드 mtd(등급별) → pm1(목표건수) 단일 연결
-const mtdr = fgs('mtd',6), pm1r2 = fgs('pm1',6);
-if(mtdr&&pm1r2) line(C.mtd.x+C.mtd.w, gc(mtdr.s,mtdr.e), C.pm1.x, gc(pm1r2.s,pm1r2.e));
-
-// pm1(프로모션) → pm2(특정 상점/라이더 선택)
-const pp = fgs('pm1',0), pm2p = fgs('pm2',0);
-if(pp&&pm2p) line(C.pm1.x+C.pm1.w, gc(pp.s,pp.e), C.pm2.x, gc(pm2p.s,pm2p.e));
-
-// pm2(프로모션) → pyt
-const pm2p2 = fgs('pm2',0), py0 = fgs('pyt',0);
-if(pm2p2&&py0) line(C.pm2.x+C.pm2.w, gc(pm2p2.s,pm2p2.e), C.pyt.x, gc(py0.s,py0.e));
-
-// pm1(미션/리워드) → pm2
-const pm1m = fgs('pm1',3), pm2m = fgs('pm2',3);
-if(pm1m&&pm2m) line(C.pm1.x+C.pm1.w, gc(pm1m.s,pm1m.e), C.pm2.x, gc(pm2m.s,pm2m.e));
-const pm1r = fgs('pm1',6), pm2r = fgs('pm2',6);
-if(pm1r&&pm2r) line(C.pm1.x+C.pm1.w, gc(pm1r.s,pm1r.e), C.pm2.x, gc(pm2r.s,pm2r.e));
-
-// pm2 → pyt
-const pm2ma = fgs('pm2',3), py3 = fgs('pyt',3);
-if(pm2ma&&py3) line(C.pm2.x+C.pm2.w, gc(pm2ma.s,pm2ma.e), C.pyt.x, gc(py3.s,py3.e));
-const pm2ra = fgs('pm2',6), py6 = fgs('pyt',6);
-if(pm2ra&&py6) line(C.pm2.x+C.pm2.w, gc(pm2ra.s,pm2ra.e), C.pyt.x, gc(py6.s,py6.e));
+// mtd → 적용 조건 1→2→3 → 지급 방식 (소분류 행별, 통합표와 동일)
+function connectCondChain(mtdStart) {
+  const m = fgs('mtd', mtdStart);
+  const a = fgs('pm1', mtdStart);
+  const b = fgs('pm2', mtdStart);
+  const c = fgs('pm3', mtdStart);
+  if (!m || !a || !b || !c) return;
+  line(C.mtd.x + C.mtd.w, gc(m.s, m.e), C.pm1.x, gc(a.s, a.e));
+  line(C.pm1.x + C.pm1.w, gc(a.s, a.e), C.pm2.x, gc(b.s, b.e));
+  line(C.pm2.x + C.pm2.w, gc(b.s, b.e), C.pm3.x, gc(c.s, c.e));
+  const py = fgr('pyt', mtdStart);
+  if (py) line(C.pm3.x + C.pm3.w, gc(c.s, c.e), C.pyt.x, gc(py.s, py.e));
+}
+[0, 1, 2, 3, 4, 5, 6].forEach(connectCondChain);
 
 const totalH = DT + 11*RP + 30;
 const totalW = C.pyt.x + C.pyt.w + 20;
