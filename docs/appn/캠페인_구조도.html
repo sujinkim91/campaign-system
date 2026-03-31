@@ -51,10 +51,15 @@
   .mtd-mission { background:#0d47a1; border:1px solid #082c5a; }
   .mtd-reward  { background:#6a1b9a; border:1px solid #4a148c; }
   svg { position:absolute; top:0; left:0; pointer-events:none; overflow:visible; }
+  .note-diagram {
+    font-size:11px; color:#37474f; margin-top:10px; max-width:920px; line-height:1.45;
+  }
+  .note-diagram strong { color:#1b5e20; }
 </style>
 </head>
 <body>
 <h2>캠페인 구조도</h2>
+<p class="note-diagram"><strong>녹색 곡선</strong>은 구분 <strong>프로모션</strong> 아래 대분류 <strong>지급</strong>·적용 대상 <strong>라이더</strong>를 거쳐 소분류 <strong>라이더 프로모션</strong>으로 이어지는 흐름을 한눈에 보여 줍니다. 나머지 연결은 통합표와 동일한 단계 순서입니다.</p>
 <div id="diagram">
 <svg id="svg"></svg>
 </div>
@@ -74,11 +79,12 @@ const C = {
   rwt:  { lbl:'대분류',           x:148, w:56  },
   tgt:  { lbl:'적용 대상',        x:208, w:60  },
   ttp:  { lbl:'적용대상 유형',    x:272, w:100 },
-  mtd:  { lbl:'소분류',           x:378, w:82  },
-  pyt:  { lbl:'지급 방식',        x:464, w:56  },
-  pm1:  { lbl:'적용 조건 1',      x:524, w:72  },
-  pm2:  { lbl:'적용 조건 2',      x:600, w:72  },
-  pm3:  { lbl:'적용 조건 3',      x:676, w:72  },
+  tst:  { lbl:'적용대상\n세부유형', x:376, w:104 },
+  mtd:  { lbl:'소분류',           x:484, w:82  },
+  pyt:  { lbl:'지급 방식',        x:570, w:56  },
+  pm1:  { lbl:'적용 조건 1',      x:630, w:72  },
+  pm2:  { lbl:'적용 조건 2',      x:706, w:72  },
+  pm3:  { lbl:'적용 조건 3',      x:782, w:72  },
 };
 
 const G = {
@@ -101,6 +107,10 @@ const G = {
   ttp: [
     { v:'전체·직영·\n프렌즈·세트', s:2, e:5 },
     { v:'전체·직영·\n프렌즈·세트', s:6, e:10 },
+  ],
+  tst: [
+    { v:'-', s:0, e:1 },
+    { v:'프렌즈 선택 시\n풀·파트타임\n· 그 외 -', s:2, e:10 },
   ],
   mtd: [
     { v:'상점 일반',       s:0,  e:0, cls:'mtd-promo' },
@@ -145,8 +155,8 @@ const G = {
   ],
 };
 
-const CLS = ['c0','c1','c2','c3','c4','c5','c5','c5','c6'];
-const KEYS = ['cam','typ','rwt','tgt','ttp','mtd','pyt','pm1','pm2','pm3'];
+const CLS = ['c0','c1','c2','c3','c4','c4','c5','c5','c5','c5','c6'];
+const KEYS = ['cam','typ','rwt','tgt','ttp','tst','mtd','pyt','pm1','pm2','pm3'];
 
 function fgs(key, s) { return G[key] ? G[key].find(g => g.s === s) : null; }
 function fgr(key, r) { return G[key] ? G[key].find(g => g.s <= r && r <= g.e) : null; }
@@ -156,6 +166,7 @@ KEYS.forEach((k) => {
   const el = document.createElement('div');
   el.className = 'hdr' + (k === 'pm1' || k === 'pm2' || k === 'pm3' ? ' hdr-cond' : '');
   el.style.cssText = `left:${col.x}px; width:${col.w}px;`;
+  if (/\n/.test(col.lbl)) el.style.whiteSpace = 'pre-line';
   el.textContent = col.lbl;
   D.appendChild(el);
 });
@@ -167,9 +178,10 @@ KEYS.forEach((key, ki) => {
     const cy = gc(grp.s, grp.e);
     const el = document.createElement('div');
     const condCol = key === 'pm1' || key === 'pm2' || key === 'pm3';
+    const smallMultiline = key === 'tst';
     let cellCls = grp.cls || CLS[ki];
     if (key === 'pm1' || key === 'pm2' || key === 'pm3') cellCls = 'cond-apply';
-    el.className = 'nd ' + (condCol ? 'nd-cond ' : '') + cellCls;
+    el.className = 'nd ' + (condCol || smallMultiline ? 'nd-cond ' : '') + cellCls;
     el.style.cssText = `left:${col.x}px; top:${cy-NH/2}px; width:${col.w}px; height:${NH}px;`;
     if (/\n/.test(grp.v)) el.style.whiteSpace = 'pre-line';
     el.textContent = grp.v;
@@ -178,15 +190,45 @@ KEYS.forEach((key, ki) => {
 });
 
 function line(x1,y1,x2,y2) {
-  const mx = x1 + (x2 - x1) * 0.5;
+  const t = 0.52;
+  const mx = x1 + (x2 - x1) * t;
   const p = document.createElementNS('http://www.w3.org/2000/svg','path');
   p.setAttribute('d',`M${x1},${y1} L${mx},${y1} L${mx},${y2} L${x2},${y2}`);
   p.setAttribute('fill','none');
-  p.setAttribute('stroke','#5a85c0');
-  p.setAttribute('stroke-width','1.15');
+  p.setAttribute('stroke','#5b7fc4');
+  p.setAttribute('stroke-width','1.1');
   p.setAttribute('stroke-linecap','round');
   p.setAttribute('stroke-linejoin','round');
+  p.setAttribute('opacity','0.92');
   SVG.appendChild(p);
+}
+
+/** 프로모션(구분) → 라이더 프로모션(소분류) 의미 연결 — 기존 단계별 선과 겹치지 않게 위로 볼록한 곡선 */
+function curvePromoToRiderPromotion() {
+  const x1 = C.typ.x + C.typ.w + 3;
+  const y1 = gc(0, 2);
+  const x2 = C.mtd.x - 3;
+  const y2 = rc(2);
+  const midX = (x1 + x2) / 2;
+  const bumpY = Math.min(y1, y2) - 56;
+  const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d', `M${x1},${y1} Q ${midX},${bumpY} ${x2},${y2}`);
+  p.setAttribute('fill', 'none');
+  p.setAttribute('stroke', '#2e7d32');
+  p.setAttribute('stroke-width', '2.25');
+  p.setAttribute('stroke-linecap', 'round');
+  p.setAttribute('opacity', '0.95');
+  SVG.appendChild(p);
+  const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x', String(midX));
+  t.setAttribute('y', String(bumpY - 5));
+  t.setAttribute('text-anchor', 'middle');
+  t.setAttribute('fill', '#1b5e20');
+  t.setAttribute('font-size', '9');
+  t.setAttribute('font-weight', '700');
+  t.setAttribute('font-family', "'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif");
+  t.textContent = '프로모션 → 라이더 프로모션';
+  SVG.appendChild(t);
 }
 
 function connG(fkey, fs, tkey, ts) {
@@ -204,10 +246,12 @@ connG('typ',6,'rwt',6);
 connG('rwt',0,'tgt',0); connG('rwt',1,'tgt',0);
 connG('rwt',2,'tgt',2);
 connG('rwt',6,'tgt',2);
-connG('tgt',0,'mtd',0); connG('tgt',0,'mtd',1);
+connG('tgt',0,'tst',0);
+connG('tst',0,'mtd',0); connG('tst',0,'mtd',1);
 connG('tgt',2,'ttp',2); connG('tgt',2,'ttp',6);
-connG('ttp',2,'mtd',2); connG('ttp',2,'mtd',3); connG('ttp',2,'mtd',4); connG('ttp',2,'mtd',5);
-connG('ttp',6,'mtd',6);
+connG('ttp',2,'tst',2);
+connG('ttp',6,'tst',2);
+connG('tst',2,'mtd',2); connG('tst',2,'mtd',3); connG('tst',2,'mtd',4); connG('tst',2,'mtd',5); connG('tst',2,'mtd',6);
 
 function connectTail(mtdStart) {
   const m = fgs('mtd', mtdStart);
@@ -223,8 +267,10 @@ function connectTail(mtdStart) {
 }
 [0, 1, 2, 3, 4, 5, 6].forEach(connectTail);
 
-const totalH = DT + 11*RP + 36;
-const totalW = C.pm3.x + C.pm3.w + 24;
+curvePromoToRiderPromotion();
+
+const totalH = DT + 11*RP + 44;
+const totalW = C.pm3.x + C.pm3.w + 28;
 D.style.cssText = `width:${totalW}px; min-height:${totalH}px; height:${totalH}px;`;
 SVG.setAttribute('width', totalW);
 SVG.setAttribute('height', totalH);
