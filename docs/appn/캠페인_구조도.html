@@ -158,9 +158,11 @@ connG('cam',0,'typ',0); connG('cam',0,'typ',3); connG('cam',0,'typ',6);
 // typ → tgt
 connG('typ',0,'tgt',0); connG('typ',0,'tgt',2); connG('typ',3,'tgt',2); connG('typ',6,'tgt',2);
 
-// tgt → rwt
+// tgt → rwt (라이더 → 지급만; 리워드→보너스는 typ에서 직접 연결)
 connG('tgt',0,'rwt',0); connG('tgt',0,'rwt',1);
-connG('tgt',2,'rwt',2); connG('tgt',2,'rwt',6);
+connG('tgt',2,'rwt',2);
+// 리워드(Campaign Type) → 보너스(Reward Type) — 라이더 공통 노드와 분리
+connG('typ',6,'rwt',6);
 
 // rwt → mtd
 connG('rwt',0,'mtd',0); connG('rwt',1,'mtd',1); connG('rwt',2,'mtd',2);
