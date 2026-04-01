@@ -330,9 +330,9 @@
                 <div class="field">
                   <div class="check-group" id="targets">
                     <label class="pill"><input type="checkbox" value="전체" /> 전체</label>
-                    <label class="pill"><input type="checkbox" value="직영" /> 직영</label>
-                    <label class="pill"><input type="checkbox" value="프렌즈" id="chk-friends" /> 프렌즈</label>
-                    <label class="pill"><input type="checkbox" value="지점" /> 지점</label>
+                    <label class="pill"><input type="checkbox" value="일반기사(프렌즈)" id="chk-friends" /> 일반기사(프렌즈)</label>
+                    <label class="pill"><input type="checkbox" value="NVP지점기사" /> NVP지점기사</label>
+                    <label class="pill"><input type="checkbox" value="벤더기사" /> 벤더기사</label>
                   </div>
                   <div class="help">1개 이상 선택</div>
                 </div>
@@ -345,7 +345,7 @@
                     <label class="pill"><input type="checkbox" value="풀타임" /> 풀타임</label>
                     <label class="pill"><input type="checkbox" value="파트타임" /> 파트타임</label>
                   </div>
-                  <div class="help">프렌즈 선택 시에만 노출 (해제 시 선택값 초기화)</div>
+                  <div class="help">일반기사(프렌즈) 선택 시에만 노출 (해제 시 선택값 초기화)</div>
                 </div>
               </div>
 
@@ -503,8 +503,8 @@
       // ===== 데이터(목록) =====
       let CAMPAIGNS = [
         { id: 'MS-2026-001', name: '점심 피크 단계형 미션', subtype: '단계형', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['전체'], zones: ['서울/강남 Z1'], createdAt: '2026-03-31', off: false },
-        { id: 'MS-2026-002', name: '주말 단일목표 미션', subtype: '단일목표형', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['프렌즈'], zones: ['부산/해운대 Z2'], createdAt: '2026-03-31', off: true },
-        { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', subtype: '단계형', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['직영'], zones: ['대구 Z3'], createdAt: '2026-03-10', off: false },
+        { id: 'MS-2026-002', name: '주말 단일목표 미션', subtype: '단일목표형', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], zones: ['부산/해운대 Z2'], createdAt: '2026-03-31', off: true },
+        { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', subtype: '단계형', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], zones: ['대구 Z3'], createdAt: '2026-03-10', off: false },
         { id: 'MS-2026-004', name: '신규 라이더 첫배달 미션', subtype: '첫배달', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['전체'], zones: ['서울/강남 Z1'], createdAt: '2026-03-28', off: false },
       ];
 
@@ -758,7 +758,7 @@
         if (!state.budget || Number(state.budget) <= 0) return { ok:false, key:'budget', msg:'예산은 0원 초과로 입력해 주세요.' };
         if (state.targets.length === 0) return { ok:false, key:'targets', msg:'적용 대상은 1개 이상 선택해 주세요.' };
         if (!document.getElementById('chk-friends').checked) {
-          // 프렌즈 해제 시 세부유형 초기화
+          // 일반기사(프렌즈) 해제 시 세부유형 초기화
           state.details = [];
           document.querySelectorAll('#details input[type="checkbox"]').forEach(i => i.checked = false);
         }
@@ -843,7 +843,7 @@
           : state.shipper + (state.shipperDetail ? ' · ' + state.shipperDetail : '');
         rows.push(['화주사', shipperLine, 2]);
         rows.push(['적용 대상', state.targets.join(', '), 2]);
-        rows.push(['세부 유형', (state.targets.includes('프렌즈') ? (state.details.length ? state.details.join(', ') : '-') : '-'), 2]);
+        rows.push(['세부 유형', (state.targets.includes('일반기사(프렌즈)') ? (state.details.length ? state.details.join(', ') : '-') : '-'), 2]);
         rows.push(['지역/ZONE', state.zones.join(', '), 2]);
         if (state.subtype === '첫배달') {
           rows.push(['가입 후 유효 일수', state.firstSignupDays + '일', 2]);
