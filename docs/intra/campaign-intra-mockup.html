@@ -246,15 +246,11 @@
                 </div>
               </div>
 
-              <div class="form-row" data-key="times">
+              <div class="form-row" data-key="times" style="align-items:flex-start;">
                 <label>시간대 설정</label>
                 <div class="field">
-                  <select id="f-times" multiple style="height:110px;">
-                    <option>11:00~13:00</option>
-                    <option>18:00~20:00</option>
-                    <option>22:00~01:00</option>
-                  </select>
-                  <div class="help">다중 선택 가능 (시간대 중복 불가)</div>
+                  <textarea id="f-times-input" rows="4" placeholder="예: 11:00~13:00&#10;한 줄에 하나씩 입력"></textarea>
+                  <div class="help">직접 입력 · 줄바꿈으로 구분 · 비우면 전일/미설정 · 동일 시간대 중복 불가</div>
                 </div>
               </div>
 
@@ -317,12 +313,15 @@
               <div class="form-row" data-key="zones">
                 <label>지역/ZONE<span class="req">*</span></label>
                 <div class="field">
-                  <select id="f-zones" multiple style="height:110px;">
+                  <select id="f-zone">
+                    <option value="">선택</option>
                     <option value="서울/강남 Z1">서울/강남 Z1</option>
                     <option value="부산/해운대 Z2">부산/해운대 Z2</option>
                     <option value="대구 Z3">대구 Z3</option>
+                    <option value="인천/송도 Z4">인천/송도 Z4</option>
+                    <option value="광주 Z5">광주 Z5</option>
                   </select>
-                  <div class="help">1개 이상 선택</div>
+                  <div class="help">드롭다운에서 1곳 선택</div>
                 </div>
               </div>
             </div>
@@ -602,8 +601,10 @@
         state.end = $('f-end').value;
         state.publish = $('f-publish').value;
         state.budget = $('f-budget').value;
-        state.times = Array.from($('f-times').selectedOptions).map(o => o.value);
-        state.zones = Array.from($('f-zones').selectedOptions).map(o => o.value);
+        const rawTimes = ($('f-times-input').value || '').split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+        state.times = rawTimes;
+        const z = $('f-zone').value;
+        state.zones = z ? [z] : [];
         state.targets = Array.from(document.querySelectorAll('#targets input[type="checkbox"]:checked')).map(i => i.value);
         state.details = Array.from(document.querySelectorAll('#details input[type="checkbox"]:checked')).map(i => i.value);
         if (state.subtype === '첫배달') {
@@ -652,7 +653,14 @@
           state.details = [];
           document.querySelectorAll('#details input[type="checkbox"]').forEach(i => i.checked = false);
         }
-        if (state.zones.length === 0) return { ok:false, key:'zones', msg:'지역/ZONE은 1개 이상 선택해 주세요.' };
+        if (state.zones.length === 0) return { ok:false, key:'zones', msg:'지역/ZONE을 선택해 주세요.' };
+        if (state.times.length > 0) {
+          const norm = state.times.map((t) => t.replace(/\s+/g, ''));
+          const uniq = new Set(norm);
+          if (uniq.size !== norm.length) {
+            return { ok:false, key:'times', msg:'시간대는 중복 없이 입력해 주세요.' };
+          }
+        }
         if (state.subtype === '첫배달') {
           if (!state.firstSignupDays || !/^\d+$/.test(String(state.firstSignupDays)) || Number(state.firstSignupDays) <= 0) {
             return { ok:false, key:'firstSignup', msg:'가입 후 유효 일수는 0보다 큰 정수로 입력해 주세요.' };
