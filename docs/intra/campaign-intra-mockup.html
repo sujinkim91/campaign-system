@@ -168,6 +168,13 @@
                 <option value="단일목표형">단일목표형</option>
                 <option value="첫배달">첫배달</option>
               </select>
+              <label>적용대상 유형</label>
+              <select id="flt-target-type">
+                <option value="">전체</option>
+                <option value="일반기사(프렌즈)">일반기사(프렌즈)</option>
+                <option value="NVP지점기사">NVP지점기사</option>
+                <option value="벤더기사">벤더기사</option>
+              </select>
               <label>미션명</label>
               <input id="flt-name" type="text" placeholder="미션명 입력" />
               <button type="button" class="btn primary" id="btn-search">검색</button>
@@ -182,7 +189,7 @@
           <div class="table-wrap">
             <table class="data-table">
               <colgroup>
-                <col style="width:20%"><col style="width:12%"><col style="width:10%"><col style="width:16%"><col style="width:12%"><col style="width:14%"><col style="width:10%"><col style="width:6%">
+                <col style="width:17%"><col style="width:10%"><col style="width:9%"><col style="width:13%"><col style="width:13%"><col style="width:10%"><col style="width:12%"><col style="width:8%"><col style="width:8%">
               </colgroup>
               <thead>
                 <tr>
@@ -190,7 +197,8 @@
                   <th>소분류</th>
                   <th>운영 방식</th>
                   <th>기간</th>
-                  <th>적용 대상</th>
+                  <th>적용대상 유형</th>
+                  <th>적용대상 세부유형</th>
                   <th>지역/ZONE</th>
                   <th>상태</th>
                   <th>관리</th>
@@ -326,7 +334,7 @@
               </div>
 
               <div class="form-row" data-key="targets">
-                <label>적용 대상<span class="req">*</span></label>
+                <label>적용대상 유형<span class="req">*</span></label>
                 <div class="field">
                   <div class="check-group" id="targets">
                     <label class="pill"><input type="checkbox" value="전체" /> 전체</label>
@@ -334,18 +342,18 @@
                     <label class="pill"><input type="checkbox" value="NVP지점기사" /> NVP지점기사</label>
                     <label class="pill"><input type="checkbox" value="벤더기사" /> 벤더기사</label>
                   </div>
-                  <div class="help">1개 이상 선택</div>
+                  <div class="help">전체 · 일반기사(프렌즈) · NVP지점기사 · 벤더기사 중 1개 이상</div>
                 </div>
               </div>
 
               <div class="form-row" data-key="detail" id="row-detail" style="display:none;">
-                <label>세부 유형</label>
+                <label>적용대상 세부유형</label>
                 <div class="field">
                   <div class="check-group" id="details">
                     <label class="pill"><input type="checkbox" value="풀타임" /> 풀타임</label>
                     <label class="pill"><input type="checkbox" value="파트타임" /> 파트타임</label>
                   </div>
-                  <div class="help">일반기사(프렌즈) 선택 시에만 노출 (해제 시 선택값 초기화)</div>
+                  <div class="help">일반기사(프렌즈) 선택 시에만 노출 · 풀타임/파트타임 (해제 시 선택값 초기화)</div>
                 </div>
               </div>
 
@@ -502,10 +510,10 @@
 
       // ===== 데이터(목록) =====
       let CAMPAIGNS = [
-        { id: 'MS-2026-001', name: '점심 피크 단계형 미션', subtype: '단계형', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['전체'], zones: ['서울/강남 Z1'], createdAt: '2026-03-31', off: false },
-        { id: 'MS-2026-002', name: '주말 단일목표 미션', subtype: '단일목표형', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], zones: ['부산/해운대 Z2'], createdAt: '2026-03-31', off: true },
-        { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', subtype: '단계형', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], zones: ['대구 Z3'], createdAt: '2026-03-10', off: false },
-        { id: 'MS-2026-004', name: '신규 라이더 첫배달 미션', subtype: '첫배달', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['전체'], zones: ['서울/강남 Z1'], createdAt: '2026-03-28', off: false },
+        { id: 'MS-2026-001', name: '점심 피크 단계형 미션', subtype: '단계형', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['전체'], targetDetails: [], zones: ['서울/강남 Z1'], createdAt: '2026-03-31', off: false },
+        { id: 'MS-2026-002', name: '주말 단일목표 미션', subtype: '단일목표형', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], targetDetails: ['풀타임', '파트타임'], zones: ['부산/해운대 Z2'], createdAt: '2026-03-31', off: true },
+        { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', subtype: '단계형', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], targetDetails: [], zones: ['대구 Z3'], createdAt: '2026-03-10', off: false },
+        { id: 'MS-2026-004', name: '신규 라이더 첫배달 미션', subtype: '첫배달', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['전체'], targetDetails: [], zones: ['서울/강남 Z1'], createdAt: '2026-03-28', off: false },
       ];
 
       function statusOf(c) {
@@ -520,15 +528,28 @@
 
       function fmtPeriod(c) { return c.start.slice(5).replace('-', '/') + '~' + c.end.slice(5).replace('-', '/'); }
 
+      function missionMatchesTargetType(c, flt) {
+        if (!flt) return true;
+        if (c.targets.includes('전체')) return true;
+        return c.targets.includes(flt);
+      }
+
+      function fmtTargetDetailsCell(c) {
+        if (c.targetDetails && c.targetDetails.length) return c.targetDetails.join(', ');
+        return '-';
+      }
+
       function renderList() {
         const fltStatus = $('flt-status').value;
         const fltSubtype = $('flt-subtype').value;
+        const fltTargetType = $('flt-target-type').value;
         const fltName = $('flt-name').value.trim();
         let rows = CAMPAIGNS.slice();
         rows = rows.filter((c) => {
           const st = statusOf(c).key;
           if (fltStatus && st !== fltStatus) return false;
           if (fltSubtype && c.subtype !== fltSubtype) return false;
+          if (!missionMatchesTargetType(c, fltTargetType)) return false;
           if (fltName && !c.name.includes(fltName)) return false;
           return true;
         });
@@ -544,6 +565,7 @@
             '<td>' + c.mode + '</td>' +
             '<td>' + fmtPeriod(c) + '</td>' +
             '<td>' + c.targets.join(', ') + '</td>' +
+            '<td>' + fmtTargetDetailsCell(c) + '</td>' +
             '<td>' + c.zones.join(', ') + '</td>' +
             '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>' +
             '<td>' + (st.key === '완료' ? '' : '<a href="#" class="link btn-toggle" data-id="' + c.id + '">' + (c.off ? 'ON' : 'OFF') + '</a>') + '</td>';
@@ -562,6 +584,7 @@
       $('btn-search').addEventListener('click', renderList);
       $('flt-status').addEventListener('change', renderList);
       $('flt-subtype').addEventListener('change', renderList);
+      $('flt-target-type').addEventListener('change', renderList);
       renderList();
 
       // ===== Stepper / Form state =====
@@ -593,7 +616,7 @@
 
       const STEP_TITLES = [
         { n: 1, t: '기본 정보', s: '미션명/소분류/운영' },
-        { n: 2, t: '적용 조건', s: '기간/대상/ZONE' },
+        { n: 2, t: '적용 조건', s: '기간/적용대상/ZONE' },
         { n: 3, t: '달성 조건', s: '휴무/취소/특성' },
         { n: 4, t: '확인', s: '요약/제출' },
       ];
@@ -756,7 +779,7 @@
         if (!state.publish) return { ok:false, key:'publish', msg:'미션 공개일은 필수입니다.' };
         if (state.publish > state.start) return { ok:false, key:'publish', msg:'미션 공개일은 시작일 이전이어야 합니다.' };
         if (!state.budget || Number(state.budget) <= 0) return { ok:false, key:'budget', msg:'예산은 0원 초과로 입력해 주세요.' };
-        if (state.targets.length === 0) return { ok:false, key:'targets', msg:'적용 대상은 1개 이상 선택해 주세요.' };
+        if (state.targets.length === 0) return { ok:false, key:'targets', msg:'적용대상 유형은 1개 이상 선택해 주세요.' };
         if (!document.getElementById('chk-friends').checked) {
           // 일반기사(프렌즈) 해제 시 세부유형 초기화
           state.details = [];
@@ -842,8 +865,8 @@
           ? '전체'
           : state.shipper + (state.shipperDetail ? ' · ' + state.shipperDetail : '');
         rows.push(['화주사', shipperLine, 2]);
-        rows.push(['적용 대상', state.targets.join(', '), 2]);
-        rows.push(['세부 유형', (state.targets.includes('일반기사(프렌즈)') ? (state.details.length ? state.details.join(', ') : '-') : '-'), 2]);
+        rows.push(['적용대상 유형', state.targets.join(', '), 2]);
+        rows.push(['적용대상 세부유형', (state.targets.includes('일반기사(프렌즈)') ? (state.details.length ? state.details.join(', ') : '-') : '-'), 2]);
         rows.push(['지역/ZONE', state.zones.join(', '), 2]);
         if (state.subtype === '첫배달') {
           rows.push(['가입 후 유효 일수', state.firstSignupDays + '일', 2]);
@@ -1029,6 +1052,7 @@
           start: state.start,
           end: state.end,
           targets: state.targets,
+          targetDetails: state.targets.includes('일반기사(프렌즈)') ? state.details.slice() : [],
           zones: state.zones,
           shipper: state.shipper,
           shipperDetail: state.shipperDetail,
