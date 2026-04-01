@@ -83,25 +83,25 @@ const C = {
 };
 
 const G = {
-  cam: [{ v:'캠페인', s:0, e:10 }],
+  cam: [{ v:'캠페인', s:0, e:11 }],
   typ: [
     { v:'프로모션', s:0, e:2 },
-    { v:'미션',     s:3, e:5 },
-    { v:'리워드',   s:6, e:10 },
+    { v:'미션',     s:3, e:6 },
+    { v:'리워드',   s:7, e:11 },
   ],
   rwt: [
     { v:'할인',   s:0, e:0 },
     { v:'쿠폰',   s:1, e:1 },
-    { v:'지급',   s:2, e:5 },
-    { v:'보너스', s:6, e:10 },
+    { v:'지급',   s:2, e:6 },
+    { v:'보너스', s:7, e:11 },
   ],
   tgt: [
     { v:'상점',   s:0, e:1 },
-    { v:'라이더', s:2, e:10 },
+    { v:'라이더', s:2, e:11 },
   ],
   ttp: [
-    { v:'전체·직영·\n프렌즈·세트', s:2, e:5 },
-    { v:'전체·직영·\n프렌즈·세트', s:6, e:10 },
+    { v:'전체·직영·\n프렌즈·세트', s:2, e:6 },
+    { v:'전체·직영·\n프렌즈·세트', s:7, e:11 },
   ],
   tst: [
     { v:'-', s:0, e:1 },
@@ -109,7 +109,8 @@ const G = {
     { v:'프렌즈: 풀타임/파트타임', s:3, e:3 },
     { v:'프렌즈: 풀타임/파트타임', s:4, e:4 },
     { v:'프렌즈: 풀타임/파트타임', s:5, e:5 },
-    { v:'프렌즈: 풀타임/파트타임', s:6, e:10 },
+    { v:'프렌즈: 풀타임/파트타임', s:6, e:6 },
+    { v:'프렌즈: 풀타임/파트타임', s:7, e:11 },
   ],
   mtd: [
     { v:'상점 일반',       s:0,  e:0, cls:'mtd-promo' },
@@ -118,12 +119,13 @@ const G = {
     { v:'단계형',          s:3,  e:3, cls:'mtd-mission' },
     { v:'단일 목표형',     s:4,  e:4, cls:'mtd-mission' },
     { v:'복귀',            s:5,  e:5, cls:'mtd-mission' },
-    { v:'등급별\n(그린~골드2)', s:6, e:10, cls:'mtd-reward' },
+    { v:'첫배달',          s:6,  e:6, cls:'mtd-mission' },
+    { v:'등급별\n(그린~골드2)', s:7, e:11, cls:'mtd-reward' },
   ],
   pyt: [
-    { v:'정액', s:0, e:1 },
-    { v:'정액', s:2, e:5 },
-    { v:'정률', s:6, e:10 },
+    { v:'정액/정률', s:0, e:0 },
+    { v:'횟수', s:1, e:1 },
+    { v:'정액/정률', s:2, e:11 },
   ],
   pm1: [
     { v:'지역/ZONE 선택', s:0, e:0 },
@@ -132,7 +134,8 @@ const G = {
     { v:'시간대 설정', s:3, e:3 },
     { v:'날짜 지정', s:4, e:4 },
     { v:'비활성 기간 조건', s:5, e:5 },
-    { v:'직전 2주 배달\n누적 건수', s:6, e:10 },
+    { v:'가입 후\n기간 설정', s:6, e:6 },
+    { v:'직전 2주 배달\n누적 건수', s:7, e:11 },
   ],
   pm2: [
     { v:'특정 상점 선택', s:0, e:0 },
@@ -141,16 +144,18 @@ const G = {
     { v:'특정 건수 단계\n설정', s:3, e:3 },
     { v:'목표 건수', s:4, e:4 },
     { v:'복귀 후 목표 건수', s:5, e:5 },
-    { v:'배차 수락률 기준', s:6, e:10 },
+    { v:'수행건수', s:6, e:6 },
+    { v:'배차 수락률 기준', s:7, e:11 },
   ],
   pm3: [
     { v:'적용 기간', s:0, e:0 },
     { v:'횟수 설정\n(최대 5회)', s:1, e:1 },
     { v:'적용 기간', s:2, e:2 },
-    { v:'등급 선택', s:3, e:3 },
-    { v:'등급 선택', s:4, e:4 },
-    { v:'등급 선택', s:5, e:5 },
-    { v:'매주 배달\n최소 건수', s:6, e:10 },
+    { v:'-', s:3, e:3 },
+    { v:'-', s:4, e:4 },
+    { v:'-', s:5, e:5 },
+    { v:'-', s:6, e:6 },
+    { v:'매주 배달\n최소 건수', s:7, e:11 },
   ],
 };
 
@@ -228,21 +233,22 @@ function connG(fkey, fs, tkey, ts) {
   line(fc.x+fc.w, gc(fg.s,fg.e), tc.x, gc(tg.s,tg.e));
 }
 
-connG('cam',0,'typ',0); connG('cam',0,'typ',3); connG('cam',0,'typ',6);
+connG('cam',0,'typ',0); connG('cam',0,'typ',3); connG('cam',0,'typ',7);
 connG('typ',0,'rwt',0); connG('typ',0,'rwt',1); connG('typ',0,'rwt',2);
 connG('typ',3,'rwt',2);
-connG('typ',6,'rwt',6);
+connG('typ',7,'rwt',7);
 connG('rwt',0,'tgt',0); connG('rwt',1,'tgt',0);
 connG('rwt',2,'tgt',2);
-connG('rwt',6,'tgt',2);
+connG('rwt',7,'tgt',2);
 connG('tgt',0,'tst',0);
 connG('tst',0,'mtd',0); connG('tst',0,'mtd',1);
-connG('tgt',2,'ttp',2); connG('tgt',2,'ttp',6);
+connG('tgt',2,'ttp',2); connG('tgt',2,'ttp',7);
 connG('ttp',2,'tst',2); connG('tst',2,'mtd',2);
 connG('ttp',2,'tst',3); connG('tst',3,'mtd',3);
 connG('ttp',2,'tst',4); connG('tst',4,'mtd',4);
 connG('ttp',2,'tst',5); connG('tst',5,'mtd',5);
-connG('ttp',6,'tst',6); connG('tst',6,'mtd',6);
+connG('ttp',2,'tst',6); connG('tst',6,'mtd',6);
+connG('ttp',7,'tst',7); connG('tst',7,'mtd',7);
 
 function connectTail(mtdStart) {
   const m = fgs('mtd', mtdStart);
@@ -256,11 +262,11 @@ function connectTail(mtdStart) {
   line(C.pm1.x + C.pm1.w, gc(a.s, a.e), C.pm2.x, gc(b.s, b.e));
   line(C.pm2.x + C.pm2.w, gc(b.s, b.e), C.pm3.x, gc(c.s, c.e));
 }
-[0, 1, 2, 3, 4, 5, 6].forEach(connectTail);
+[0, 1, 2, 3, 4, 5, 6, 7].forEach(connectTail);
 
 promoLink();
 
-const totalH = DT + 11*RP + 44;
+const totalH = DT + 12*RP + 44;
 const totalW = C.pm3.x + C.pm3.w + 28;
 D.style.cssText = `width:${totalW}px; min-height:${totalH}px; height:${totalH}px;`;
 SVG.setAttribute('width', totalW);
