@@ -155,6 +155,7 @@
                 <option value="">전체</option>
                 <option value="단계형">단계형</option>
                 <option value="단일목표형">단일목표형</option>
+                <option value="첫배달">첫배달</option>
               </select>
               <label>미션명</label>
               <input id="flt-name" type="text" placeholder="미션명 입력" />
@@ -213,6 +214,10 @@
                   <div class="radio-group">
                     <label class="pill"><input type="radio" name="subtype" value="단계형" /> 단계형</label>
                     <label class="pill"><input type="radio" name="subtype" value="단일목표형" /> 단일목표형</label>
+                    <label class="pill"><input type="radio" name="subtype" value="첫배달" /> 첫배달</label>
+                  </div>
+                  <div id="first-mission-desc" class="help" style="display:none;margin-top:10px;line-height:1.5;">
+                    신규 가입 라이더가 가입일로부터 N일 이내 첫 배달 N건 완료 시 금액을 1회 지급
                   </div>
                 </div>
               </div>
@@ -266,6 +271,22 @@
                 <div class="field">
                   <input id="f-budget" type="number" min="1" step="1" placeholder="0원 초과" />
                   <div class="help">예산 소진 시 지급 중단</div>
+                </div>
+              </div>
+
+              <div class="form-row mission-first-only" data-key="firstSignup" id="row-first-signup" style="display:none;">
+                <label>가입 후 유효 일수<span class="req">*</span></label>
+                <div class="field">
+                  <input id="f-first-days" type="number" min="1" step="1" placeholder="가입일부터 N일 이내" />
+                  <div class="help">가입 후 기간 설정 (일)</div>
+                </div>
+              </div>
+
+              <div class="form-row mission-first-only" data-key="firstTarget" id="row-first-target" style="display:none;">
+                <label>첫 배달 목표 건수<span class="req">*</span></label>
+                <div class="field">
+                  <input id="f-first-count" type="number" min="1" step="1" placeholder="N건 완료 시" />
+                  <div class="help">수행건수 (첫 배달 기준)</div>
                 </div>
               </div>
 
@@ -353,6 +374,16 @@
                   </div>
                 </div>
               </div>
+
+              <div id="block-first" style="display:none;">
+                <div class="form-row" data-key="firstPay">
+                  <label>1회 지급 금액<span class="req">*</span></label>
+                  <div class="field">
+                    <input id="f-first-amount" type="number" min="1" step="1" placeholder="원" />
+                    <div class="help">첫배달 달성 시 1회만 지급</div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <!-- Step 4 -->
@@ -425,6 +456,7 @@
         { id: 'MS-2026-001', name: '점심 피크 단계형 미션', subtype: '단계형', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['전체'], zones: ['서울/강남 Z1'], createdAt: '2026-03-31', off: false },
         { id: 'MS-2026-002', name: '주말 단일목표 미션', subtype: '단일목표형', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['프렌즈'], zones: ['부산/해운대 Z2'], createdAt: '2026-03-31', off: true },
         { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', subtype: '단계형', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['직영'], zones: ['대구 Z3'], createdAt: '2026-03-10', off: false },
+        { id: 'MS-2026-004', name: '신규 라이더 첫배달 미션', subtype: '첫배달', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['전체'], zones: ['서울/강남 Z1'], createdAt: '2026-03-28', off: false },
       ];
 
       function statusOf(c) {
@@ -502,6 +534,9 @@
         stages: [{ count: '', amount: '' }],
         singleCount: '',
         singleAmount: '',
+        firstSignupDays: '',
+        firstTargetCount: '',
+        firstPayAmount: '',
       };
 
       const STEP_TITLES = [
@@ -571,13 +606,23 @@
         state.zones = Array.from($('f-zones').selectedOptions).map(o => o.value);
         state.targets = Array.from(document.querySelectorAll('#targets input[type="checkbox"]:checked')).map(i => i.value);
         state.details = Array.from(document.querySelectorAll('#details input[type="checkbox"]:checked')).map(i => i.value);
+        if (state.subtype === '첫배달') {
+          state.firstSignupDays = $('f-first-days').value;
+          state.firstTargetCount = $('f-first-count').value;
+        } else {
+          state.firstSignupDays = '';
+          state.firstTargetCount = '';
+        }
       }
       function readStep3() {
         state.offday = $('f-offday').value;
         state.cancel = $('f-cancel').value;
         if (state.subtype === '단계형') {
           // state.stages already bound by inputs
+        } else if (state.subtype === '첫배달') {
+          state.firstPayAmount = $('f-first-amount').value;
         } else {
+          state.firstPayAmount = '';
           state.singleCount = $('f-single-count').value;
           state.singleAmount = $('f-single-amount').value;
         }
@@ -608,6 +653,14 @@
           document.querySelectorAll('#details input[type="checkbox"]').forEach(i => i.checked = false);
         }
         if (state.zones.length === 0) return { ok:false, key:'zones', msg:'지역/ZONE은 1개 이상 선택해 주세요.' };
+        if (state.subtype === '첫배달') {
+          if (!state.firstSignupDays || !/^\d+$/.test(String(state.firstSignupDays)) || Number(state.firstSignupDays) <= 0) {
+            return { ok:false, key:'firstSignup', msg:'가입 후 유효 일수는 0보다 큰 정수로 입력해 주세요.' };
+          }
+          if (!state.firstTargetCount || !/^\d+$/.test(String(state.firstTargetCount)) || Number(state.firstTargetCount) <= 0) {
+            return { ok:false, key:'firstTarget', msg:'첫 배달 목표 건수는 0보다 큰 정수로 입력해 주세요.' };
+          }
+        }
         return { ok:true };
       }
 
@@ -646,6 +699,10 @@
         if (state.subtype === '단계형') {
           const st = validateStagesAscending();
           if (!st.ok) return { ok:false, key:'stages', msg: st.msg };
+        } else if (state.subtype === '첫배달') {
+          if (!/^\d+$/.test(String(state.firstPayAmount)) || Number(state.firstPayAmount) <= 0) {
+            return { ok:false, key:'firstPay', msg:'1회 지급 금액은 0원 초과로 입력해 주세요.' };
+          }
         } else {
           if (!/^\d+$/.test(String(state.singleCount)) || Number(state.singleCount) <= 0) return { ok:false, key:'single', msg:'목표 건수는 0 초과 정수로 입력해 주세요.' };
           if (!/^\d+$/.test(String(state.singleAmount)) || Number(state.singleAmount) <= 0) return { ok:false, key:'single', msg:'지급 금액은 0원 초과로 입력해 주세요.' };
@@ -665,10 +722,16 @@
         rows.push(['적용 대상', state.targets.join(', '), 2]);
         rows.push(['세부 유형', (state.targets.includes('프렌즈') ? (state.details.length ? state.details.join(', ') : '-') : '-'), 2]);
         rows.push(['지역/ZONE', state.zones.join(', '), 2]);
+        if (state.subtype === '첫배달') {
+          rows.push(['가입 후 유효 일수', state.firstSignupDays + '일', 2]);
+          rows.push(['첫 배달 목표 건수', state.firstTargetCount + '건', 2]);
+        }
         rows.push(['휴무 조건', state.offday === '' ? '-' : (state.offday + '회/주'), 3]);
         rows.push(['취소건수 조건', state.cancel === '' ? '-' : (state.cancel + '건/주'), 3]);
         if (state.subtype === '단계형') {
           rows.push(['단계 설정', state.stages.map((s,i) => (i+1)+'단계: '+s.count+'건 / '+s.amount+'원').join(' · '), 3]);
+        } else if (state.subtype === '첫배달') {
+          rows.push(['1회 지급 금액', state.firstPayAmount + '원', 3]);
         } else {
           rows.push(['목표/지급', state.singleCount + '건 / ' + state.singleAmount + '원', 3]);
         }
@@ -689,6 +752,17 @@
       }
 
       function syncUIBySubtype() {
+        readStep1();
+        const isFirst = state.subtype === '첫배달';
+        $('first-mission-desc').style.display = isFirst ? 'block' : 'none';
+        $('row-first-signup').style.display = isFirst ? 'flex' : 'none';
+        $('row-first-target').style.display = isFirst ? 'flex' : 'none';
+        if (!isFirst) {
+          $('f-first-days').value = '';
+          $('f-first-count').value = '';
+          $('f-first-amount').value = '';
+        }
+
         // Step2 friends detail
         const friendsChecked = document.getElementById('chk-friends').checked;
         $('row-detail').style.display = friendsChecked ? 'flex' : 'none';
@@ -696,7 +770,8 @@
         // Step3 blocks
         const isStep = state.subtype === '단계형';
         $('block-step').style.display = isStep ? 'block' : 'none';
-        $('block-single').style.display = isStep ? 'none' : 'block';
+        $('block-single').style.display = (!isStep && !isFirst) ? 'block' : 'none';
+        $('block-first').style.display = isFirst ? 'block' : 'none';
 
         // dynamic note
         $('dyn-note').style.display = state.mode === '동적' ? 'block' : 'none';
