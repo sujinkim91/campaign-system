@@ -39,7 +39,7 @@
     .screen { display: none; }
     .screen.active { display: block; }
 
-    .filter-section { background: var(--card); border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; border: 1px solid var(--border); }
+    .filter-section { background: var(--card); border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; border: 1px solid var(--border); width: 100%; box-sizing: border-box; }
     .filter-required { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
     .filter-required::before { content: '●'; color: var(--primary); margin-right: 6px; }
     .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
@@ -72,7 +72,7 @@
     .list-guide { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
 
     /* Stepper */
-    .stepper { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .stepper { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; width: 100%; }
     .step { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:#fff; cursor: pointer; user-select:none; }
     .step .n { width: 22px; height: 22px; border-radius: 999px; background: #e2e8f0; color:#0f172a; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; }
     .step.active { border-color: rgba(37,99,235,.35); background: rgba(37,99,235,.06); }
@@ -81,13 +81,15 @@
     .step .t { font-weight: 700; font-size: 13px; }
     .step .s { font-size: 12px; color: var(--text-muted); }
 
-    .form-shell { background: var(--card); border-radius: 8px; border: 1px solid var(--border); padding: 22px; max-width: 720px; }
-    .form-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-    .form-row label { width: 150px; flex-shrink: 0; font-weight: 600; font-size: 14px; }
+    .form-shell { background: var(--card); border-radius: 8px; border: 1px solid var(--border); padding: 28px 32px; width: 100%; max-width: none; box-sizing: border-box; }
+    #screen-register { width: 100%; max-width: 100%; }
+    .form-row { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+    .form-row label { width: min(180px, 22%); flex-shrink: 0; font-weight: 600; font-size: 14px; }
     .req { color: var(--danger); font-weight: 900; margin-left: 4px; }
     .field { flex: 1; min-width: 0; }
-    .field input, .field select, .field textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: #fff; }
-    .field textarea { min-height: 84px; resize: vertical; }
+    .field input, .field select, .field textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; background: #fff; }
+    .field textarea { min-height: 160px; resize: vertical; line-height: 1.5; }
+    .field textarea.input-time { min-height: 200px; }
     .row-inline { display:flex; gap: 10px; align-items:center; }
     .row-inline > * { flex: 1; }
     .help { margin-top: 6px; font-size: 12px; color: var(--text-muted); }
@@ -101,7 +103,8 @@
 
     /* Step3 단계형 */
     .stage-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff; }
-    .stage-table th, .stage-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .stage-table th, .stage-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .stage-table input { padding: 10px 12px; font-size: 15px; }
     .stage-table th { background: #f8fafc; text-align: left; font-weight: 800; }
     .stage-table tr:last-child td { border-bottom: none; }
     .stage-actions { display:flex; gap: 10px; margin-top: 10px; }
@@ -249,7 +252,7 @@
               <div class="form-row" data-key="times" style="align-items:flex-start;">
                 <label>시간대 설정</label>
                 <div class="field">
-                  <textarea id="f-times-input" rows="4" placeholder="예: 11:00~13:00&#10;한 줄에 하나씩 입력"></textarea>
+                  <textarea id="f-times-input" class="input-time" rows="10" placeholder="예: 11:00~13:00&#10;한 줄에 하나씩 입력"></textarea>
                   <div class="help">직접 입력 · 줄바꿈으로 구분 · 비우면 전일/미설정 · 동일 시간대 중복 불가</div>
                 </div>
               </div>
