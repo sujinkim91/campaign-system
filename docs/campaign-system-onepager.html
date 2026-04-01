@@ -209,10 +209,10 @@ flowchart LR
           <tr><td>프로모션</td><td>할인</td><td>상점</td><td>-</td><td>-</td><td>상점 일반</td><td>정액</td><td>지역/ZONE 선택</td><td>특정 상점 선택</td><td>적용 기간</td><td></td></tr>
           <tr><td>프로모션</td><td>쿠폰</td><td>상점</td><td>-</td><td>-</td><td>제로패스</td><td>횟수</td><td>지역/ZONE 선택</td><td>특정 상점 선택</td><td>횟수 설정 (최대 5회)</td><td>기본판가만 적용</td></tr>
           <tr><td>프로모션</td><td>지급</td><td>라이더</td><td>전체·직영·프렌즈·세트</td><td>프렌즈: 풀타임/파트타임</td><td>라이더 프로모션</td><td>정액/정률</td><td>지역/ZONE 선택</td><td>특정 라이더 선택</td><td>적용 기간</td><td></td></tr>
-          <tr><td>미션</td><td>지급</td><td>라이더</td><td>전체·직영·프렌즈·세트</td><td>프렌즈: 풀타임/파트타임</td><td>단계형</td><td>정액/정률</td><td>시간대 설정</td><td>특정 건수 단계 설정</td><td>등급 선택</td><td>예: 4/8/10건</td></tr>
-          <tr><td>미션</td><td>지급</td><td>라이더</td><td>전체·직영·프렌즈·세트</td><td>프렌즈: 풀타임/파트타임</td><td>단일 목표형</td><td>정액/정률</td><td>날짜 지정</td><td>목표 건수</td><td>등급 선택</td><td>특정일 집중 유도</td></tr>
-          <tr><td>미션</td><td>지급</td><td>라이더</td><td>전체·직영·프렌즈·세트</td><td>프렌즈: 풀타임/파트타임</td><td>복귀</td><td>정액/정률</td><td>비활성 기간 조건</td><td>복귀 후 목표 건수</td><td>등급 선택</td><td>이탈 라이더 복귀</td></tr>
-          <tr><td>미션</td><td>지급</td><td>라이더</td><td>전체·직영·프렌즈·세트</td><td>프렌즈: 풀타임/파트타임</td><td>첫배달</td><td>정액/정률</td><td>가입 후 기간 설정</td><td>수행건수</td><td>등급 선택</td><td>첫배달 달성 기준</td></tr>
+          <tr><td>미션</td><td>지급</td><td>라이더</td><td>전체·직영·프렌즈·세트</td><td>프렌즈: 풀타임/파트타임</td><td>단계형</td><td>정액/정률</td><td>시간대 설정</td><td>특정 건수 단계 설정</td><td>-</td><td>예: 4/8/10건</td></tr>
+          <tr><td>미션</td><td>지급</td><td>라이더</td><td>전체·직영·프렌즈·세트</td><td>프렌즈: 풀타임/파트타임</td><td>단일 목표형</td><td>정액/정률</td><td>날짜 지정</td><td>목표 건수</td><td>-</td><td>특정일 집중 유도</td></tr>
+          <tr><td>미션</td><td>지급</td><td>라이더</td><td>전체·직영·프렌즈·세트</td><td>프렌즈: 풀타임/파트타임</td><td>복귀</td><td>정액/정률</td><td>비활성 기간 조건</td><td>복귀 후 목표 건수</td><td>-</td><td>이탈 라이더 복귀</td></tr>
+          <tr><td>미션</td><td>지급</td><td>라이더</td><td>전체·직영·프렌즈·세트</td><td>프렌즈: 풀타임/파트타임</td><td>첫배달</td><td>정액/정률</td><td>가입 후 기간 설정</td><td>수행건수</td><td>-</td><td></td></tr>
           <tr><td>리워드</td><td>보너스</td><td>라이더</td><td>전체·직영·프렌즈·세트</td><td>프렌즈: 풀타임/파트타임</td><td>등급형</td><td>정액/정률</td><td>직전 2주 배달 누적 건수</td><td>배차 수락률 기준</td><td>매주 배달 최소 건수</td><td>그린 +7% · 블루 +15% · 퍼플 +20% · 골드1 +25% · 골드2 +30%</td></tr>
         </tbody>
       </table>
@@ -241,7 +241,7 @@ flowchart LR
   <section>
     <h2>7. 구조도</h2>
     <div class="embed-wrap embed-full-structure">
-      <iframe title="캠페인 구조도" src="appn/캠페인_구조도.html?v=first-delivery" scrolling="auto"></iframe>
+      <iframe title="캠페인 구조도" src="appn/캠페인_구조도.html?v=no-grade-pm3" scrolling="auto"></iframe>
     </div>
   </section>
 
@@ -273,6 +273,7 @@ flowchart LR
           <tr><td>단계형</td><td>시간대 내 건수 단계별 달성 시 보상 지급</td></tr>
           <tr><td>단일 목표형</td><td>특정일 단일 목표건수 달성 시 보상 지급</td></tr>
           <tr><td>복귀</td><td>비활성 라이더가 복귀 후 목표건수 달성 시 보상 지급</td></tr>
+          <tr><td>첫배달</td><td>신규 가입 라이더가 가입일로부터 N일 이내 첫 배달 1건 완료 시 정액 보너스를 1회 지급</td></tr>
           <tr><td>등급형</td><td>실적 기반으로 등급을 산정하여 등급별 정률 보너스를 지급 (그린 / 블루 / 퍼플 / 골드1 / 골드2)</td></tr>
         </tbody>
       </table>
