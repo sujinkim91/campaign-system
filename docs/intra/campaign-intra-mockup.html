@@ -148,7 +148,7 @@
       <div class="content">
         <!-- 화면 1: 캠페인 목록 -->
         <section id="screen-list" class="screen active">
-          <p class="list-guide">미션 캠페인을 등록·조회하고 on/off로 제어합니다. 조건 정의는 Notion <strong>라이더 미션 구조화</strong>와 <code>docs/intra/notion-라이더-미션-구조화.md</code> 스냅샷을 따릅니다.</p>
+          <p class="list-guide">미션 캠페인을 등록·조회하고 on/off로 제어합니다. 조건은 Notion <strong>[캠페인시스템] 라이더 미션 구조화</strong>의 <strong>라이더 미션 조건</strong>(목적·공통·지급 구조별 적용/달성) 및 구조도 <code>mission_structure_v11.svg</code>와 동일하게, 스냅샷은 <code>docs/intra/notion-라이더-미션-구조화.md</code>를 따릅니다.</p>
 
           <div class="filter-section">
             <div class="filter-required">필수 입력 사항</div>
@@ -161,12 +161,17 @@
                 <option value="완료">완료</option>
                 <option value="중단">중단</option>
               </select>
-              <label>소분류</label>
-              <select id="flt-subtype">
+              <label>목적</label>
+              <select id="flt-purpose">
                 <option value="">전체</option>
-                <option value="단계형">단계형</option>
-                <option value="단일목표형">단일목표형</option>
-                <option value="첫배달">첫배달</option>
+                <option value="전환">전환</option>
+                <option value="활성화">활성화</option>
+              </select>
+              <label>지급 구조</label>
+              <select id="flt-structure">
+                <option value="">전체</option>
+                <option value="단일">단일</option>
+                <option value="단계">단계</option>
               </select>
               <label>적용대상 유형</label>
               <select id="flt-target-type">
@@ -189,16 +194,18 @@
           <div class="table-wrap">
             <table class="data-table">
               <colgroup>
-                <col style="width:17%"><col style="width:10%"><col style="width:9%"><col style="width:13%"><col style="width:13%"><col style="width:10%"><col style="width:12%"><col style="width:8%"><col style="width:8%">
+                <col style="width:14%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:11%"><col style="width:11%"><col style="width:9%"><col style="width:9%"><col style="width:12%"><col style="width:7%"><col style="width:8%">
               </colgroup>
               <thead>
                 <tr>
                   <th>미션명</th>
-                  <th>소분류</th>
+                  <th>목적</th>
+                  <th>지급 구조</th>
                   <th>운영 방식</th>
                   <th>기간</th>
                   <th>적용대상 유형</th>
-                  <th>적용대상 세부유형</th>
+                  <th>세그먼트1</th>
+                  <th>세그먼트2</th>
                   <th>지역/ZONE</th>
                   <th>상태</th>
                   <th>관리</th>
@@ -227,17 +234,27 @@
                 </div>
               </div>
 
-              <div class="form-row" data-key="subtype">
-                <label>소분류<span class="req">*</span></label>
+              <div class="form-row" data-key="purpose">
+                <label>목적<span class="req">*</span></label>
                 <div class="field">
                   <div class="radio-group">
-                    <label class="pill"><input type="radio" name="subtype" value="단계형" /> 단계형</label>
-                    <label class="pill"><input type="radio" name="subtype" value="단일목표형" /> 단일목표형</label>
-                    <label class="pill"><input type="radio" name="subtype" value="첫배달" /> 첫배달</label>
+                    <label class="pill"><input type="radio" name="purpose" value="전환" /> 전환</label>
+                    <label class="pill"><input type="radio" name="purpose" value="활성화" /> 활성화</label>
                   </div>
-                  <div id="first-mission-desc" class="help" style="display:none;margin-top:10px;line-height:1.5;">
-                    신규 가입 라이더가 가입일로부터 N일 이내 첫 배달 N건 완료 시 금액을 1회 지급
+                  <div id="conversion-desc" class="help" style="display:none;margin-top:10px;line-height:1.5;">
+                    신규 라이더 전환 유도. 가입일 이내 조건이 활성화됩니다(지급 구조: 단일 고정).
                   </div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="structure" id="row-structure">
+                <label>지급 구조<span class="req">*</span></label>
+                <div class="field">
+                  <div class="radio-group">
+                    <label class="pill"><input type="radio" name="structure" value="단일" /> 단일</label>
+                    <label class="pill"><input type="radio" name="structure" value="단계" /> 단계</label>
+                  </div>
+                  <div class="help">활성화 목적일 때 단일 또는 단계를 선택합니다. 전환 목적은 단일 고정입니다.</div>
                 </div>
               </div>
 
@@ -275,7 +292,7 @@
                     <button type="button" class="btn ghost" id="btn-add-time">추가</button>
                   </div>
                   <div id="time-tags" class="time-tag-wrap" aria-live="polite"></div>
-                  <div class="help">단계형·단일목표형만 해당 · 첫배달 미션은 미사용 · 시작·종료 시각 후 <strong>추가</strong> · 다중 구간 · 태그 × 삭제 · 미등록 시 전일/미설정 · 중복 불가</div>
+                  <div class="help">지급 구조가 단일·단계(활성화)일 때 사용 · 전환 목적은 미사용 · 시작·종료 시각 후 <strong>추가</strong> · 다중 구간 · 태그 × 삭제 · 미등록 시 전일/미설정 · 중복 불가</div>
                 </div>
               </div>
 
@@ -309,7 +326,7 @@
                 </div>
               </div>
 
-              <div class="form-row mission-first-only" data-key="firstSignup" id="row-first-signup" style="display:none;">
+              <div class="form-row mission-conversion-only" data-key="firstSignup" id="row-first-signup" style="display:none;">
                 <label>가입 후 유효 일수<span class="req">*</span></label>
                 <div class="field">
                   <input id="f-first-days" type="number" min="1" step="1" placeholder="가입일부터 N일 이내" />
@@ -317,7 +334,7 @@
                 </div>
               </div>
 
-              <div class="form-row mission-first-only" data-key="firstTarget" id="row-first-target" style="display:none;">
+              <div class="form-row mission-conversion-only" data-key="firstTarget" id="row-first-target" style="display:none;">
                 <label>첫 배달 목표 건수<span class="req">*</span></label>
                 <div class="field">
                   <input id="f-first-count" type="number" min="1" step="1" placeholder="N건 완료 시" />
@@ -325,11 +342,11 @@
                 </div>
               </div>
 
-              <div class="form-row mission-first-only" data-key="firstAuto" id="row-first-auto" style="display:none;">
+              <div class="form-row mission-conversion-only" data-key="firstAuto" id="row-first-auto" style="display:none;">
                 <label>신규 가입 자동 적용</label>
                 <div class="field">
                   <label class="pill"><input type="checkbox" id="chk-first-auto" /> 신규 가입 라이더에 자동 부여</label>
-                  <div class="help">첫배달 미션만 · Notion 적용 조건</div>
+                  <div class="help">전환 목적(가입일 이내 조건) · Notion 적용 조건</div>
                 </div>
               </div>
 
@@ -337,23 +354,35 @@
                 <label>적용대상 유형<span class="req">*</span></label>
                 <div class="field">
                   <div class="check-group" id="targets">
-                    <label class="pill"><input type="checkbox" value="전체" /> 전체</label>
                     <label class="pill"><input type="checkbox" value="일반기사(프렌즈)" id="chk-friends" /> 일반기사(프렌즈)</label>
                     <label class="pill"><input type="checkbox" value="NVP지점기사" /> NVP지점기사</label>
                     <label class="pill"><input type="checkbox" value="벤더기사" /> 벤더기사</label>
                   </div>
-                  <div class="help">전체 · 일반기사(프렌즈) · NVP지점기사 · 벤더기사 중 1개 이상</div>
+                  <div class="help">Notion 적용 대상 · 일반기사(프렌즈) · NVP지점기사 · 벤더기사 중 1개 이상</div>
                 </div>
               </div>
 
-              <div class="form-row" data-key="detail" id="row-detail" style="display:none;">
-                <label>적용대상 세부유형</label>
+              <div class="form-row" data-key="segment1" id="row-seg-activity" style="display:none;">
+                <label>세그먼트1 - 활동 수준<span class="req">*</span></label>
                 <div class="field">
-                  <div class="check-group" id="details">
-                    <label class="pill"><input type="checkbox" value="풀타임" /> 풀타임</label>
-                    <label class="pill"><input type="checkbox" value="파트타임" /> 파트타임</label>
+                  <div class="check-group" id="seg-activity">
+                    <label class="pill"><input type="checkbox" value="높음" /> 높음</label>
+                    <label class="pill"><input type="checkbox" value="중간" /> 중간</label>
+                    <label class="pill"><input type="checkbox" value="낮음" /> 낮음</label>
                   </div>
-                  <div class="help">일반기사(프렌즈) 선택 시에만 노출 · 풀타임/파트타임 (해제 시 선택값 초기화)</div>
+                  <div class="help">Notion 지급 구조별 적용 조건 · 일반기사(프렌즈) 선택 시 노출 · 높음/중간/낮음 중 1개 이상</div>
+                </div>
+              </div>
+              <div class="form-row" data-key="segment2" id="row-seg-commute" style="display:none;">
+                <label>세그먼트2 - 주요 출근 시간<span class="req">*</span></label>
+                <div class="field">
+                  <div class="check-group" id="seg-commute">
+                    <label class="pill"><input type="checkbox" value="오전" /> 오전</label>
+                    <label class="pill"><input type="checkbox" value="오후" /> 오후</label>
+                    <label class="pill"><input type="checkbox" value="저녁" /> 저녁</label>
+                    <label class="pill"><input type="checkbox" value="새벽" /> 새벽</label>
+                  </div>
+                  <div class="help">Notion 지급 구조별 적용 조건 · 일반기사(프렌즈) 선택 시 노출 · 오전/오후/저녁/새벽 중 1개 이상</div>
                 </div>
               </div>
 
@@ -394,7 +423,7 @@
 
               <div id="block-step">
                 <div class="form-row" style="align-items:flex-start;" data-key="stages">
-                  <label>단계형 조건<span class="req">*</span></label>
+                  <label>단계 지급 조건<span class="req">*</span></label>
                   <div class="field">
                     <table class="stage-table">
                       <thead>
@@ -412,7 +441,7 @@
 
               <div id="block-single" style="display:none;">
                 <div class="form-row" data-key="single">
-                  <label>단일목표형 조건<span class="req">*</span></label>
+                  <label>단일 지급 조건<span class="req">*</span></label>
                   <div class="field">
                     <div class="row-inline">
                       <input id="f-single-count" type="number" min="1" step="1" placeholder="목표 건수" />
@@ -427,7 +456,7 @@
                   <label>1회 지급 금액<span class="req">*</span></label>
                   <div class="field">
                     <input id="f-first-amount" type="number" min="1" step="1" placeholder="원" />
-                    <div class="help">첫배달 달성 시 1회만 지급</div>
+                    <div class="help">전환 목적 달성 시 1회 지급(단일 고정)</div>
                   </div>
                 </div>
               </div>
@@ -493,6 +522,8 @@
         screenList.classList.remove('active');
         screenRegister.classList.add('active');
         pageTitle.textContent = '미션 캠페인 등록';
+        if ($('f-name')) $('f-name').value = '';
+        document.querySelectorAll('input[name="purpose"], input[name="structure"], input[name="mode"]').forEach((el) => { el.checked = false; });
         state.times = [];
         if ($('f-time-start')) $('f-time-start').value = '';
         if ($('f-time-end')) $('f-time-end').value = '';
@@ -501,8 +532,10 @@
         if ($('f-shipper')) { $('f-shipper').value = '전체'; syncShipperDetail(); }
         if ($('f-shipper-detail')) $('f-shipper-detail').value = '';
         if ($('chk-first-auto')) $('chk-first-auto').checked = false;
+        document.querySelectorAll('#targets input[type="checkbox"]').forEach((x) => { x.checked = false; });
+        document.querySelectorAll('#seg-activity input[type="checkbox"], #seg-commute input[type="checkbox"]').forEach((x) => { x.checked = false; });
         readStep1();
-        syncUIBySubtype();
+        syncUIByPurposeStructure();
         goStep(1, true);
       }
       navList.addEventListener('click', (e) => { e.preventDefault(); showList(); });
@@ -510,10 +543,10 @@
 
       // ===== 데이터(목록) =====
       let CAMPAIGNS = [
-        { id: 'MS-2026-001', name: '점심 피크 단계형 미션', subtype: '단계형', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['전체'], targetDetails: [], zones: ['서울/강남 Z1'], createdAt: '2026-03-31', off: false },
-        { id: 'MS-2026-002', name: '주말 단일목표 미션', subtype: '단일목표형', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], targetDetails: ['풀타임', '파트타임'], zones: ['부산/해운대 Z2'], createdAt: '2026-03-31', off: true },
-        { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', subtype: '단계형', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], targetDetails: [], zones: ['대구 Z3'], createdAt: '2026-03-10', off: false },
-        { id: 'MS-2026-004', name: '신규 라이더 첫배달 미션', subtype: '첫배달', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['전체'], targetDetails: [], zones: ['서울/강남 Z1'], createdAt: '2026-03-28', off: false },
+        { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전'], zones: ['서울/강남 Z1'], createdAt: '2026-03-31', off: false },
+        { id: 'MS-2026-002', name: '주말 단일 지급 미션', purpose: '활성화', structure: '단일', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전', '저녁'], zones: ['부산/해운대 Z2'], createdAt: '2026-03-31', off: true },
+        { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', purpose: '활성화', structure: '단계', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], zones: ['대구 Z3'], createdAt: '2026-03-10', off: false },
+        { id: 'MS-2026-004', name: '신규 라이더 전환 미션', purpose: '전환', structure: '단일', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['일반기사(프렌즈)'], segmentActivity: ['중간'], segmentCommute: ['오후', '저녁'], zones: ['서울/강남 Z1'], createdAt: '2026-03-28', off: false },
       ];
 
       function statusOf(c) {
@@ -530,25 +563,30 @@
 
       function missionMatchesTargetType(c, flt) {
         if (!flt) return true;
-        if (c.targets.includes('전체')) return true;
         return c.targets.includes(flt);
       }
 
-      function fmtTargetDetailsCell(c) {
-        if (c.targetDetails && c.targetDetails.length) return c.targetDetails.join(', ');
-        return '-';
+      function fmtSeg1List(c) {
+        if (!c.targets.includes('일반기사(프렌즈)')) return '-';
+        return (c.segmentActivity && c.segmentActivity.length) ? c.segmentActivity.join(', ') : '-';
+      }
+      function fmtSeg2List(c) {
+        if (!c.targets.includes('일반기사(프렌즈)')) return '-';
+        return (c.segmentCommute && c.segmentCommute.length) ? c.segmentCommute.join(', ') : '-';
       }
 
       function renderList() {
         const fltStatus = $('flt-status').value;
-        const fltSubtype = $('flt-subtype').value;
+        const fltPurpose = $('flt-purpose').value;
+        const fltStructure = $('flt-structure').value;
         const fltTargetType = $('flt-target-type').value;
         const fltName = $('flt-name').value.trim();
         let rows = CAMPAIGNS.slice();
         rows = rows.filter((c) => {
           const st = statusOf(c).key;
           if (fltStatus && st !== fltStatus) return false;
-          if (fltSubtype && c.subtype !== fltSubtype) return false;
+          if (fltPurpose && c.purpose !== fltPurpose) return false;
+          if (fltStructure && c.structure !== fltStructure) return false;
           if (!missionMatchesTargetType(c, fltTargetType)) return false;
           if (fltName && !c.name.includes(fltName)) return false;
           return true;
@@ -561,11 +599,13 @@
           const tr = document.createElement('tr');
           tr.innerHTML =
             '<td title="' + c.id + '">' + c.name + '</td>' +
-            '<td>' + c.subtype + '</td>' +
+            '<td>' + c.purpose + '</td>' +
+            '<td>' + (c.purpose === '전환' ? '단일(고정)' : c.structure) + '</td>' +
             '<td>' + c.mode + '</td>' +
             '<td>' + fmtPeriod(c) + '</td>' +
             '<td>' + c.targets.join(', ') + '</td>' +
-            '<td>' + fmtTargetDetailsCell(c) + '</td>' +
+            '<td>' + fmtSeg1List(c) + '</td>' +
+            '<td>' + fmtSeg2List(c) + '</td>' +
             '<td>' + c.zones.join(', ') + '</td>' +
             '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>' +
             '<td>' + (st.key === '완료' ? '' : '<a href="#" class="link btn-toggle" data-id="' + c.id + '">' + (c.off ? 'ON' : 'OFF') + '</a>') + '</td>';
@@ -583,7 +623,8 @@
 
       $('btn-search').addEventListener('click', renderList);
       $('flt-status').addEventListener('change', renderList);
-      $('flt-subtype').addEventListener('change', renderList);
+      $('flt-purpose').addEventListener('change', renderList);
+      $('flt-structure').addEventListener('change', renderList);
       $('flt-target-type').addEventListener('change', renderList);
       renderList();
 
@@ -591,7 +632,8 @@
       const state = {
         step: 1,
         name: '',
-        subtype: '',
+        purpose: '',
+        structure: '',
         mode: '',
         start: '',
         end: '',
@@ -599,7 +641,8 @@
         publish: '',
         budget: '',
         targets: [],
-        details: [],
+        segmentActivity: [],
+        segmentCommute: [],
         zones: [],
         offday: '',
         cancel: '',
@@ -615,7 +658,7 @@
       };
 
       const STEP_TITLES = [
-        { n: 1, t: '기본 정보', s: '미션명/소분류/운영' },
+        { n: 1, t: '기본 정보', s: '미션명/목적/지급 구조' },
         { n: 2, t: '적용 조건', s: '기간/적용대상/ZONE' },
         { n: 3, t: '달성 조건', s: '휴무/취소/특성' },
         { n: 4, t: '확인', s: '요약/제출' },
@@ -669,7 +712,10 @@
 
       function readStep1() {
         state.name = $('f-name').value;
-        state.subtype = (document.querySelector('input[name="subtype"]:checked') || {}).value || '';
+        state.purpose = (document.querySelector('input[name="purpose"]:checked') || {}).value || '';
+        state.structure = state.purpose === '전환'
+          ? '단일'
+          : ((document.querySelector('input[name="structure"]:checked') || {}).value || '');
         state.mode = (document.querySelector('input[name="mode"]:checked') || {}).value || '';
       }
       function renderTimeTags() {
@@ -731,8 +777,9 @@
         state.shipper = $('f-shipper').value || '전체';
         state.shipperDetail = ($('f-shipper-detail').value || '').trim();
         state.targets = Array.from(document.querySelectorAll('#targets input[type="checkbox"]:checked')).map(i => i.value);
-        state.details = Array.from(document.querySelectorAll('#details input[type="checkbox"]:checked')).map(i => i.value);
-        if (state.subtype === '첫배달') {
+        state.segmentActivity = Array.from(document.querySelectorAll('#seg-activity input[type="checkbox"]:checked')).map(i => i.value);
+        state.segmentCommute = Array.from(document.querySelectorAll('#seg-commute input[type="checkbox"]:checked')).map(i => i.value);
+        if (state.purpose === '전환') {
           state.firstSignupDays = $('f-first-days').value;
           state.firstTargetCount = $('f-first-count').value;
           state.firstAutoApply = $('chk-first-auto').checked;
@@ -743,16 +790,16 @@
         }
       }
       function readStep3() {
-        if (state.subtype === '첫배달') {
+        if (state.purpose === '전환') {
           state.offday = '';
           state.cancel = '';
         } else {
           state.offday = $('f-offday').value;
           state.cancel = $('f-cancel').value;
         }
-        if (state.subtype === '단계형') {
+        if (state.structure === '단계') {
           // state.stages already bound by inputs
-        } else if (state.subtype === '첫배달') {
+        } else if (state.purpose === '전환') {
           state.firstPayAmount = $('f-first-amount').value;
         } else {
           state.firstPayAmount = '';
@@ -765,7 +812,8 @@
         readStep1();
         if (!state.name) return { ok:false, key:'name', msg:'미션명은 필수입니다.' };
         if (/\s/.test(state.name)) return { ok:false, key:'name', msg:'미션명은 공백 없이 입력해 주세요.' };
-        if (!state.subtype) return { ok:false, key:'subtype', msg:'소분류를 선택해 주세요.' };
+        if (!state.purpose) return { ok:false, key:'purpose', msg:'목적을 선택해 주세요.' };
+        if (state.purpose === '활성화' && !state.structure) return { ok:false, key:'structure', msg:'지급 구조를 선택해 주세요.' };
         if (!state.mode) return { ok:false, key:'mode', msg:'운영 방식을 선택해 주세요.' };
         return { ok:true };
       }
@@ -781,24 +829,31 @@
         if (!state.budget || Number(state.budget) <= 0) return { ok:false, key:'budget', msg:'예산은 0원 초과로 입력해 주세요.' };
         if (state.targets.length === 0) return { ok:false, key:'targets', msg:'적용대상 유형은 1개 이상 선택해 주세요.' };
         if (!document.getElementById('chk-friends').checked) {
-          // 일반기사(프렌즈) 해제 시 세부유형 초기화
-          state.details = [];
-          document.querySelectorAll('#details input[type="checkbox"]').forEach(i => i.checked = false);
+          state.segmentActivity = [];
+          state.segmentCommute = [];
+          document.querySelectorAll('#seg-activity input[type="checkbox"], #seg-commute input[type="checkbox"]').forEach(i => { i.checked = false; });
+        } else {
+          if (state.segmentActivity.length === 0) {
+            return { ok:false, key:'segment1', msg:'일반기사(프렌즈) 선택 시 세그먼트1(활동 수준)을 1개 이상 선택해 주세요.' };
+          }
+          if (state.segmentCommute.length === 0) {
+            return { ok:false, key:'segment2', msg:'일반기사(프렌즈) 선택 시 세그먼트2(주요 출근 시간)을 1개 이상 선택해 주세요.' };
+          }
         }
         if (state.zones.length === 0) return { ok:false, key:'zones', msg:'지역/ZONE은 1개 이상 선택해 주세요.' };
-        if (state.subtype !== '첫배달' && state.times.length > 0) {
+        if (state.purpose !== '전환' && state.times.length > 0) {
           const norm = state.times.map((t) => t.replace(/\s+/g, ''));
           const uniq = new Set(norm);
           if (uniq.size !== norm.length) {
             return { ok:false, key:'times', msg:'시간대는 중복 없이 입력해 주세요.' };
           }
         }
-        if (state.subtype === '첫배달') {
+        if (state.purpose === '전환') {
           if (!state.firstSignupDays || !/^\d+$/.test(String(state.firstSignupDays)) || Number(state.firstSignupDays) <= 0) {
             return { ok:false, key:'firstSignup', msg:'가입 후 유효 일수는 0보다 큰 정수로 입력해 주세요.' };
           }
           if (!state.firstTargetCount || !/^\d+$/.test(String(state.firstTargetCount)) || Number(state.firstTargetCount) <= 0) {
-            return { ok:false, key:'firstTarget', msg:'첫 배달 목표 건수는 0보다 큰 정수로 입력해 주세요.' };
+            return { ok:false, key:'firstTarget', msg:'목표 건수는 0보다 큰 정수로 입력해 주세요.' };
           }
         }
         return { ok:true };
@@ -812,7 +867,7 @@
 
       function validateStagesAscending() {
         // 최소 1단계
-        if (!state.stages || state.stages.length === 0) return { ok:false, msg:'단계형은 최소 1단계를 설정해야 합니다.' };
+        if (!state.stages || state.stages.length === 0) return { ok:false, msg:'단계 지급은 최소 1단계를 설정해야 합니다.' };
         if (state.stages.length > 10) return { ok:false, msg:'단계는 최대 10단계까지 가능합니다.' };
         let prev = 0;
         for (let i=0;i<state.stages.length;i++) {
@@ -831,17 +886,17 @@
         if (state.mode === '동적') {
           // 동적은 Step3 자동 설정 안내 (입력은 허용)
         }
-        if (state.subtype !== '첫배달') {
+        if (state.purpose !== '전환') {
           const o = intOrEmpty(state.offday);
           if (!o.ok) return { ok:false, key:'offday', msg:'휴무 조건은 0 이상 정수로 입력해 주세요.' };
           const c = intOrEmpty(state.cancel);
           if (!c.ok) return { ok:false, key:'cancel', msg:'취소건수 조건은 0 이상 정수로 입력해 주세요.' };
         }
 
-        if (state.subtype === '단계형') {
+        if (state.structure === '단계') {
           const st = validateStagesAscending();
           if (!st.ok) return { ok:false, key:'stages', msg: st.msg };
-        } else if (state.subtype === '첫배달') {
+        } else if (state.purpose === '전환') {
           if (!/^\d+$/.test(String(state.firstPayAmount)) || Number(state.firstPayAmount) <= 0) {
             return { ok:false, key:'firstPay', msg:'1회 지급 금액은 0원 초과로 입력해 주세요.' };
           }
@@ -855,10 +910,11 @@
       function buildSummary() {
         const rows = [];
         rows.push(['미션명', state.name, 1]);
-        rows.push(['소분류', state.subtype, 1]);
+        rows.push(['목적', state.purpose, 1]);
+        rows.push(['지급 구조', state.purpose === '전환' ? '단일(고정)' : state.structure, 1]);
         rows.push(['운영 방식', state.mode, 1]);
         rows.push(['기간 설정', state.start + ' ~ ' + state.end, 2]);
-        rows.push(['시간대 설정', state.subtype === '첫배달' ? '해당 없음 (첫배달)' : (state.times.length ? state.times.join(', ') : '-'), 2]);
+        rows.push(['시간대 설정', state.purpose === '전환' ? '해당 없음 (전환)' : (state.times.length ? state.times.join(', ') : '-'), 2]);
         rows.push(['미션 공개일', state.publish, 2]);
         rows.push(['예산', state.budget + '원', 2]);
         const shipperLine = state.shipper === '전체'
@@ -866,18 +922,21 @@
           : state.shipper + (state.shipperDetail ? ' · ' + state.shipperDetail : '');
         rows.push(['화주사', shipperLine, 2]);
         rows.push(['적용대상 유형', state.targets.join(', '), 2]);
-        rows.push(['적용대상 세부유형', (state.targets.includes('일반기사(프렌즈)') ? (state.details.length ? state.details.join(', ') : '-') : '-'), 2]);
+        const seg1 = state.targets.includes('일반기사(프렌즈)') && state.segmentActivity.length ? state.segmentActivity.join(', ') : '-';
+        const seg2 = state.targets.includes('일반기사(프렌즈)') && state.segmentCommute.length ? state.segmentCommute.join(', ') : '-';
+        rows.push(['세그먼트1 - 활동 수준', state.targets.includes('일반기사(프렌즈)') ? seg1 : '-', 2]);
+        rows.push(['세그먼트2 - 주요 출근 시간', state.targets.includes('일반기사(프렌즈)') ? seg2 : '-', 2]);
         rows.push(['지역/ZONE', state.zones.join(', '), 2]);
-        if (state.subtype === '첫배달') {
+        if (state.purpose === '전환') {
           rows.push(['가입 후 유효 일수', state.firstSignupDays + '일', 2]);
-          rows.push(['첫 배달 목표 건수', state.firstTargetCount + '건', 2]);
+          rows.push(['목표 건수', state.firstTargetCount + '건', 2]);
           rows.push(['신규 가입 자동 적용', state.firstAutoApply ? 'Y' : 'N', 2]);
         }
-        rows.push(['휴무 조건', state.subtype === '첫배달' ? '-' : (state.offday === '' ? '-' : (state.offday + '회/주')), 3]);
-        rows.push(['취소건수 조건', state.subtype === '첫배달' ? '-' : (state.cancel === '' ? '-' : (state.cancel + '건/주')), 3]);
-        if (state.subtype === '단계형') {
+        rows.push(['휴무 조건', state.purpose === '전환' ? '-' : (state.offday === '' ? '-' : (state.offday + '회/주')), 3]);
+        rows.push(['취소건수 조건', state.purpose === '전환' ? '-' : (state.cancel === '' ? '-' : (state.cancel + '건/주')), 3]);
+        if (state.structure === '단계') {
           rows.push(['단계 설정', state.stages.map((s,i) => (i+1)+'단계: '+s.count+'건 / '+s.amount+'원').join(' · '), 3]);
-        } else if (state.subtype === '첫배달') {
+        } else if (state.purpose === '전환') {
           rows.push(['1회 지급 금액', state.firstPayAmount + '원', 3]);
         } else {
           rows.push(['목표/지급', state.singleCount + '건 / ' + state.singleAmount + '원', 3]);
@@ -906,43 +965,45 @@
         if (!show) d.value = '';
       }
 
-      function syncUIBySubtype() {
+      function syncUIByPurposeStructure() {
         readStep1();
-        const isFirst = state.subtype === '첫배달';
-        $('first-mission-desc').style.display = isFirst ? 'block' : 'none';
-        $('row-first-signup').style.display = isFirst ? 'flex' : 'none';
-        $('row-first-target').style.display = isFirst ? 'flex' : 'none';
-        $('row-first-auto').style.display = isFirst ? 'flex' : 'none';
+        const isConversion = state.purpose === '전환';
+        const rowStruct = $('row-structure');
+        if (rowStruct) rowStruct.style.display = state.purpose === '활성화' ? 'flex' : 'none';
+        $('conversion-desc').style.display = isConversion ? 'block' : 'none';
+        $('row-first-signup').style.display = isConversion ? 'flex' : 'none';
+        $('row-first-target').style.display = isConversion ? 'flex' : 'none';
+        $('row-first-auto').style.display = isConversion ? 'flex' : 'none';
         const tw = $('row-times-wrap');
-        if (tw) tw.style.display = isFirst ? 'none' : '';
-        if (isFirst) {
+        if (tw) tw.style.display = isConversion ? 'none' : '';
+        if (isConversion) {
           state.times = [];
           if ($('f-time-start')) { $('f-time-start').value = ''; $('f-time-end').value = ''; }
           renderTimeTags();
           $('f-offday').value = '';
           $('f-cancel').value = '';
+          document.querySelectorAll('input[name="structure"]').forEach((r) => { r.checked = false; });
         } else {
           $('chk-first-auto').checked = false;
         }
-        if (!isFirst) {
+        if (!isConversion) {
           $('f-first-days').value = '';
           $('f-first-count').value = '';
           $('f-first-amount').value = '';
         }
         const oc = $('row-off-cancel-wrap');
-        if (oc) oc.style.display = isFirst ? 'none' : 'block';
+        if (oc) oc.style.display = isConversion ? 'none' : 'block';
 
-        // Step2 friends detail
         const friendsChecked = document.getElementById('chk-friends').checked;
-        $('row-detail').style.display = friendsChecked ? 'flex' : 'none';
+        $('row-seg-activity').style.display = friendsChecked ? 'flex' : 'none';
+        $('row-seg-commute').style.display = friendsChecked ? 'flex' : 'none';
 
-        // Step3 blocks
-        const isStep = state.subtype === '단계형';
+        const isStep = state.structure === '단계';
+        const isSingleActive = state.purpose === '활성화' && state.structure === '단일';
         $('block-step').style.display = isStep ? 'block' : 'none';
-        $('block-single').style.display = (!isStep && !isFirst) ? 'block' : 'none';
-        $('block-first').style.display = isFirst ? 'block' : 'none';
+        $('block-single').style.display = isSingleActive ? 'block' : 'none';
+        $('block-first').style.display = isConversion ? 'block' : 'none';
 
-        // dynamic note
         $('dyn-note').style.display = state.mode === '동적' ? 'block' : 'none';
       }
 
@@ -988,9 +1049,9 @@
       document.querySelectorAll('#targets input[type="checkbox"]').forEach((c) => {
         c.addEventListener('change', () => {
           if (!document.getElementById('chk-friends').checked) {
-            document.querySelectorAll('#details input[type="checkbox"]').forEach(i => i.checked = false);
+            document.querySelectorAll('#seg-activity input[type="checkbox"], #seg-commute input[type="checkbox"]').forEach(i => { i.checked = false; });
           }
-          syncUIBySubtype();
+          syncUIByPurposeStructure();
         });
       });
 
@@ -1010,7 +1071,7 @@
         btnPrev.style.visibility = (n === 1) ? 'hidden' : 'visible';
         btnNext.style.display = (n === 4) ? 'none' : 'inline-flex';
         btnSubmit.style.display = (n === 4) ? 'inline-flex' : 'none';
-        if (n === 2 || n === 3 || n === 4) syncUIBySubtype();
+        if (n === 2 || n === 3 || n === 4) syncUIByPurposeStructure();
         if (n === 4) buildSummary();
       }
 
@@ -1024,8 +1085,7 @@
         if (state.step === 2) v = validateStep2();
         if (state.step === 3) v = validateStep3();
         if (!v.ok) { markInvalid(v.key, v.msg); return; }
-        // subtype/mode update for step3 UI
-        if (state.step === 1) syncUIBySubtype();
+        if (state.step === 1) syncUIByPurposeStructure();
         goStep(state.step + 1, true);
       });
 
@@ -1047,12 +1107,14 @@
         CAMPAIGNS.unshift({
           id: nextId,
           name: state.name,
-          subtype: state.subtype,
+          purpose: state.purpose,
+          structure: state.structure,
           mode: state.mode,
           start: state.start,
           end: state.end,
           targets: state.targets,
-          targetDetails: state.targets.includes('일반기사(프렌즈)') ? state.details.slice() : [],
+          segmentActivity: state.targets.includes('일반기사(프렌즈)') ? state.segmentActivity.slice() : [],
+          segmentCommute: state.targets.includes('일반기사(프렌즈)') ? state.segmentCommute.slice() : [],
           zones: state.zones,
           shipper: state.shipper,
           shipperDetail: state.shipperDetail,
@@ -1066,8 +1128,9 @@
       });
 
       // change listeners for step1
-      document.querySelectorAll('input[name="subtype"]').forEach(r => r.addEventListener('change', () => { readStep1(); syncUIBySubtype(); }));
-      document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener('change', () => { readStep1(); syncUIBySubtype(); }));
+      document.querySelectorAll('input[name="purpose"]').forEach(r => r.addEventListener('change', () => { readStep1(); syncUIByPurposeStructure(); }));
+      document.querySelectorAll('input[name="structure"]').forEach(r => r.addEventListener('change', () => { readStep1(); syncUIByPurposeStructure(); }));
+      document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener('change', () => { readStep1(); syncUIByPurposeStructure(); }));
       $('f-shipper').addEventListener('change', syncShipperDetail);
 
       // default dates for UX
@@ -1080,6 +1143,7 @@
       renderTimeTags();
       renderStepper();
       goStep(1, true);
+      syncUIByPurposeStructure();
       showList();
     })();
   </script>
