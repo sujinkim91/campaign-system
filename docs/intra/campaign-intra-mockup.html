@@ -6,143 +6,199 @@
   <title>캠페인 관리 시스템 - Mockup</title>
   <style>
     :root {
-      --bg: #f8f9fa;
+      --bg: #f0f2f5;
       --card: #ffffff;
-      --border: #e9ecef;
-      --text: #212529;
-      --text-muted: #6c757d;
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --sidebar: #1e293b;
-      --sidebar-hover: #334155;
-      --sidebar-active: #334155;
-      --danger: #dc2626;
-      --ok: #059669;
-      --shadow: 0 10px 30px rgba(2, 6, 23, .08);
+      --border: #d8dee6;
+      --text: #1a2b3c;
+      --text-muted: #5c6f82;
+      --navy: #243b55;
+      --navy-deep: #1a2d42;
+      --navy-hover: #2f4a68;
+      --sidebar-bg: #1a2d42;
+      --sidebar-border: rgba(255,255,255,0.06);
+      --sidebar-active: #e8eef8;
+      --sidebar-active-text: #1a2d42;
+      --primary: #243b55;
+      --primary-hover: #1f3550;
+      --danger: #c62828;
+      --danger-soft: #ffebee;
+      --ok: #2e7d32;
+      --req-dot: #e65100;
+      --shadow: 0 2px 8px rgba(26, 45, 66, 0.08);
     }
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); line-height: 1.5; }
+    body { margin: 0; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); line-height: 1.5; }
     .app-wrap { display: flex; min-height: 100vh; overflow: hidden; }
 
-    .sidebar { width: 240px; min-width: 240px; background: var(--sidebar); color: #e2e8f0; display: flex; flex-direction: column; flex-shrink: 0; }
-    .sidebar-logo { padding: 24px; font-size: 15px; font-weight: 700; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .sidebar-nav { padding: 16px 0; }
-    .sidebar-nav a { display: block; padding: 12px 24px; color: #94a3b8; text-decoration: none; font-size: 14px; transition: background .15s, color .15s; }
-    .sidebar-nav a:hover { background: var(--sidebar-hover); color: #fff; }
-    .sidebar-nav a.active { background: var(--sidebar-active); color: #fff; font-weight: 600; }
+    /* —— Sidebar (VROONG Intra Lite 결) —— */
+    .sidebar { width: 260px; min-width: 260px; background: var(--sidebar-bg); color: #e8ecf0; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid var(--sidebar-border); }
+    .sidebar-brand { padding: 20px 16px 16px; border-bottom: 1px solid var(--sidebar-border); }
+    .sidebar-app-name { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
+    .sidebar-user-line { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; }
+    .sidebar-user-meta { font-size: 12px; color: #9db0c4; line-height: 1.35; }
+    .btn-logout { padding: 6px 12px; font-size: 12px; font-weight: 700; color: #fff; background: var(--danger); border: none; border-radius: 4px; cursor: pointer; }
+    .btn-logout:hover { filter: brightness(1.08); }
+    .sidebar-menu-search { padding: 12px 16px; border-bottom: 1px solid var(--sidebar-border); }
+    .sidebar-menu-search input { width: 100%; padding: 8px 12px; font-size: 13px; border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; background: rgba(0,0,0,.2); color: #fff; }
+    .sidebar-menu-search input::placeholder { color: #7a8fa3; }
+    .sidebar-nav { padding: 8px 0 24px; flex: 1; overflow: auto; }
+    .nav-group-title { width: 100%; text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 700; color: #b8c5d4; background: transparent; border: none; cursor: default; }
+    .nav-group-items { padding: 0 8px 8px; }
+    .sidebar-nav a { display: block; padding: 10px 14px 10px 20px; margin: 2px 0; color: #c5d0dc; text-decoration: none; font-size: 14px; border-radius: 6px; transition: background .15s, color .15s; }
+    .sidebar-nav a:hover { background: rgba(255,255,255,0.06); color: #fff; }
+    .sidebar-nav a.active { background: var(--sidebar-active); color: var(--sidebar-active-text); font-weight: 700; }
 
-    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
-    .header { padding: 20px 32px; background: var(--card); border-bottom: 1px solid var(--border); flex-shrink: 0; }
-    .header h1 { margin: 0; font-size: 20px; font-weight: 600; color: var(--text); }
-    .content { flex: 1; padding: 32px; overflow: auto; }
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; background: var(--bg); }
+    .header { padding: 16px 28px 18px; background: var(--card); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .breadcrumb { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+    .header-title-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .page-heading { margin: 0; font-size: 22px; font-weight: 800; color: var(--navy); letter-spacing: -0.02em; }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .badge-req-hint { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+    .dot-req { width: 8px; height: 8px; border-radius: 50%; background: var(--req-dot); flex-shrink: 0; }
+
+    .btn-reset { padding: 8px 16px; font-size: 13px; font-weight: 700; color: var(--danger); background: #fff; border: 1px solid var(--danger); border-radius: 4px; cursor: pointer; }
+    .btn-reset:hover { background: var(--danger-soft); }
+
+    .content { flex: 1; padding: 20px 28px 28px; overflow: auto; }
 
     .screen { display: none; }
     .screen.active { display: block; }
 
-    .filter-section { background: var(--card); border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; border: 1px solid var(--border); width: 100%; box-sizing: border-box; }
-    .filter-required { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
-    .filter-required::before { content: '●'; color: var(--primary); margin-right: 6px; }
-    .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-    .filter-row label { font-size: 14px; color: var(--text); font-weight: 500; margin-right: 4px; }
-    .filter-row select, .filter-row input[type="text"] { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; background: var(--card); }
-    .filter-row select { min-width: 160px; }
-    .filter-row input[type="text"] { min-width: 220px; }
-    .btn { padding: 10px 20px; border: 1px solid transparent; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
-    .btn.primary { background: var(--primary); color: #fff; }
-    .btn.primary:hover { background: var(--primary-hover); }
+    .filter-section { background: var(--card); border-radius: 0; padding: 16px 20px; margin-bottom: 16px; border: 1px solid var(--border); width: 100%; box-shadow: var(--shadow); }
+    .filter-search-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+    .filter-row label { font-size: 13px; color: var(--text); font-weight: 600; margin-right: 2px; }
+    .filter-row select, .filter-row input[type="text"] { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; background: #fff; min-height: 36px; }
+    .filter-row select { min-width: 140px; }
+    .filter-row input[type="text"] { min-width: 200px; }
+
+    .btn { padding: 9px 18px; border: 1px solid transparent; border-radius: 4px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn.primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
     .btn.ghost { background: #fff; border-color: var(--border); color: var(--text); }
-    .btn.ghost:hover { background: #f8fafc; }
+    .btn.ghost:hover { background: #f5f7fa; }
 
-    .list-header { display: flex; align-items: center; justify-content: space-between; margin: 10px 0 16px; }
-    .list-count { font-size: 14px; color: var(--text-muted); }
-    .table-wrap { background: var(--card); border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
-    .data-table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
-    .data-table th { background: #f8fafc; font-weight: 700; color: var(--text); text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border); }
-    .data-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--text); overflow: hidden; text-overflow: ellipsis; }
-    .data-table tbody tr:hover { background: #f8fafc; }
+    .btn-search-icon { width: 40px; height: 40px; min-width: 40px; padding: 0; border-radius: 50%; background: var(--primary); color: #fff; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(36,59,85,.35); }
+    .btn-search-icon:hover { background: var(--primary-hover); }
+    .btn-search-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .table-wrap { background: var(--card); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+    .data-table th { background: #f5f7fa; font-weight: 800; color: var(--navy); text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 12px; }
+    .data-table td { padding: 12px 14px; border-bottom: 1px solid #e8ecf0; color: var(--text); overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+    .data-table tbody tr:nth-child(even) { background: #fafbfc; }
+    .data-table tbody tr:nth-child(odd) { background: #fff; }
+    .data-table tbody tr:hover { background: #f0f4f8; }
     .data-table tbody tr:last-child td { border-bottom: none; }
-    .link { color: var(--primary); text-decoration: none; margin-right: 12px; font-size: 13px; font-weight: 600; }
+    .link { color: var(--primary); text-decoration: none; margin-right: 10px; font-size: 13px; font-weight: 700; }
     .link:hover { text-decoration: underline; }
-    .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: #fff; }
-    .badge.ok { color: var(--ok); border-color: rgba(5,150,105,.25); background: rgba(5,150,105,.08); }
-    .badge.muted { color: var(--text-muted); }
-    .badge.danger { color: var(--danger); border-color: rgba(220,38,38,.25); background: rgba(220,38,38,.08); }
+    .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border); background: #fff; }
+    .badge.ok { color: var(--ok); border-color: #c8e6c9; background: #e8f5e9; }
+    .badge.muted { color: var(--text-muted); background: #f5f5f5; }
+    .badge.danger { color: var(--danger); border-color: #ffcdd2; background: #ffebee; }
 
-    .page-note { margin-top: 16px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-    .list-guide { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+    .list-guide { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.55; }
+    .page-note { margin-top: 12px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
 
-    /* Stepper */
-    .stepper { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; width: 100%; }
-    .step { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:#fff; cursor: pointer; user-select:none; }
-    .step .n { width: 22px; height: 22px; border-radius: 999px; background: #e2e8f0; color:#0f172a; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; }
-    .step.active { border-color: rgba(37,99,235,.35); background: rgba(37,99,235,.06); }
-    .step.active .n { background: rgba(37,99,235,.2); color: #1d4ed8; }
-    .step.done .n { background: rgba(5,150,105,.18); color: #047857; }
-    .step .t { font-weight: 700; font-size: 13px; }
-    .step .s { font-size: 12px; color: var(--text-muted); }
+    .list-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding: 12px 0 0; gap: 16px; flex-wrap: wrap; }
+    .btn-add { padding: 10px 22px; font-size: 14px; font-weight: 800; color: #fff; background: var(--primary); border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 8px rgba(36,59,85,.25); }
+    .btn-add:hover { background: var(--primary-hover); }
+    .pagination-mock { flex: 1; display: flex; justify-content: center; align-items: center; gap: 6px; }
+    .pagination-mock span { min-width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; border: 1px solid var(--border); border-radius: 4px; background: var(--primary); color: #fff; border-color: var(--primary); }
+    .list-count-footer { font-size: 13px; font-weight: 600; color: var(--text-muted); }
 
-    .form-shell { background: var(--card); border-radius: 8px; border: 1px solid var(--border); padding: 28px 32px; width: 100%; max-width: none; box-sizing: border-box; }
+    .form-single-page { padding-bottom: 8px; }
+    .form-single-page .form-section-title { margin-top: 28px; }
+    .form-single-page .form-section-title:first-child { margin-top: 0; }
+
+    .form-shell { background: var(--card); border-radius: 0; border: 1px solid var(--border); padding: 24px 28px 28px; width: 100%; max-width: none; box-sizing: border-box; box-shadow: var(--shadow); }
     #screen-register { width: 100%; max-width: 100%; }
-    .form-row { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
-    .form-row label { width: min(180px, 22%); flex-shrink: 0; font-weight: 600; font-size: 14px; }
-    .req { color: var(--danger); font-weight: 900; margin-left: 4px; }
+    .form-section-title { font-size: 15px; font-weight: 800; color: var(--navy); margin: 0 0 16px; padding-bottom: 10px; border-bottom: 2px solid var(--navy); }
+    .form-row { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+    .form-row label { width: min(200px, 24%); flex-shrink: 0; font-weight: 700; font-size: 13px; color: var(--text); padding-top: 10px; }
+    .req { color: var(--req-dot); font-weight: 900; margin-left: 3px; }
     .field { flex: 1; min-width: 0; }
-    .field input, .field select, .field textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; background: #fff; }
-    .field textarea { min-height: 160px; resize: vertical; line-height: 1.5; }
+    .field input, .field select, .field textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; background: #fff; }
+    .field textarea { min-height: 140px; resize: vertical; line-height: 1.5; }
 
     .time-slot-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
-    .time-slot-row input[type="time"] { width: auto; min-width: 132px; max-width: 160px; padding: 12px 14px; font-size: 15px; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
-    .time-slot-sep { color: var(--text-muted); font-weight: 800; font-size: 15px; user-select: none; }
-    .time-tag-wrap { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; min-height: 0; }
+    .time-slot-row input[type="time"] { width: auto; min-width: 120px; padding: 10px 12px; font-size: 14px; border: 1px solid var(--border); border-radius: 4px; background: #fff; }
+    .time-slot-sep { color: var(--text-muted); font-weight: 800; font-size: 14px; user-select: none; }
+    .time-tag-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; min-height: 0; }
     .time-tag-wrap:empty { margin-top: 0; }
-    .time-tag { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 999px; font-size: 14px; font-weight: 600; color: #1e40af; }
-    .time-tag-rm { border: none; background: transparent; color: #64748b; cursor: pointer; font-size: 20px; line-height: 1; padding: 0 4px; border-radius: 4px; line-height: 0.85; }
-    .time-tag-rm:hover { color: var(--danger); background: rgba(220,38,38,.08); }
+    .time-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: #e8eef8; border: 1px solid #c5d4e8; border-radius: 4px; font-size: 13px; font-weight: 600; color: var(--navy); }
+    .time-tag-rm { border: none; background: transparent; color: #64748b; cursor: pointer; font-size: 18px; line-height: 1; padding: 0 4px; }
+    .time-tag-rm:hover { color: var(--danger); }
     .row-inline { display:flex; gap: 10px; align-items:center; }
     .row-inline > * { flex: 1; }
-    .help { margin-top: 6px; font-size: 12px; color: var(--text-muted); }
+    .help { margin-top: 6px; font-size: 12px; color: var(--text-muted); line-height: 1.45; }
 
-    .radio-group, .check-group { display:flex; gap: 14px; flex-wrap: wrap; }
-    .pill { display:flex; align-items:center; gap: 8px; border: 1px solid var(--border); background: #fff; padding: 8px 10px; border-radius: 999px; cursor: pointer; }
+    .radio-group, .check-group { display:flex; gap: 10px; flex-wrap: wrap; }
+    .pill { display:flex; align-items:center; gap: 8px; border: 1px solid var(--border); background: #fff; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+    .pill:hover { border-color: #a8b8cc; }
     .pill input { width: 16px; height: 16px; }
 
-    .invalid input, .invalid select, .invalid textarea { border-color: rgba(220,38,38,.65); background: rgba(220,38,38,.04); }
-    .warn { margin-top: 12px; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(220,38,38,.25); background: rgba(220,38,38,.06); color: #991b1b; font-size: 13px; display:none; }
+    .invalid input, .invalid select, .invalid textarea { border-color: #c62828; background: #fff8f8; }
+    .warn { margin-top: 12px; padding: 10px 12px; border-radius: 4px; border: 1px solid #ffcdd2; background: #ffebee; color: #b71c1c; font-size: 13px; display:none; }
 
-    /* Step3 단계형 */
-    .stage-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff; }
-    .stage-table th, .stage-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 14px; }
-    .stage-table input { padding: 10px 12px; font-size: 15px; }
-    .stage-table th { background: #f8fafc; text-align: left; font-weight: 800; }
+    .stage-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: 0; overflow: hidden; background: #fff; }
+    .stage-table th, .stage-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .stage-table input { padding: 8px 10px; font-size: 14px; border-radius: 4px; }
+    .stage-table th { background: #f5f7fa; text-align: left; font-weight: 800; color: var(--navy); }
     .stage-table tr:last-child td { border-bottom: none; }
     .stage-actions { display:flex; gap: 10px; margin-top: 10px; }
-    .btn-mini { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: #fff; font-weight: 700; cursor: pointer; }
+    .btn-mini { padding: 7px 12px; border-radius: 4px; border: 1px solid var(--border); background: #fff; font-weight: 700; font-size: 13px; cursor: pointer; }
     .btn-mini:disabled { opacity: .5; cursor: not-allowed; }
-    .btn-mini.primary { border-color: rgba(37,99,235,.35); color: #1d4ed8; background: rgba(37,99,235,.06); }
-    .btn-mini.danger { border-color: rgba(220,38,38,.25); color:#b91c1c; background: rgba(220,38,38,.06); }
+    .btn-mini.primary { border-color: var(--primary); color: #fff; background: var(--primary); }
+    .btn-mini.danger { border-color: var(--danger); color: var(--danger); background: #fff; }
 
-    .actions { display:flex; justify-content: space-between; gap: 10px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
-    .toast { position: fixed; right: 18px; bottom: 18px; background: #0f172a; color: #fff; padding: 12px 14px; border-radius: 10px; box-shadow: var(--shadow); font-size: 13px; opacity: 0; transform: translateY(8px); transition: .18s ease; pointer-events: none; }
+    .actions { display:flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .actions-left { margin-right: auto; }
+    .toast { position: fixed; right: 18px; bottom: 18px; background: var(--navy-deep); color: #fff; padding: 12px 16px; border-radius: 6px; box-shadow: var(--shadow); font-size: 13px; opacity: 0; transform: translateY(8px); transition: .18s ease; pointer-events: none; }
     .toast.show { opacity: 1; transform: translateY(0); }
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,.45); display:none; align-items: center; justify-content: center; padding: 20px; }
-    .modal { width: 100%; max-width: 520px; background: #fff; border-radius: 14px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-    .modal .hd { padding: 14px 16px; border-bottom: 1px solid var(--border); font-weight: 800; }
-    .modal .bd { padding: 14px 16px; color: var(--text); font-size: 14px; }
-    .modal .ft { padding: 14px 16px; border-top: 1px solid var(--border); display:flex; justify-content: flex-end; gap: 10px; }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(26,45,66,.5); display:none; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
+    .modal { width: 100%; max-width: 480px; background: #fff; border-radius: 6px; box-shadow: 0 12px 40px rgba(0,0,0,.2); border: 1px solid var(--border); }
+    .modal .hd { padding: 16px 18px; border-bottom: 1px solid var(--border); font-weight: 800; font-size: 16px; color: var(--navy); }
+    .modal .bd { padding: 18px; color: var(--text); font-size: 14px; line-height: 1.55; }
+    .modal .ft { padding: 14px 18px; border-top: 1px solid var(--border); display:flex; justify-content: flex-end; gap: 10px; }
   </style>
 </head>
 <body>
   <div class="app-wrap">
     <aside class="sidebar">
-      <div class="sidebar-logo">캠페인 관리 시스템</div>
+      <div class="sidebar-brand">
+        <div class="sidebar-app-name">VROONG Intra Lite</div>
+        <div class="sidebar-user-line">
+          <span class="sidebar-user-meta">캠페인 시스템<br />UI 목업</span>
+          <button type="button" class="btn-logout" id="btn-logout-mock">로그아웃</button>
+        </div>
+      </div>
+      <div class="sidebar-menu-search">
+        <input type="search" placeholder="메뉴 검색 (Shift+F)" disabled aria-disabled="true" />
+      </div>
       <nav class="sidebar-nav">
-        <a href="#" id="nav-list" class="active">캠페인 현황</a>
+        <div class="nav-group">
+          <div class="nav-group-title">캠페인 관리</div>
+          <div class="nav-group-items">
+            <a href="#" id="nav-list" class="active">미션 캠페인 목록</a>
+          </div>
+        </div>
       </nav>
     </aside>
 
     <main class="main">
       <header class="header">
-        <h1 id="page-title">캠페인 목록</h1>
+        <div class="breadcrumb" id="page-breadcrumb">캠페인 관리 &gt; 미션 캠페인 목록</div>
+        <div class="header-title-row">
+          <h1 id="page-title" class="page-heading">미션 캠페인 목록</h1>
+          <div class="header-actions" id="header-actions-list">
+            <button type="button" class="btn-reset" id="btn-reset-filters">초기화</button>
+          </div>
+          <div class="header-actions" id="header-actions-register" style="display:none;">
+            <span class="badge-req-hint"><span class="dot-req" aria-hidden="true"></span>필수 입력 사항</span>
+          </div>
+        </div>
       </header>
 
       <div class="content">
@@ -151,7 +207,7 @@
           <p class="list-guide">미션 캠페인을 등록·조회하고 on/off로 제어합니다. 조건은 Notion <strong>[캠페인시스템] 라이더 미션 구조화</strong>의 <strong>라이더 미션 조건</strong>(목적·공통·지급 구조별 적용/달성) 및 구조도 <code>mission_structure_v11.svg</code>와 동일하게, 스냅샷은 <code>docs/intra/notion-라이더-미션-구조화.md</code>를 따릅니다.</p>
 
           <div class="filter-section">
-            <div class="filter-required">필수 입력 사항</div>
+            <div class="filter-search-title">검색 조건</div>
             <div class="filter-row">
               <label>상태</label>
               <select id="flt-status">
@@ -182,13 +238,10 @@
               </select>
               <label>미션명</label>
               <input id="flt-name" type="text" placeholder="미션명 입력" />
-              <button type="button" class="btn primary" id="btn-search">검색</button>
+              <button type="button" class="btn-search-icon" id="btn-search" title="검색" aria-label="검색">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"/><path d="M15 15l4.5 4.5"/></svg>
+              </button>
             </div>
-          </div>
-
-          <div class="list-header">
-            <span class="list-count" id="list-count">총 0건</span>
-            <button type="button" class="btn primary" id="btn-open-register">등록</button>
           </div>
 
           <div class="table-wrap">
@@ -215,18 +268,23 @@
             </table>
           </div>
 
+          <div class="list-footer">
+            <button type="button" class="btn-add" id="btn-open-register">+ 추가</button>
+            <div class="pagination-mock" aria-hidden="true"><span>1</span></div>
+            <span class="list-count-footer" id="list-count-footer">총 0건</span>
+          </div>
+
           <p class="page-note">* 상태는 시작일/종료일 기준 자동 판단(예정/진행/완료). 관리자 off 시 중단.</p>
         </section>
 
-        <!-- 화면 2: 미션 캠페인 등록 (스텝) -->
+        <!-- 화면 2: 미션 캠페인 등록 (원페이지) -->
         <section id="screen-register" class="screen">
-          <div class="stepper" id="stepper"></div>
-
           <div class="form-shell">
             <div class="warn" id="warn-box"></div>
+            <p class="list-guide" style="margin-top:0;">아래 항목을 한 화면에서 입력한 뒤 <strong>저장</strong>합니다. 조건부 항목은 목적·지급 구조·적용대상에 따라 표시됩니다.</p>
 
-            <!-- Step 1 -->
-            <div class="step-page" data-step="1">
+            <div class="form-single-page" id="form-single-page">
+              <h2 class="form-section-title">기본 정보</h2>
               <div class="form-row" data-key="name">
                 <label>미션명<span class="req">*</span></label>
                 <div class="field">
@@ -267,10 +325,8 @@
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Step 2 -->
-            <div class="step-page" data-step="2" style="display:none;">
+              <h2 class="form-section-title">적용 조건</h2>
               <div class="form-row" data-key="period">
                 <label>기간 설정<span class="req">*</span></label>
                 <div class="field">
@@ -399,10 +455,8 @@
                   <div class="help">Notion 공통 조건 · Ctrl(⌘)+클릭으로 다중 선택 · 1개 이상</div>
                 </div>
               </div>
-            </div>
 
-            <!-- Step 3 -->
-            <div class="step-page" data-step="3" style="display:none;">
+              <h2 class="form-section-title">달성 조건</h2>
               <div id="dyn-note" class="warn" style="display:none;">달성 조건은 S&OP 연동 후 자동 설정됩니다</div>
 
               <div id="row-off-cancel-wrap">
@@ -462,26 +516,11 @@
               </div>
             </div>
 
-            <!-- Step 4 -->
-            <div class="step-page" data-step="4" style="display:none;">
-              <div class="list-guide">입력 내용을 확인하고 최종 제출합니다.</div>
-              <div class="table-wrap">
-                <table class="data-table" style="table-layout:auto;">
-                  <colgroup><col style="width:25%"><col style="width:55%"><col style="width:20%"></colgroup>
-                  <thead><tr><th>항목</th><th>값</th><th>수정</th></tr></thead>
-                  <tbody id="summary-body"></tbody>
-                </table>
-              </div>
-            </div>
-
             <div class="actions">
-              <div>
-                <button type="button" class="btn ghost" id="btn-prev">이전</button>
-              </div>
+              <div class="actions-left"></div>
               <div style="display:flex; gap:10px;">
-                <button type="button" class="btn ghost" id="btn-cancel">취소</button>
-                <button type="button" class="btn primary" id="btn-next">다음</button>
-                <button type="button" class="btn primary" id="btn-submit" style="display:none;">최종 제출</button>
+                <button type="button" class="btn ghost" id="btn-cancel">목록으로</button>
+                <button type="button" class="btn primary" id="btn-submit">저장</button>
               </div>
             </div>
           </div>
@@ -493,7 +532,7 @@
   <div class="toast" id="toast"></div>
   <div class="modal-backdrop" id="modal">
     <div class="modal">
-      <div class="hd" id="modal-title">등록 실패</div>
+      <div class="hd" id="modal-title">저장 실패</div>
       <div class="bd" id="modal-body"></div>
       <div class="ft">
         <button class="btn ghost" id="modal-close" type="button">확인</button>
@@ -511,17 +550,26 @@
       const screenList = $('screen-list');
       const screenRegister = $('screen-register');
       const pageTitle = $('page-title');
+      const pageBreadcrumb = $('page-breadcrumb');
+      const headerList = $('header-actions-list');
+      const headerRegister = $('header-actions-register');
       function showList() {
         navList.classList.add('active');
         screenList.classList.add('active');
         screenRegister.classList.remove('active');
-        pageTitle.textContent = '캠페인 목록';
+        pageTitle.textContent = '미션 캠페인 목록';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 미션 캠페인 목록';
+        if (headerList) headerList.style.display = 'flex';
+        if (headerRegister) headerRegister.style.display = 'none';
       }
       function showRegister() {
         navList.classList.remove('active');
         screenList.classList.remove('active');
         screenRegister.classList.add('active');
         pageTitle.textContent = '미션 캠페인 등록';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 미션 캠페인 목록 > 등록';
+        if (headerList) headerList.style.display = 'none';
+        if (headerRegister) headerRegister.style.display = 'flex';
         if ($('f-name')) $('f-name').value = '';
         document.querySelectorAll('input[name="purpose"], input[name="structure"], input[name="mode"]').forEach((el) => { el.checked = false; });
         state.times = [];
@@ -536,10 +584,22 @@
         document.querySelectorAll('#seg-activity input[type="checkbox"], #seg-commute input[type="checkbox"]').forEach((x) => { x.checked = false; });
         readStep1();
         syncUIByPurposeStructure();
-        goStep(1, true);
+        clearInvalid();
+        const content = document.querySelector('.content');
+        if (content) content.scrollTop = 0;
       }
       navList.addEventListener('click', (e) => { e.preventDefault(); showList(); });
       $('btn-open-register').addEventListener('click', showRegister);
+      $('btn-reset-filters').addEventListener('click', () => {
+        $('flt-status').value = '';
+        $('flt-purpose').value = '';
+        $('flt-structure').value = '';
+        $('flt-target-type').value = '';
+        $('flt-name').value = '';
+        renderList();
+        showToast('검색 조건을 초기화했습니다.');
+      });
+      $('btn-logout-mock').addEventListener('click', () => showToast('목업: 로그아웃 동작 없음'));
 
       // ===== 데이터(목록) =====
       let CAMPAIGNS = [
@@ -591,7 +651,9 @@
           if (fltName && !c.name.includes(fltName)) return false;
           return true;
         });
-        $('list-count').textContent = '총 ' + rows.length + '건';
+        const cnt = '총 ' + rows.length + '건';
+        const elFooter = $('list-count-footer');
+        if (elFooter) elFooter.textContent = cnt;
         const tb = $('tbody-list');
         tb.innerHTML = '';
         rows.forEach((c) => {
@@ -628,9 +690,8 @@
       $('flt-target-type').addEventListener('change', renderList);
       renderList();
 
-      // ===== Stepper / Form state =====
+      // ===== Form state =====
       const state = {
-        step: 1,
         name: '',
         purpose: '',
         structure: '',
@@ -657,26 +718,9 @@
         firstAutoApply: false,
       };
 
-      const STEP_TITLES = [
-        { n: 1, t: '기본 정보', s: '미션명/목적/지급 구조' },
-        { n: 2, t: '적용 조건', s: '기간/적용대상/ZONE' },
-        { n: 3, t: '달성 조건', s: '휴무/취소/특성' },
-        { n: 4, t: '확인', s: '요약/제출' },
-      ];
-
-      function renderStepper() {
-        const el = $('stepper');
-        el.innerHTML = '';
-        STEP_TITLES.forEach((x) => {
-          const d = document.createElement('div');
-          d.className = 'step' + (x.n === state.step ? ' active' : '') + (x.n < state.step ? ' done' : '');
-          d.innerHTML = '<div class="n">' + x.n + '</div><div><div class="t">' + x.t + '</div><div class="s">' + x.s + '</div></div>';
-          d.addEventListener('click', () => {
-            // 스펙: Step4 요약의 수정 버튼으로 이동. 스텝바는 현재/이전까지만 이동 허용.
-            if (x.n <= state.step) goStep(x.n);
-          });
-          el.appendChild(d);
-        });
+      function scrollFirstInvalid() {
+        const el = document.querySelector('#screen-register .invalid');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
 
       function showToast(msg) {
@@ -687,7 +731,7 @@
       }
 
       function showFailModal(msg) {
-        $('modal-title').textContent = '제출 실패';
+        $('modal-title').textContent = '저장 실패';
         $('modal-body').textContent = msg;
         $('modal').style.display = 'flex';
       }
@@ -705,7 +749,7 @@
         w.style.display = 'block';
       }
       function markInvalid(key, msg) {
-        const row = document.querySelector('.step-page[data-step="' + state.step + '"] [data-key="' + key + '"]');
+        const row = document.querySelector('#screen-register [data-key="' + key + '"]');
         if (row) row.classList.add('invalid');
         if (msg) warn(msg);
       }
@@ -907,56 +951,6 @@
         return { ok:true };
       }
 
-      function buildSummary() {
-        const rows = [];
-        rows.push(['미션명', state.name, 1]);
-        rows.push(['목적', state.purpose, 1]);
-        rows.push(['지급 구조', state.purpose === '전환' ? '단일(고정)' : state.structure, 1]);
-        rows.push(['운영 방식', state.mode, 1]);
-        rows.push(['기간 설정', state.start + ' ~ ' + state.end, 2]);
-        rows.push(['시간대 설정', state.purpose === '전환' ? '해당 없음 (전환)' : (state.times.length ? state.times.join(', ') : '-'), 2]);
-        rows.push(['미션 공개일', state.publish, 2]);
-        rows.push(['예산', state.budget + '원', 2]);
-        const shipperLine = state.shipper === '전체'
-          ? '전체'
-          : state.shipper + (state.shipperDetail ? ' · ' + state.shipperDetail : '');
-        rows.push(['화주사', shipperLine, 2]);
-        rows.push(['적용대상 유형', state.targets.join(', '), 2]);
-        const seg1 = state.targets.includes('일반기사(프렌즈)') && state.segmentActivity.length ? state.segmentActivity.join(', ') : '-';
-        const seg2 = state.targets.includes('일반기사(프렌즈)') && state.segmentCommute.length ? state.segmentCommute.join(', ') : '-';
-        rows.push(['세그먼트1 - 활동 수준', state.targets.includes('일반기사(프렌즈)') ? seg1 : '-', 2]);
-        rows.push(['세그먼트2 - 주요 출근 시간', state.targets.includes('일반기사(프렌즈)') ? seg2 : '-', 2]);
-        rows.push(['지역/ZONE', state.zones.join(', '), 2]);
-        if (state.purpose === '전환') {
-          rows.push(['가입 후 유효 일수', state.firstSignupDays + '일', 2]);
-          rows.push(['목표 건수', state.firstTargetCount + '건', 2]);
-          rows.push(['신규 가입 자동 적용', state.firstAutoApply ? 'Y' : 'N', 2]);
-        }
-        rows.push(['휴무 조건', state.purpose === '전환' ? '-' : (state.offday === '' ? '-' : (state.offday + '회/주')), 3]);
-        rows.push(['취소건수 조건', state.purpose === '전환' ? '-' : (state.cancel === '' ? '-' : (state.cancel + '건/주')), 3]);
-        if (state.structure === '단계') {
-          rows.push(['단계 설정', state.stages.map((s,i) => (i+1)+'단계: '+s.count+'건 / '+s.amount+'원').join(' · '), 3]);
-        } else if (state.purpose === '전환') {
-          rows.push(['1회 지급 금액', state.firstPayAmount + '원', 3]);
-        } else {
-          rows.push(['목표/지급', state.singleCount + '건 / ' + state.singleAmount + '원', 3]);
-        }
-
-        const tb = $('summary-body');
-        tb.innerHTML = '';
-        rows.forEach(([k,v,step]) => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = '<td>' + k + '</td><td>' + String(v).replace(/</g,'&lt;') + '</td><td><a href="#" class="link sum-edit" data-step="' + step + '">수정</a></td>';
-          tb.appendChild(tr);
-        });
-        tb.querySelectorAll('.sum-edit').forEach((a) => {
-          a.addEventListener('click', (e) => {
-            e.preventDefault();
-            goStep(Number(a.getAttribute('data-step')));
-          });
-        });
-      }
-
       function syncShipperDetail() {
         const v = $('f-shipper').value;
         const d = $('f-shipper-detail');
@@ -1055,46 +1049,20 @@
         });
       });
 
-      // Step buttons
-      const btnPrev = $('btn-prev');
-      const btnNext = $('btn-next');
       const btnCancel = $('btn-cancel');
       const btnSubmit = $('btn-submit');
 
-      function goStep(n, resetInvalid) {
-        if (resetInvalid) clearInvalid();
-        state.step = n;
-        renderStepper();
-        document.querySelectorAll('.step-page').forEach((p) => {
-          p.style.display = (Number(p.getAttribute('data-step')) === n) ? 'block' : 'none';
-        });
-        btnPrev.style.visibility = (n === 1) ? 'hidden' : 'visible';
-        btnNext.style.display = (n === 4) ? 'none' : 'inline-flex';
-        btnSubmit.style.display = (n === 4) ? 'inline-flex' : 'none';
-        if (n === 2 || n === 3 || n === 4) syncUIByPurposeStructure();
-        if (n === 4) buildSummary();
-      }
-
-      btnPrev.addEventListener('click', () => goStep(Math.max(1, state.step - 1), true));
       btnCancel.addEventListener('click', () => { showList(); });
-
-      btnNext.addEventListener('click', () => {
-        clearInvalid();
-        let v = { ok:true };
-        if (state.step === 1) v = validateStep1();
-        if (state.step === 2) v = validateStep2();
-        if (state.step === 3) v = validateStep3();
-        if (!v.ok) { markInvalid(v.key, v.msg); return; }
-        if (state.step === 1) syncUIByPurposeStructure();
-        goStep(state.step + 1, true);
-      });
 
       btnSubmit.addEventListener('click', () => {
         clearInvalid();
-        // final validate all
-        const v1 = validateStep1(); if (!v1.ok) { goStep(1,true); markInvalid(v1.key,v1.msg); return; }
-        const v2 = validateStep2(); if (!v2.ok) { goStep(2,true); markInvalid(v2.key,v2.msg); return; }
-        const v3 = validateStep3(); if (!v3.ok) { goStep(3,true); markInvalid(v3.key,v3.msg); return; }
+        const v1 = validateStep1();
+        if (!v1.ok) { markInvalid(v1.key, v1.msg); scrollFirstInvalid(); return; }
+        syncUIByPurposeStructure();
+        const v2 = validateStep2();
+        if (!v2.ok) { markInvalid(v2.key, v2.msg); scrollFirstInvalid(); return; }
+        const v3 = validateStep3();
+        if (!v3.ok) { markInvalid(v3.key, v3.msg); scrollFirstInvalid(); return; }
 
         // mock submit: sometimes fail if budget too huge (just for demo)
         if (Number(state.budget) > 999999999) {
@@ -1124,7 +1092,7 @@
         });
         showList();
         renderList();
-        showToast('등록 완료: ' + state.name);
+        showToast('저장 완료: ' + state.name);
       });
 
       // change listeners for step1
@@ -1141,8 +1109,6 @@
       // init
       syncShipperDetail();
       renderTimeTags();
-      renderStepper();
-      goStep(1, true);
       syncUIByPurposeStructure();
       showList();
     })();
