@@ -115,6 +115,7 @@
     .form-shell { background: var(--card); border-radius: 0; border: 1px solid var(--border); padding: 24px 28px 28px; width: 100%; max-width: none; box-sizing: border-box; box-shadow: var(--shadow); }
     #screen-register { width: 100%; max-width: 100%; }
     .form-section-title { font-size: 15px; font-weight: 800; color: var(--navy); margin: 0 0 16px; padding-bottom: 10px; border-bottom: 2px solid var(--navy); }
+    .form-subsection-title { font-size: 14px; font-weight: 800; color: var(--navy); margin: 20px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
     .form-row { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
     .form-row label { width: min(200px, 24%); flex-shrink: 0; font-weight: 700; font-size: 13px; color: var(--text); padding-top: 10px; }
     .req { color: var(--req-dot); font-weight: 900; margin-left: 3px; }
@@ -375,10 +376,10 @@
               </div>
 
               <div class="form-row" data-key="budget">
-                <label>예산<span class="req">*</span></label>
+                <label>1인당 예산<span class="req">*</span></label>
                 <div class="field">
-                  <input id="f-budget" type="number" min="1" step="1" placeholder="0원 초과" />
-                  <div class="help">예산 소진 시 지급 중단</div>
+                  <input id="f-budget" type="number" min="1" step="1" placeholder="1인당 예산(원) 입력" />
+                  <div class="help">1인당 적용 예산(원). 소진 시 해당 미션 지급 중단</div>
                 </div>
               </div>
 
@@ -459,18 +460,21 @@
               <h2 class="form-section-title">달성 조건</h2>
               <div id="dyn-note" class="warn" style="display:none;">달성 조건은 S&OP 연동 후 자동 설정됩니다</div>
 
+              <h3 class="form-subsection-title">미션 운영기준</h3>
               <div id="row-off-cancel-wrap">
                 <div class="form-row" data-key="offday">
-                  <label>휴무 조건</label>
+                  <label>휴무</label>
                   <div class="field">
                     <input id="f-offday" type="number" min="0" step="1" placeholder="0 이상 정수 (회/주)" />
+                    <div class="help">미션 운영기준 · 선택 달성 조건 · 회/주</div>
                   </div>
                 </div>
 
                 <div class="form-row" data-key="cancel">
-                  <label>취소건수 조건</label>
+                  <label>취소 건수</label>
                   <div class="field">
                     <input id="f-cancel" type="number" min="0" step="1" placeholder="0 이상 정수 (건/주)" />
+                    <div class="help">미션 운영기준 · 선택 달성 조건 · 건/주</div>
                   </div>
                 </div>
               </div>
@@ -870,7 +874,7 @@
         if (state.end <= state.start) return { ok:false, key:'period', msg:'종료일은 시작일보다 이후여야 합니다.' };
         if (!state.publish) return { ok:false, key:'publish', msg:'미션 공개일은 필수입니다.' };
         if (state.publish > state.start) return { ok:false, key:'publish', msg:'미션 공개일은 시작일 이전이어야 합니다.' };
-        if (!state.budget || Number(state.budget) <= 0) return { ok:false, key:'budget', msg:'예산은 0원 초과로 입력해 주세요.' };
+        if (!state.budget || Number(state.budget) <= 0) return { ok:false, key:'budget', msg:'1인당 예산은 0원 초과로 입력해 주세요.' };
         if (state.targets.length === 0) return { ok:false, key:'targets', msg:'적용대상 유형은 1개 이상 선택해 주세요.' };
         if (!document.getElementById('chk-friends').checked) {
           state.segmentActivity = [];
@@ -932,9 +936,9 @@
         }
         if (state.purpose !== '전환') {
           const o = intOrEmpty(state.offday);
-          if (!o.ok) return { ok:false, key:'offday', msg:'휴무 조건은 0 이상 정수로 입력해 주세요.' };
+          if (!o.ok) return { ok:false, key:'offday', msg:'미션 운영기준(휴무)는 0 이상 정수로 입력해 주세요.' };
           const c = intOrEmpty(state.cancel);
-          if (!c.ok) return { ok:false, key:'cancel', msg:'취소건수 조건은 0 이상 정수로 입력해 주세요.' };
+          if (!c.ok) return { ok:false, key:'cancel', msg:'미션 운영기준(취소 건수)는 0 이상 정수로 입력해 주세요.' };
         }
 
         if (state.structure === '단계') {
@@ -1066,7 +1070,7 @@
 
         // mock submit: sometimes fail if budget too huge (just for demo)
         if (Number(state.budget) > 999999999) {
-          showFailModal('예산 최대값(TBD)을 초과했습니다.');
+          showFailModal('1인당 예산 최대값(TBD)을 초과했습니다.');
           return;
         }
 
