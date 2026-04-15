@@ -98,6 +98,7 @@
     .badge.muted { color: var(--text-muted); background: #f5f5f5; }
     .badge.danger { color: var(--danger); border-color: #ffcdd2; background: #ffebee; }
     .manage-na { font-size: 12px; color: var(--text-muted); user-select: none; cursor: default; }
+    .data-table .td-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
     .list-guide { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.55; }
 
@@ -239,7 +240,7 @@
           <div class="table-wrap">
             <table class="data-table">
               <colgroup>
-                <col style="width:20%"><col style="width:9%"><col style="width:9%"><col style="width:13%"><col style="width:15%"><col style="width:19%"><col style="width:8%"><col style="width:7%">
+                <col style="width:16%"><col style="width:7%"><col style="width:7%"><col style="width:10%"><col style="width:11%"><col style="width:11%"><col style="width:9%"><col style="width:9%"><col style="width:7%"><col style="width:13%">
               </colgroup>
               <thead>
                 <tr>
@@ -249,6 +250,8 @@
                   <th>기간</th>
                   <th>적용대상 유형</th>
                   <th>지역・ZONE</th>
+                  <th>예산</th>
+                  <th>소진예산</th>
                   <th>상태</th>
                   <th>관리</th>
                 </tr>
@@ -608,17 +611,17 @@
         const t = todayISO();
         const add = (n) => addDaysISO(t, n);
         const demo = [
-          { id: 'MS-DEMO-01', name: '도심 점심 피크 사전 집중 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(14), end: add(28), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['서울특별시 강남구'], zones: [], createdAt: t, off: false },
-          { id: 'MS-DEMO-02', name: '서초구 주간 피크 달성형 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-2), end: add(10), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['서울특별시 서초구'], zones: [], createdAt: t, off: false },
-          { id: 'MS-DEMO-03', name: '연수 NVP 야간 구간 인센티브', purpose: '활성화', structure: '단일', mode: '정적', start: add(-40), end: add(-5), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['인천 연수ZONE'], createdAt: t, off: false },
-          { id: 'MS-DEMO-04', name: '해운대 프렌즈 주말 스탬프 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(8), end: add(22), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['부산광역시 해운대구'], zones: [], createdAt: t, off: true },
-          { id: 'MS-DEMO-05', name: '서울 강남ZONE NVP 동선 최적화 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-3), end: add(9), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['서울 강남ZONE'], createdAt: t, off: true },
+          { id: 'MS-DEMO-01', name: '도심 점심 피크 사전 집중 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(14), end: add(28), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['서울특별시 강남구'], zones: [], budgetTotal: 12000000, budgetSpent: 0, createdAt: t, off: false },
+          { id: 'MS-DEMO-02', name: '서초구 주간 피크 달성형 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-2), end: add(10), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['서울특별시 서초구'], zones: [], budgetTotal: 8000000, budgetSpent: 3250000, createdAt: t, off: false },
+          { id: 'MS-DEMO-03', name: '연수 NVP 야간 구간 인센티브', purpose: '활성화', structure: '단일', mode: '정적', start: add(-40), end: add(-5), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['인천 연수ZONE'], budgetTotal: 5500000, budgetSpent: 5500000, createdAt: t, off: false },
+          { id: 'MS-DEMO-04', name: '해운대 프렌즈 주말 스탬프 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(8), end: add(22), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['부산광역시 해운대구'], zones: [], budgetTotal: 3000000, budgetSpent: 0, createdAt: t, off: true },
+          { id: 'MS-DEMO-05', name: '서울 강남ZONE NVP 동선 최적화 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-3), end: add(9), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['서울 강남ZONE'], budgetTotal: 15000000, budgetSpent: 7800000, createdAt: t, off: true },
         ];
         const samples = [
-          { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전'], sgg: ['서울특별시 강남구'], zones: [], createdAt: '2026-03-31', off: false },
-          { id: 'MS-2026-002', name: '주말 단일 지급 미션', purpose: '활성화', structure: '단일', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전', '저녁'], sgg: ['부산광역시 해운대구'], zones: [], createdAt: '2026-03-31', off: true },
-          { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', purpose: '활성화', structure: '단계', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['대구 수성ZONE'], createdAt: '2026-03-10', off: false },
-          { id: 'MS-2026-004', name: '신규 라이더 전환 미션', purpose: '전환', structure: '단일', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['일반기사(프렌즈)'], segmentActivity: ['중간'], segmentCommute: ['오후', '저녁'], sgg: ['서울특별시 강남구'], zones: [], createdAt: '2026-03-28', off: false },
+          { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전'], sgg: ['서울특별시 강남구'], zones: [], budgetTotal: 20000000, budgetSpent: 9100000, createdAt: '2026-03-31', off: false },
+          { id: 'MS-2026-002', name: '주말 단일 지급 미션', purpose: '활성화', structure: '단일', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전', '저녁'], sgg: ['부산광역시 해운대구'], zones: [], budgetTotal: 4000000, budgetSpent: 1200000, createdAt: '2026-03-31', off: true },
+          { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', purpose: '활성화', structure: '단계', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['대구 수성ZONE'], budgetTotal: 30000000, budgetSpent: 30000000, createdAt: '2026-03-10', off: false },
+          { id: 'MS-2026-004', name: '신규 라이더 전환 미션', purpose: '전환', structure: '단일', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['일반기사(프렌즈)'], segmentActivity: ['중간'], segmentCommute: ['오후', '저녁'], sgg: ['서울특별시 강남구'], zones: [], budgetTotal: 50000000, budgetSpent: 12400000, createdAt: '2026-03-28', off: false },
         ];
         return demo.concat(samples);
       })();
@@ -634,6 +637,12 @@
       }
 
       function fmtPeriod(c) { return c.start.slice(5).replace('-', '/') + '~' + c.end.slice(5).replace('-', '/'); }
+
+      function fmtWon(n) {
+        const v = Number(n);
+        if (!Number.isFinite(v) || v < 0) return '—';
+        return v.toLocaleString('ko-KR') + '원';
+      }
 
       function missionMatchesTargetType(c, flt) {
         if (!flt) return true;
@@ -682,6 +691,8 @@
             '<td>' + fmtPeriod(c) + '</td>' +
             '<td>' + c.targets.join(', ') + '</td>' +
             '<td>' + fmtGeoCell(c) + '</td>' +
+            '<td class="td-num">' + fmtWon(c.budgetTotal) + '</td>' +
+            '<td class="td-num">' + fmtWon(c.budgetSpent) + '</td>' +
             '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>' +
             '<td>' + manageTd + '</td>';
           tb.appendChild(tr);
@@ -1103,6 +1114,8 @@
 
         // append to list
         const nextId = 'MS-2026-' + String(100 + CAMPAIGNS.length + 1).padStart(3,'0');
+        const per = Number(state.budget);
+        const pool = Number.isFinite(per) && per > 0 ? Math.max(per * 200, 500000) : 0;
         CAMPAIGNS.unshift({
           id: nextId,
           name: state.name,
@@ -1119,6 +1132,8 @@
           shipper: state.shipper,
           shipperDetail: state.shipperDetail,
           firstAutoApply: state.firstAutoApply,
+          budgetTotal: pool,
+          budgetSpent: 0,
           createdAt: todayISO(),
           off: false
         });
