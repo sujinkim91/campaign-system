@@ -99,6 +99,12 @@
     .badge.danger { color: var(--danger); border-color: #ffcdd2; background: #ffebee; }
     .manage-na { font-size: 12px; color: var(--text-muted); user-select: none; cursor: default; }
     .data-table .td-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .data-table .td-spend { text-align: right; vertical-align: top; }
+    .td-spend-wrap { display: inline-block; min-width: 7.5rem; width: 100%; max-width: 13rem; margin-left: auto; text-align: right; }
+    .td-spend-wrap .spend-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: 4px; font-size: 11px; color: var(--text-muted); line-height: 1.35; }
+    .td-spend-wrap .spend-pct { font-variant-numeric: tabular-nums; flex-shrink: 0; font-weight: 600; }
+    .td-spend-wrap .spend-bar { height: 4px; background: #e8ecf1; border-radius: 2px; margin-top: 6px; overflow: hidden; }
+    .td-spend-wrap .spend-bar-fill { display: block; height: 100%; max-width: 100%; background: var(--navy); border-radius: 2px; opacity: 0.5; }
 
     .list-guide { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.55; }
 
@@ -240,7 +246,7 @@
           <div class="table-wrap">
             <table class="data-table">
               <colgroup>
-                <col style="width:16%"><col style="width:7%"><col style="width:7%"><col style="width:10%"><col style="width:11%"><col style="width:11%"><col style="width:9%"><col style="width:9%"><col style="width:7%"><col style="width:13%">
+                <col style="width:15%"><col style="width:7%"><col style="width:7%"><col style="width:10%"><col style="width:11%"><col style="width:11%"><col style="width:8%"><col style="width:11%"><col style="width:7%"><col style="width:13%">
               </colgroup>
               <thead>
                 <tr>
@@ -251,7 +257,7 @@
                   <th>적용대상 유형</th>
                   <th>지역・ZONE</th>
                   <th>총 예산</th>
-                  <th>소진액</th>
+                  <th title="누적 소진액·잔여 예산·사용 비율">소진액</th>
                   <th>상태</th>
                   <th>관리</th>
                 </tr>
@@ -644,6 +650,31 @@
         return v.toLocaleString('ko-KR') + '원';
       }
 
+      /** 총 예산 유지 + 소진액 주요 표시, 같은 셀에 잔여·사용 비율·막대(목업) */
+      function fmtSpendCell(c) {
+        const total = Number(c.budgetTotal);
+        const spentRaw = Number(c.budgetSpent);
+        if (!Number.isFinite(total) || total < 0) {
+          return '<div class="td-spend-wrap"><span class="td-num">—</span></div>';
+        }
+        const spent = (Number.isFinite(spentRaw) && spentRaw >= 0) ? spentRaw : 0;
+        const remain = Math.max(0, Math.round(total - spent));
+        const pct = total > 0 ? Math.min(100, Math.round((spent / total) * 100)) : 0;
+        const aria = '예산 대비 소진 ' + pct + '퍼센트, 잔여 ' + remain.toLocaleString('ko-KR') + '원';
+        return (
+          '<div class="td-spend-wrap">' +
+            '<div class="td-num">' + fmtWon(spent) + '</div>' +
+            '<div class="spend-meta">' +
+              '<span class="spend-remain">잔여 ' + fmtWon(remain) + '</span>' +
+              '<span class="spend-pct">' + pct + '%</span>' +
+            '</div>' +
+            '<div class="spend-bar" role="img" aria-label="' + aria + '">' +
+              '<span class="spend-bar-fill" style="width:' + pct + '%;"></span>' +
+            '</div>' +
+          '</div>'
+        );
+      }
+
       function missionMatchesTargetType(c, flt) {
         if (!flt) return true;
         return c.targets.includes(flt);
@@ -692,7 +723,7 @@
             '<td>' + c.targets.join(', ') + '</td>' +
             '<td>' + fmtGeoCell(c) + '</td>' +
             '<td class="td-num">' + fmtWon(c.budgetTotal) + '</td>' +
-            '<td class="td-num">' + fmtWon(c.budgetSpent) + '</td>' +
+            '<td class="td-spend">' + fmtSpendCell(c) + '</td>' +
             '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>' +
             '<td>' + manageTd + '</td>';
           tb.appendChild(tr);
