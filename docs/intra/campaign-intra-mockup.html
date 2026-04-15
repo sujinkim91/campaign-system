@@ -222,12 +222,6 @@
                 <option value="전환">전환</option>
                 <option value="활성화">활성화</option>
               </select>
-              <label>지급 구조</label>
-              <select id="flt-structure">
-                <option value="">전체</option>
-                <option value="단일">단일</option>
-                <option value="단계">단계</option>
-              </select>
               <label>적용대상 유형</label>
               <select id="flt-target-type">
                 <option value="">전체</option>
@@ -246,13 +240,12 @@
           <div class="table-wrap">
             <table class="data-table">
               <colgroup>
-                <col style="width:14%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:11%"><col style="width:11%"><col style="width:9%"><col style="width:9%"><col style="width:12%"><col style="width:7%"><col style="width:8%">
+                <col style="width:16%"><col style="width:8%"><col style="width:8%"><col style="width:12%"><col style="width:12%"><col style="width:10%"><col style="width:10%"><col style="width:14%"><col style="width:7%"><col style="width:7%">
               </colgroup>
               <thead>
                 <tr>
                   <th>미션명</th>
                   <th>목적</th>
-                  <th>지급 구조</th>
                   <th>운영 방식</th>
                   <th>기간</th>
                   <th>적용대상 유형</th>
@@ -280,7 +273,7 @@
         <section id="screen-register" class="screen">
           <div class="form-shell">
             <div class="warn" id="warn-box"></div>
-            <p class="list-guide" style="margin-top:0;">아래 항목을 한 화면에서 입력한 뒤 <strong>저장</strong>합니다. 조건부 항목은 목적·지급 구조·적용대상에 따라 표시됩니다.</p>
+            <p class="list-guide" style="margin-top:0;">아래 항목을 한 화면에서 입력한 뒤 <strong>저장</strong>합니다. 조건부 항목은 목적·적용대상에 따라 표시됩니다.</p>
 
             <div class="form-single-page" id="form-single-page">
               <h2 class="form-section-title">기본 정보</h2>
@@ -299,19 +292,8 @@
                     <label class="pill"><input type="radio" name="purpose" value="활성화" /> 활성화</label>
                   </div>
                   <div id="conversion-desc" class="help" style="display:none;margin-top:10px;line-height:1.5;">
-                    신규 라이더 전환 유도. 가입일 이내 조건이 활성화됩니다(지급 구조: 단일 고정).
+                    신규 라이더 전환 유도. 가입일 이내 조건이 활성화됩니다(단일 지급 고정).
                   </div>
-                </div>
-              </div>
-
-              <div class="form-row" data-key="structure" id="row-structure">
-                <label>지급 구조<span class="req">*</span></label>
-                <div class="field">
-                  <div class="radio-group">
-                    <label class="pill"><input type="radio" name="structure" value="단일" /> 단일</label>
-                    <label class="pill"><input type="radio" name="structure" value="단계" /> 단계</label>
-                  </div>
-                  <div class="help">활성화 목적일 때 단일 또는 단계를 선택합니다. 전환 목적은 단일 고정입니다.</div>
                 </div>
               </div>
 
@@ -347,7 +329,7 @@
                     <button type="button" class="btn ghost" id="btn-add-time">추가</button>
                   </div>
                   <div id="time-tags" class="time-tag-wrap" aria-live="polite"></div>
-                  <div class="help">지급 구조가 단일·단계(활성화)일 때 사용 · 전환 목적은 미사용 · 시작·종료 시각 후 <strong>추가</strong> · 다중 구간 · 태그 × 삭제 · 미등록 시 전일/미설정 · 중복 불가</div>
+                  <div class="help">활성화 목적일 때 사용 · 전환 목적은 미사용 · 시작·종료 시각 후 <strong>추가</strong> · 다중 구간 · 태그 × 삭제 · 미등록 시 전일/미설정 · 중복 불가</div>
                 </div>
               </div>
 
@@ -425,7 +407,7 @@
                     <label class="pill"><input type="checkbox" value="중간" /> 중간</label>
                     <label class="pill"><input type="checkbox" value="낮음" /> 낮음</label>
                   </div>
-                  <div class="help">Notion 지급 구조별 적용 조건 · 일반기사(프렌즈) 선택 시 노출 · 높음/중간/낮음 중 1개 이상</div>
+                  <div class="help">Notion 적용 조건 · 일반기사(프렌즈) 선택 시 노출 · 높음/중간/낮음 중 1개 이상</div>
                 </div>
               </div>
               <div class="form-row" data-key="segment2" id="row-seg-commute" style="display:none;">
@@ -437,7 +419,7 @@
                     <label class="pill"><input type="checkbox" value="저녁" /> 저녁</label>
                     <label class="pill"><input type="checkbox" value="새벽" /> 새벽</label>
                   </div>
-                  <div class="help">Notion 지급 구조별 적용 조건 · 일반기사(프렌즈) 선택 시 노출 · 오전/오후/저녁/새벽 중 1개 이상</div>
+                  <div class="help">Notion 적용 조건 · 일반기사(프렌즈) 선택 시 노출 · 오전/오후/저녁/새벽 중 1개 이상</div>
                 </div>
               </div>
 
@@ -573,7 +555,7 @@
         if (headerList) headerList.style.display = 'none';
         if (headerRegister) headerRegister.style.display = 'flex';
         if ($('f-name')) $('f-name').value = '';
-        document.querySelectorAll('input[name="purpose"], input[name="structure"], input[name="mode"]').forEach((el) => { el.checked = false; });
+        document.querySelectorAll('input[name="purpose"], input[name="mode"]').forEach((el) => { el.checked = false; });
         state.times = [];
         if ($('f-time-start')) $('f-time-start').value = '';
         if ($('f-time-end')) $('f-time-end').value = '';
@@ -595,7 +577,6 @@
       $('btn-reset-filters').addEventListener('click', () => {
         $('flt-status').value = '';
         $('flt-purpose').value = '';
-        $('flt-structure').value = '';
         $('flt-target-type').value = '';
         $('flt-name').value = '';
         renderList();
@@ -640,7 +621,6 @@
       function renderList() {
         const fltStatus = $('flt-status').value;
         const fltPurpose = $('flt-purpose').value;
-        const fltStructure = $('flt-structure').value;
         const fltTargetType = $('flt-target-type').value;
         const fltName = $('flt-name').value.trim();
         let rows = CAMPAIGNS.slice();
@@ -648,7 +628,6 @@
           const st = statusOf(c).key;
           if (fltStatus && st !== fltStatus) return false;
           if (fltPurpose && c.purpose !== fltPurpose) return false;
-          if (fltStructure && c.structure !== fltStructure) return false;
           if (!missionMatchesTargetType(c, fltTargetType)) return false;
           if (fltName && !c.name.includes(fltName)) return false;
           return true;
@@ -664,7 +643,6 @@
           tr.innerHTML =
             '<td title="' + c.id + '">' + c.name + '</td>' +
             '<td>' + c.purpose + '</td>' +
-            '<td>' + (c.purpose === '전환' ? '단일(고정)' : c.structure) + '</td>' +
             '<td>' + c.mode + '</td>' +
             '<td>' + fmtPeriod(c) + '</td>' +
             '<td>' + c.targets.join(', ') + '</td>' +
@@ -688,7 +666,6 @@
       $('btn-search').addEventListener('click', renderList);
       $('flt-status').addEventListener('change', renderList);
       $('flt-purpose').addEventListener('change', renderList);
-      $('flt-structure').addEventListener('change', renderList);
       $('flt-target-type').addEventListener('change', renderList);
       renderList();
 
@@ -759,9 +736,7 @@
       function readStep1() {
         state.name = $('f-name').value;
         state.purpose = (document.querySelector('input[name="purpose"]:checked') || {}).value || '';
-        state.structure = state.purpose === '전환'
-          ? '단일'
-          : ((document.querySelector('input[name="structure"]:checked') || {}).value || '');
+        state.structure = '단일';
         state.mode = (document.querySelector('input[name="mode"]:checked') || {}).value || '';
       }
       function renderTimeTags() {
@@ -843,9 +818,7 @@
           state.offday = $('f-offday').value;
           state.cancel = $('f-cancel').value;
         }
-        if (state.structure === '단계') {
-          // state.stages already bound by inputs
-        } else if (state.purpose === '전환') {
+        if (state.purpose === '전환') {
           state.firstPayAmount = $('f-first-amount').value;
         } else {
           state.firstPayAmount = '';
@@ -859,7 +832,6 @@
         if (!state.name) return { ok:false, key:'name', msg:'미션명은 필수입니다.' };
         if (/\s/.test(state.name)) return { ok:false, key:'name', msg:'미션명은 공백 없이 입력해 주세요.' };
         if (!state.purpose) return { ok:false, key:'purpose', msg:'목적을 선택해 주세요.' };
-        if (state.purpose === '활성화' && !state.structure) return { ok:false, key:'structure', msg:'지급 구조를 선택해 주세요.' };
         if (!state.mode) return { ok:false, key:'mode', msg:'운영 방식을 선택해 주세요.' };
         return { ok:true };
       }
@@ -939,10 +911,7 @@
           if (!c.ok) return { ok:false, key:'cancel', msg:'미션 운영기준(취소 건수)는 0 이상 정수로 입력해 주세요.' };
         }
 
-        if (state.structure === '단계') {
-          const st = validateStagesAscending();
-          if (!st.ok) return { ok:false, key:'stages', msg: st.msg };
-        } else if (state.purpose === '전환') {
+        if (state.purpose === '전환') {
           if (!/^\d+$/.test(String(state.firstPayAmount)) || Number(state.firstPayAmount) <= 0) {
             return { ok:false, key:'firstPay', msg:'1회 지급 금액은 0원 초과로 입력해 주세요.' };
           }
@@ -964,8 +933,6 @@
       function syncUIByPurposeStructure() {
         readStep1();
         const isConversion = state.purpose === '전환';
-        const rowStruct = $('row-structure');
-        if (rowStruct) rowStruct.style.display = state.purpose === '활성화' ? 'flex' : 'none';
         $('conversion-desc').style.display = isConversion ? 'block' : 'none';
         $('row-first-signup').style.display = isConversion ? 'flex' : 'none';
         $('row-first-target').style.display = isConversion ? 'flex' : 'none';
@@ -978,7 +945,6 @@
           renderTimeTags();
           $('f-offday').value = '';
           $('f-cancel').value = '';
-          document.querySelectorAll('input[name="structure"]').forEach((r) => { r.checked = false; });
         } else {
           $('chk-first-auto').checked = false;
         }
@@ -994,9 +960,8 @@
         $('row-seg-activity').style.display = friendsChecked ? 'flex' : 'none';
         $('row-seg-commute').style.display = friendsChecked ? 'flex' : 'none';
 
-        const isStep = state.structure === '단계';
-        const isSingleActive = state.purpose === '활성화' && state.structure === '단일';
-        $('block-step').style.display = isStep ? 'block' : 'none';
+        $('block-step').style.display = 'none';
+        const isSingleActive = state.purpose === '활성화';
         $('block-single').style.display = isSingleActive ? 'block' : 'none';
         $('block-first').style.display = isConversion ? 'block' : 'none';
 
@@ -1099,7 +1064,6 @@
 
       // change listeners for step1
       document.querySelectorAll('input[name="purpose"]').forEach(r => r.addEventListener('change', () => { readStep1(); syncUIByPurposeStructure(); }));
-      document.querySelectorAll('input[name="structure"]').forEach(r => r.addEventListener('change', () => { readStep1(); syncUIByPurposeStructure(); }));
       document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener('change', () => { readStep1(); syncUIByPurposeStructure(); }));
       $('f-shipper').addEventListener('change', syncShipperDetail);
 
