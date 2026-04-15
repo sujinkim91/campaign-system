@@ -74,34 +74,22 @@
     }
     .dot-req { width: 8px; height: 8px; border-radius: 50%; background: var(--req-dot); flex-shrink: 0; }
 
-    .btn-reset {
-      min-height: var(--control-h);
-      padding: 0 16px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-muted);
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-xs);
-      cursor: pointer;
-      transition: background .15s, border-color .15s, color .15s;
-    }
-    .btn-reset:hover { background: #f4f6f9; color: var(--danger); border-color: #e0b4b4; }
+    .btn-reset { padding: 8px 16px; font-size: 13px; font-weight: 700; color: var(--danger); background: #fff; border: 1px solid var(--danger); border-radius: 4px; cursor: pointer; }
+    .btn-reset:hover { background: var(--danger-soft); }
 
     .content { flex: 1; padding: 22px 24px 32px; overflow: auto; }
 
     .screen { display: none; }
     .screen.active { display: block; }
 
-    /* 목록·등록 공통: 페이지 폭 */
-    #screen-list.screen.active,
+    /* 등록 화면만 폭 제한 */
     #screen-register.screen.active {
       max-width: var(--content-max);
       margin: 0 auto;
       width: 100%;
     }
 
-    /* 카드형 패널 (필터 = 등록 폼 상단과 동일 결) */
+    /* 카드형 패널 (등록 폼) */
     .panel {
       background: var(--card);
       border: 1px solid var(--border);
@@ -119,46 +107,18 @@
       letter-spacing: -0.02em;
     }
 
-    .filter-panel { margin-bottom: 0; }
-    .filter-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px 16px;
-      align-items: flex-end;
-    }
-    .filter-field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex: 1 1 140px;
-      min-width: 0;
-    }
-    .filter-field--wide { flex: 2 1 200px; }
-    .filter-field--btn { flex: 0 0 auto; align-self: flex-end; }
-    .filter-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
-      letter-spacing: 0.03em;
-    }
-    .filter-field select,
-    .filter-field input[type="text"] {
-      width: 100%;
-      min-height: var(--control-h);
-      padding: 0 12px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-xs);
-      font-size: 14px;
-      background: #fff;
-      color: var(--text);
-      transition: border-color .15s, box-shadow .15s;
-    }
-    .filter-field select:focus,
-    .filter-field input[type="text"]:focus {
-      outline: none;
-      border-color: var(--navy);
-      box-shadow: 0 0 0 3px rgba(36, 59, 85, 0.12);
-    }
+    /* 목록 검색 영역 (이전 디자인) */
+    .filter-section { background: var(--card); border-radius: 0; padding: 16px 20px; margin-bottom: 16px; border: 1px solid var(--border); width: 100%; box-shadow: var(--shadow); }
+    .filter-search-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+    .filter-row label { font-size: 13px; color: var(--text); font-weight: 600; margin-right: 2px; }
+    .filter-row select, .filter-row input[type="text"] { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; background: #fff; min-height: 36px; }
+    .filter-row select { min-width: 140px; }
+    .filter-row input[type="text"] { min-width: 200px; }
+
+    .btn-search-icon { width: 40px; height: 40px; min-width: 40px; padding: 0; border-radius: 50%; background: var(--primary); color: #fff; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(36,59,85,.35); }
+    .btn-search-icon:hover { background: var(--primary-hover); }
+    .btn-search-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 
     .btn {
       display: inline-flex;
@@ -180,17 +140,17 @@
     .btn.ghost:hover { background: #f4f6f9; border-color: #c5ced9; }
     .btn.btn-lg { min-height: 44px; padding: 0 22px; border-radius: var(--radius-sm); font-size: 14px; }
 
-    .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow); }
+    .table-wrap { background: var(--card); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
     .data-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
-    .data-table th { background: #f0f3f7; font-weight: 800; color: var(--navy); text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: 11px; text-transform: none; letter-spacing: 0.02em; }
-    .data-table td { padding: 11px 14px; border-bottom: 1px solid #e8ecf0; color: var(--text); overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+    .data-table th { background: #f5f7fa; font-weight: 800; color: var(--navy); text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 12px; }
+    .data-table td { padding: 12px 14px; border-bottom: 1px solid #e8ecf0; color: var(--text); overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
     .data-table tbody tr:nth-child(even) { background: #fafbfc; }
     .data-table tbody tr:nth-child(odd) { background: #fff; }
     .data-table tbody tr:hover { background: #f0f4f8; }
     .data-table tbody tr:last-child td { border-bottom: none; }
     .link { color: var(--primary); text-decoration: none; margin-right: 10px; font-size: 13px; font-weight: 700; }
     .link:hover { text-decoration: underline; }
-    .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: #fff; }
+    .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border); background: #fff; }
     .badge.ok { color: var(--ok); border-color: #c8e6c9; background: #e8f5e9; }
     .badge.muted { color: var(--text-muted); background: #f5f5f5; }
     .badge.danger { color: var(--danger); border-color: #ffcdd2; background: #ffebee; }
@@ -209,43 +169,13 @@
     .slot-pill .slot-range { font-size: 11px; font-weight: 700; color: var(--text-muted); line-height: 1.25; }
     #f-desc { max-width: 720px; min-height: 88px; font-family: inherit; }
 
-    .list-stack { display: flex; flex-direction: column; gap: 16px; }
-    .list-footer {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 12px;
-      padding: 18px 4px 6px;
-      margin-top: 4px;
-      border-top: 1px solid var(--border);
-    }
-    .list-footer .list-count-footer { justify-self: start; }
-    .list-footer .pagination-mock { justify-self: center; }
-    .list-footer #btn-open-register { justify-self: end; }
+    .list-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding: 12px 0 0; gap: 16px; flex-wrap: wrap; }
+    .btn-add { padding: 10px 22px; font-size: 14px; font-weight: 800; color: #fff; background: var(--primary); border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 8px rgba(36,59,85,.25); }
+    .btn-add:hover { background: var(--primary-hover); }
+    .pagination-mock { flex: 1; display: flex; justify-content: center; align-items: center; gap: 6px; }
+    .pagination-mock span { min-width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; border: 1px solid var(--border); border-radius: 4px; background: var(--primary); color: #fff; border-color: var(--primary); }
+    .list-count-footer { font-size: 13px; font-weight: 600; color: var(--text-muted); }
     .actions-btns { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-    .pagination-mock { display: flex; justify-content: center; align-items: center; gap: 6px; }
-    .pagination-mock span {
-      min-width: 36px;
-      height: 36px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 700;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-xs);
-      background: #f4f6f9;
-      color: var(--text-muted);
-    }
-    .list-count-footer {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-muted);
-      padding: 8px 14px;
-      background: #f0f3f7;
-      border-radius: 999px;
-      border: 1px solid #e2e8ef;
-    }
 
     .form-single-page { padding-bottom: 4px; }
     .form-single-page > .panel-title:not(:first-child) { margin-top: 28px; }
@@ -417,15 +347,6 @@
     .modal .ft { padding: 14px 18px; border-top: 1px solid var(--border); display:flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
 
     @media (max-width: 720px) {
-      .list-footer {
-        grid-template-columns: 1fr;
-        justify-items: stretch;
-        text-align: center;
-      }
-      .list-footer .list-count-footer,
-      .list-footer .pagination-mock,
-      .list-footer #btn-open-register { justify-self: center; width: 100%; }
-      .list-footer #btn-open-register { max-width: 320px; }
       .header-title-row { align-items: flex-start; }
     }
   </style>
@@ -470,44 +391,34 @@
       <div class="content">
         <!-- 화면 1: 캠페인 목록 -->
         <section id="screen-list" class="screen active">
-          <div class="list-stack">
-          <div class="panel panel--pad filter-panel">
-            <div class="panel-title">검색 조건</div>
-            <div class="filter-grid">
-              <div class="filter-field">
-                <span class="filter-label" id="lbl-flt-status">상태</span>
-                <select id="flt-status" aria-labelledby="lbl-flt-status">
-                  <option value="">전체</option>
-                  <option value="예정">예정</option>
-                  <option value="진행">진행</option>
-                  <option value="완료">완료</option>
-                  <option value="중단">중단</option>
-                </select>
-              </div>
-              <div class="filter-field">
-                <span class="filter-label" id="lbl-flt-purpose">목적</span>
-                <select id="flt-purpose" aria-labelledby="lbl-flt-purpose">
-                  <option value="">전체</option>
-                  <option value="전환">전환</option>
-                  <option value="활성화">활성화</option>
-                </select>
-              </div>
-              <div class="filter-field">
-                <span class="filter-label" id="lbl-flt-target">적용대상 유형</span>
-                <select id="flt-target-type" aria-labelledby="lbl-flt-target">
-                  <option value="">전체</option>
-                  <option value="일반기사(프렌즈)">일반기사(프렌즈)</option>
-                  <option value="NVP지점기사">NVP지점기사</option>
-                </select>
-              </div>
-              <div class="filter-field filter-field--wide">
-                <span class="filter-label" id="lbl-flt-name">미션명</span>
-                <input id="flt-name" type="text" placeholder="키워드 검색" aria-labelledby="lbl-flt-name" />
-              </div>
-              <div class="filter-field filter-field--btn">
-                <span class="filter-label" aria-hidden="true" style="visibility:hidden">검색</span>
-                <button type="button" class="btn primary" id="btn-search">검색</button>
-              </div>
+          <div class="filter-section">
+            <div class="filter-search-title">검색 조건</div>
+            <div class="filter-row">
+              <label for="flt-status">상태</label>
+              <select id="flt-status">
+                <option value="">전체</option>
+                <option value="예정">예정</option>
+                <option value="진행">진행</option>
+                <option value="완료">완료</option>
+                <option value="중단">중단</option>
+              </select>
+              <label for="flt-purpose">목적</label>
+              <select id="flt-purpose">
+                <option value="">전체</option>
+                <option value="전환">전환</option>
+                <option value="활성화">활성화</option>
+              </select>
+              <label for="flt-target-type">적용대상 유형</label>
+              <select id="flt-target-type">
+                <option value="">전체</option>
+                <option value="일반기사(프렌즈)">일반기사(프렌즈)</option>
+                <option value="NVP지점기사">NVP지점기사</option>
+              </select>
+              <label for="flt-name">미션명</label>
+              <input id="flt-name" type="text" placeholder="미션명 입력" />
+              <button type="button" class="btn-search-icon" id="btn-search" title="검색" aria-label="검색">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"/><path d="M15 15l4.5 4.5"/></svg>
+              </button>
             </div>
           </div>
 
@@ -534,10 +445,9 @@
           </div>
 
           <div class="list-footer">
-            <span class="list-count-footer" id="list-count-footer">총 0건</span>
+            <button type="button" class="btn-add" id="btn-open-register">+ 추가</button>
             <div class="pagination-mock" aria-hidden="true"><span>1</span></div>
-            <button type="button" class="btn primary btn-lg" id="btn-open-register">미션 추가</button>
-          </div>
+            <span class="list-count-footer" id="list-count-footer">총 0건</span>
           </div>
         </section>
 
