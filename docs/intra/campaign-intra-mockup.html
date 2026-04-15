@@ -189,7 +189,7 @@
         <div class="nav-group">
           <div class="nav-group-title">캠페인 관리</div>
           <div class="nav-group-items">
-            <a href="#" id="nav-list" class="active">미션관리</a>
+            <a href="#" id="nav-list" class="active">미션 관리</a>
           </div>
         </div>
       </nav>
@@ -197,9 +197,9 @@
 
     <main class="main">
       <header class="header">
-        <div class="breadcrumb" id="page-breadcrumb">캠페인 관리 &gt; 미션관리</div>
+        <div class="breadcrumb" id="page-breadcrumb">캠페인 관리 &gt; 미션 관리</div>
         <div class="header-title-row">
-          <h1 id="page-title" class="page-heading">미션관리</h1>
+          <h1 id="page-title" class="page-heading">미션 관리</h1>
           <div class="header-actions" id="header-actions-list">
             <button type="button" class="btn-reset" id="btn-reset-filters">초기화</button>
           </div>
@@ -567,8 +567,8 @@
         navList.classList.add('active');
         screenList.classList.add('active');
         screenRegister.classList.remove('active');
-        pageTitle.textContent = '미션관리';
-        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 미션관리';
+        pageTitle.textContent = '미션 관리';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 미션 관리';
         if (headerList) headerList.style.display = 'flex';
         if (headerRegister) headerRegister.style.display = 'none';
       }
@@ -577,7 +577,7 @@
         screenList.classList.remove('active');
         screenRegister.classList.add('active');
         pageTitle.textContent = '미션 캠페인 등록';
-        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 미션관리 > 등록';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 미션 관리 > 등록';
         if (headerList) headerList.style.display = 'none';
         if (headerRegister) headerRegister.style.display = 'flex';
         if ($('f-name')) $('f-name').value = '';
