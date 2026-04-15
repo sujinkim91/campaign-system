@@ -6,9 +6,9 @@
   <title>캠페인 관리 시스템 - Mockup</title>
   <style>
     :root {
-      --bg: #f0f2f5;
+      --bg: #eef1f5;
       --card: #ffffff;
-      --border: #d8dee6;
+      --border: #d0d8e2;
       --text: #1a2b3c;
       --text-muted: #5c6f82;
       --navy: #243b55;
@@ -24,13 +24,19 @@
       --danger-soft: #ffebee;
       --ok: #2e7d32;
       --req-dot: #e65100;
-      --shadow: 0 2px 8px rgba(26, 45, 66, 0.08);
+      --shadow: 0 1px 3px rgba(26, 45, 66, 0.06), 0 4px 14px rgba(26, 45, 66, 0.06);
+      --radius-lg: 12px;
+      --radius-md: 10px;
+      --radius-sm: 8px;
+      --radius-xs: 6px;
+      --control-h: 40px;
+      --content-max: 1080px;
     }
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); line-height: 1.5; }
     .app-wrap { display: flex; min-height: 100vh; overflow: hidden; }
 
-    /* —— Sidebar (VROONG Intra Lite 결) —— */
+    /* —— Sidebar (VROONG Intra Lite 톤) —— */
     .sidebar { width: 260px; min-width: 260px; background: var(--sidebar-bg); color: #e8ecf0; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid var(--sidebar-border); }
     .sidebar-brand { padding: 20px 16px 16px; border-bottom: 1px solid var(--sidebar-border); }
     .sidebar-app-name { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
@@ -49,51 +55,142 @@
     .sidebar-nav a.active { background: var(--sidebar-active); color: var(--sidebar-active-text); font-weight: 700; }
 
     .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; background: var(--bg); }
-    .header { padding: 16px 28px 18px; background: var(--card); border-bottom: 1px solid var(--border); flex-shrink: 0; }
-    .breadcrumb { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
-    .header-title-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    .page-heading { margin: 0; font-size: 22px; font-weight: 800; color: var(--navy); letter-spacing: -0.02em; }
-    .header-actions { display: flex; align-items: center; gap: 12px; }
-    .badge-req-hint { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+    .header { padding: 18px 28px 20px; background: var(--card); border-bottom: 1px solid var(--border); flex-shrink: 0; box-shadow: 0 1px 0 rgba(255,255,255,.8) inset; }
+    .breadcrumb { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.01em; }
+    .header-title-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .page-heading { margin: 0; font-size: 21px; font-weight: 800; color: var(--navy); letter-spacing: -0.03em; }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .badge-req-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      padding: 8px 14px;
+      background: #f0f3f7;
+      border-radius: 999px;
+      border: 1px solid #e2e8ef;
+    }
     .dot-req { width: 8px; height: 8px; border-radius: 50%; background: var(--req-dot); flex-shrink: 0; }
 
-    .btn-reset { padding: 8px 16px; font-size: 13px; font-weight: 700; color: var(--danger); background: #fff; border: 1px solid var(--danger); border-radius: 4px; cursor: pointer; }
-    .btn-reset:hover { background: var(--danger-soft); }
+    .btn-reset {
+      min-height: var(--control-h);
+      padding: 0 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      cursor: pointer;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+    .btn-reset:hover { background: #f4f6f9; color: var(--danger); border-color: #e0b4b4; }
 
-    .content { flex: 1; padding: 20px 28px 28px; overflow: auto; }
+    .content { flex: 1; padding: 22px 24px 32px; overflow: auto; }
 
     .screen { display: none; }
     .screen.active { display: block; }
 
-    .filter-section { background: var(--card); border-radius: 0; padding: 16px 20px; margin-bottom: 16px; border: 1px solid var(--border); width: 100%; box-shadow: var(--shadow); }
-    .filter-search-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-    .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
-    .filter-row label { font-size: 13px; color: var(--text); font-weight: 600; margin-right: 2px; }
-    .filter-row select, .filter-row input[type="text"] { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; background: #fff; min-height: 36px; }
-    .filter-row select { min-width: 140px; }
-    .filter-row input[type="text"] { min-width: 200px; }
+    /* 목록·등록 공통: 페이지 폭 */
+    #screen-list.screen.active,
+    #screen-register.screen.active {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      width: 100%;
+    }
 
-    .btn { padding: 9px 18px; border: 1px solid transparent; border-radius: 4px; font-size: 14px; font-weight: 700; cursor: pointer; }
-    .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    /* 카드형 패널 (필터 = 등록 폼 상단과 동일 결) */
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow);
+    }
+    .panel--pad { padding: 20px 22px 22px; }
+    .panel-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 0 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--navy);
+      letter-spacing: -0.02em;
+    }
+
+    .filter-panel { margin-bottom: 0; }
+    .filter-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 16px;
+      align-items: flex-end;
+    }
+    .filter-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1 1 140px;
+      min-width: 0;
+    }
+    .filter-field--wide { flex: 2 1 200px; }
+    .filter-field--btn { flex: 0 0 auto; align-self: flex-end; }
+    .filter-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+    .filter-field select,
+    .filter-field input[type="text"] {
+      width: 100%;
+      min-height: var(--control-h);
+      padding: 0 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      font-size: 14px;
+      background: #fff;
+      color: var(--text);
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .filter-field select:focus,
+    .filter-field input[type="text"]:focus {
+      outline: none;
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(36, 59, 85, 0.12);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: var(--control-h);
+      padding: 0 18px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-xs);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s, border-color .15s, color .15s, box-shadow .15s;
+    }
+    .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 1px 2px rgba(36,59,85,.12); }
     .btn.primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
     .btn.ghost { background: #fff; border-color: var(--border); color: var(--text); }
-    .btn.ghost:hover { background: #f5f7fa; }
+    .btn.ghost:hover { background: #f4f6f9; border-color: #c5ced9; }
+    .btn.btn-lg { min-height: 44px; padding: 0 22px; border-radius: var(--radius-sm); font-size: 14px; }
 
-    .btn-search-icon { width: 40px; height: 40px; min-width: 40px; padding: 0; border-radius: 50%; background: var(--primary); color: #fff; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(36,59,85,.35); }
-    .btn-search-icon:hover { background: var(--primary-hover); }
-    .btn-search-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-
-    .table-wrap { background: var(--card); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
+    .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow); }
     .data-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
-    .data-table th { background: #f5f7fa; font-weight: 800; color: var(--navy); text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 12px; }
-    .data-table td { padding: 12px 14px; border-bottom: 1px solid #e8ecf0; color: var(--text); overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+    .data-table th { background: #f0f3f7; font-weight: 800; color: var(--navy); text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: 11px; text-transform: none; letter-spacing: 0.02em; }
+    .data-table td { padding: 11px 14px; border-bottom: 1px solid #e8ecf0; color: var(--text); overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
     .data-table tbody tr:nth-child(even) { background: #fafbfc; }
     .data-table tbody tr:nth-child(odd) { background: #fff; }
     .data-table tbody tr:hover { background: #f0f4f8; }
     .data-table tbody tr:last-child td { border-bottom: none; }
     .link { color: var(--primary); text-decoration: none; margin-right: 10px; font-size: 13px; font-weight: 700; }
     .link:hover { text-decoration: underline; }
-    .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border); background: #fff; }
+    .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: #fff; }
     .badge.ok { color: var(--ok); border-color: #c8e6c9; background: #e8f5e9; }
     .badge.muted { color: var(--text-muted); background: #f5f5f5; }
     .badge.danger { color: var(--danger); border-color: #ffcdd2; background: #ffebee; }
@@ -105,78 +202,232 @@
     .td-remain-wrap .remain-bar { height: 4px; background: #e8ecf1; border-radius: 2px; margin-top: 6px; overflow: hidden; }
     .td-remain-wrap .remain-bar-fill { display: block; height: 100%; max-width: 100%; background: var(--ok); border-radius: 2px; opacity: 0.55; }
 
-    .target-panel { border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px 8px; margin-bottom: 18px; background: #f8fafc; }
+    .target-panel { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 18px 10px; margin-bottom: 18px; background: #f6f8fb; }
     .target-panel-hd { font-size: 13px; font-weight: 800; color: var(--navy); margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid #dde4ec; letter-spacing: -0.02em; }
     label.pill.slot-pill { flex-direction: column; align-items: flex-start; align-self: flex-start; gap: 4px; padding-top: 10px; padding-bottom: 10px; }
     label.pill.slot-pill input { margin-top: 2px; }
     .slot-pill .slot-range { font-size: 11px; font-weight: 700; color: var(--text-muted); line-height: 1.25; }
-    #f-desc { width: 100%; max-width: 720px; box-sizing: border-box; resize: vertical; min-height: 72px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 14px; }
+    #f-desc { max-width: 720px; min-height: 88px; font-family: inherit; }
 
-    .list-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding: 12px 0 0; gap: 16px; flex-wrap: wrap; }
-    .btn-add { padding: 10px 22px; font-size: 14px; font-weight: 800; color: #fff; background: var(--primary); border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 8px rgba(36,59,85,.25); }
-    .btn-add:hover { background: var(--primary-hover); }
-    .pagination-mock { flex: 1; display: flex; justify-content: center; align-items: center; gap: 6px; }
-    .pagination-mock span { min-width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; border: 1px solid var(--border); border-radius: 4px; background: var(--primary); color: #fff; border-color: var(--primary); }
-    .list-count-footer { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+    .list-stack { display: flex; flex-direction: column; gap: 16px; }
+    .list-footer {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 4px 6px;
+      margin-top: 4px;
+      border-top: 1px solid var(--border);
+    }
+    .list-footer .list-count-footer { justify-self: start; }
+    .list-footer .pagination-mock { justify-self: center; }
+    .list-footer #btn-open-register { justify-self: end; }
+    .actions-btns { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .pagination-mock { display: flex; justify-content: center; align-items: center; gap: 6px; }
+    .pagination-mock span {
+      min-width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      background: #f4f6f9;
+      color: var(--text-muted);
+    }
+    .list-count-footer {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      padding: 8px 14px;
+      background: #f0f3f7;
+      border-radius: 999px;
+      border: 1px solid #e2e8ef;
+    }
 
-    .form-single-page { padding-bottom: 8px; }
-    .form-single-page .form-section-title { margin-top: 28px; }
-    .form-single-page .form-section-title:first-child { margin-top: 0; }
+    .form-single-page { padding-bottom: 4px; }
+    .form-single-page > .panel-title:not(:first-child) { margin-top: 28px; }
 
-    .form-shell { background: var(--card); border-radius: 0; border: 1px solid var(--border); padding: 24px 28px 28px; width: 100%; max-width: none; box-sizing: border-box; box-shadow: var(--shadow); }
+    .form-shell.panel { padding: 22px 22px 20px; width: 100%; box-sizing: border-box; }
     #screen-register { width: 100%; max-width: 100%; }
-    .form-section-title { font-size: 15px; font-weight: 800; color: var(--navy); margin: 0 0 16px; padding-bottom: 10px; border-bottom: 2px solid var(--navy); }
-    .form-subsection-title { font-size: 14px; font-weight: 800; color: var(--navy); margin: 20px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+    .form-subsection-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 22px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      letter-spacing: -0.02em;
+    }
     .form-row { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
-    .form-row label { width: min(200px, 24%); flex-shrink: 0; font-weight: 700; font-size: 13px; color: var(--text); padding-top: 10px; }
+    .form-row label {
+      width: min(168px, 22%);
+      flex-shrink: 0;
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--text-muted);
+      padding-top: 11px;
+      letter-spacing: 0.02em;
+    }
     .req { color: var(--req-dot); font-weight: 900; margin-left: 3px; }
     .field { flex: 1; min-width: 0; }
-    .field input, .field select, .field textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; background: #fff; }
-    .field textarea { min-height: 140px; resize: vertical; line-height: 1.5; }
+    .field input:not([type="radio"]):not([type="checkbox"]),
+    .field select,
+    .field textarea {
+      width: 100%;
+      min-height: var(--control-h);
+      padding: 0 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      font-size: 14px;
+      background: #fff;
+      color: var(--text);
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .field textarea { min-height: 120px; padding: 10px 12px; resize: vertical; line-height: 1.5; }
+    .field input:not([type="radio"]):not([type="checkbox"]):focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(36, 59, 85, 0.1);
+    }
 
     .time-slot-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
-    .time-slot-row input[type="time"] { width: auto; min-width: 120px; padding: 10px 12px; font-size: 14px; border: 1px solid var(--border); border-radius: 4px; background: #fff; }
+    .time-slot-row input[type="time"] {
+      width: auto;
+      min-width: 120px;
+      min-height: var(--control-h);
+      padding: 0 12px;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      background: #fff;
+    }
     .time-slot-sep { color: var(--text-muted); font-weight: 800; font-size: 14px; user-select: none; }
     .time-tag-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; min-height: 0; }
     .time-tag-wrap:empty { margin-top: 0; }
-    .time-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: #e8eef8; border: 1px solid #c5d4e8; border-radius: 4px; font-size: 13px; font-weight: 600; color: var(--navy); }
+    .time-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: #e8eef8; border: 1px solid #c5d4e8; border-radius: var(--radius-xs); font-size: 13px; font-weight: 600; color: var(--navy); }
     .time-tag-rm { border: none; background: transparent; color: #64748b; cursor: pointer; font-size: 18px; line-height: 1; padding: 0 4px; }
     .time-tag-rm:hover { color: var(--danger); }
     .geo-tag-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; min-height: 10px; align-items: center; }
     .geo-add-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 4px; }
-    .geo-add-row .geo-add-select { flex: 1; min-width: 200px; max-width: 440px; }
+    .geo-add-row .geo-add-select {
+      flex: 1;
+      min-width: 200px;
+      max-width: 440px;
+      min-height: var(--control-h);
+      border-radius: var(--radius-xs);
+      padding: 0 12px;
+    }
+    .geo-cascade-wrap { margin-top: 6px; }
+    .geo-cascade-row { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: flex-end; }
+    .geo-cascade-field { display: flex; flex-direction: column; gap: 4px; min-width: 140px; flex: 1; max-width: 220px; }
+    .geo-cascade-field select {
+      width: 100%;
+      min-height: var(--control-h);
+      padding: 0 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      font-size: 14px;
+      background: #fff;
+    }
+    .geo-cascade-field select:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(36, 59, 85, 0.1); }
+    .geo-mini-label { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: -0.02em; }
+    .geo-cascade-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+    .geo-cascade-actions .btn { padding: 8px 14px; font-size: 13px; border-radius: 999px; }
+    .geo-manual-row { display: none; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
+    .geo-manual-row.show { display: flex; }
+    .geo-manual-row input { flex: 1; min-width: 200px; max-width: 420px; }
     .row-inline { display:flex; gap: 10px; align-items:center; }
     .row-inline > * { flex: 1; }
     .help { margin-top: 6px; font-size: 12px; color: var(--text-muted); line-height: 1.45; }
 
+    /* 활성화 시에만 보이는 지급 구조 행 */
+    #row-structure.form-row.invalid {
+      outline: 2px solid #c62828;
+      outline-offset: 2px;
+      border-radius: var(--radius-xs);
+      background: #fff8f8;
+    }
+
     .radio-group, .check-group { display:flex; gap: 10px; flex-wrap: wrap; }
-    .pill { display:flex; align-items:center; gap: 8px; border: 1px solid var(--border); background: #fff; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
-    .pill:hover { border-color: #a8b8cc; }
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 8px 14px;
+      border-radius: var(--radius-xs);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      transition: border-color .15s, background .15s, box-shadow .15s;
+    }
+    .pill:hover { border-color: #9eb0c4; background: #fafbfd; }
+    .pill:has(input:checked) { border-color: var(--navy); background: #f0f4fa; box-shadow: 0 0 0 1px rgba(36,59,85,.08); }
     .pill input { width: 16px; height: 16px; }
 
-    .invalid input, .invalid select, .invalid textarea { border-color: #c62828; background: #fff8f8; }
-    .warn { margin-top: 12px; padding: 10px 12px; border-radius: 4px; border: 1px solid #ffcdd2; background: #ffebee; color: #b71c1c; font-size: 13px; display:none; }
+    .invalid input:not([type="radio"]):not([type="checkbox"]),
+    .invalid select,
+    .invalid textarea { border-color: #c62828; background: #fff8f8; }
+    .warn {
+      margin-top: 0;
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: var(--radius-xs);
+      border: 1px solid #ffcdd2;
+      background: #ffebee;
+      color: #b71c1c;
+      font-size: 13px;
+      display: none;
+    }
 
-    .stage-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: 0; overflow: hidden; background: #fff; }
+    .stage-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: var(--radius-xs); overflow: hidden; background: #fff; }
     .stage-table th, .stage-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
     .stage-table input { padding: 8px 10px; font-size: 14px; border-radius: 4px; }
     .stage-table th { background: #f5f7fa; text-align: left; font-weight: 800; color: var(--navy); }
     .stage-table tr:last-child td { border-bottom: none; }
     .stage-actions { display:flex; gap: 10px; margin-top: 10px; }
-    .btn-mini { padding: 7px 12px; border-radius: 4px; border: 1px solid var(--border); background: #fff; font-weight: 700; font-size: 13px; cursor: pointer; }
+    .btn-mini { padding: 7px 12px; border-radius: var(--radius-xs); border: 1px solid var(--border); background: #fff; font-weight: 700; font-size: 13px; cursor: pointer; }
     .btn-mini:disabled { opacity: .5; cursor: not-allowed; }
     .btn-mini.primary { border-color: var(--primary); color: #fff; background: var(--primary); }
     .btn-mini.danger { border-color: var(--danger); color: var(--danger); background: #fff; }
 
-    .actions { display:flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
     .actions-left { margin-right: auto; }
-    .toast { position: fixed; right: 18px; bottom: 18px; background: var(--navy-deep); color: #fff; padding: 12px 16px; border-radius: 6px; box-shadow: var(--shadow); font-size: 13px; opacity: 0; transform: translateY(8px); transition: .18s ease; pointer-events: none; }
+    .toast { position: fixed; right: 18px; bottom: 18px; background: var(--navy-deep); color: #fff; padding: 12px 18px; border-radius: var(--radius-sm); box-shadow: var(--shadow); font-size: 13px; opacity: 0; transform: translateY(8px); transition: .18s ease; pointer-events: none; }
     .toast.show { opacity: 1; transform: translateY(0); }
     .modal-backdrop { position: fixed; inset: 0; background: rgba(26,45,66,.5); display:none; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
-    .modal { width: 100%; max-width: 480px; background: #fff; border-radius: 6px; box-shadow: 0 12px 40px rgba(0,0,0,.2); border: 1px solid var(--border); }
+    .modal { width: 100%; max-width: 480px; background: #fff; border-radius: var(--radius-md); box-shadow: 0 12px 40px rgba(0,0,0,.2); border: 1px solid var(--border); }
     .modal .hd { padding: 16px 18px; border-bottom: 1px solid var(--border); font-weight: 800; font-size: 16px; color: var(--navy); }
     .modal .bd { padding: 18px; color: var(--text); font-size: 14px; line-height: 1.55; }
     .modal .ft { padding: 14px 18px; border-top: 1px solid var(--border); display:flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+
+    @media (max-width: 720px) {
+      .list-footer {
+        grid-template-columns: 1fr;
+        justify-items: stretch;
+        text-align: center;
+      }
+      .list-footer .list-count-footer,
+      .list-footer .pagination-mock,
+      .list-footer #btn-open-register { justify-self: center; width: 100%; }
+      .list-footer #btn-open-register { max-width: 320px; }
+      .header-title-row { align-items: flex-start; }
+    }
   </style>
 </head>
 <body>
@@ -219,50 +470,59 @@
       <div class="content">
         <!-- 화면 1: 캠페인 목록 -->
         <section id="screen-list" class="screen active">
-          <div class="filter-section">
-            <div class="filter-search-title">검색 조건</div>
-            <div class="filter-row">
-              <label>상태</label>
-              <select id="flt-status">
-                <option value="">전체</option>
-                <option value="예정">예정</option>
-                <option value="진행">진행</option>
-                <option value="완료">완료</option>
-                <option value="중단">중단</option>
-              </select>
-              <label>목적</label>
-              <select id="flt-purpose">
-                <option value="">전체</option>
-                <option value="전환">전환</option>
-                <option value="활성화">활성화</option>
-              </select>
-              <label>적용대상 유형</label>
-              <select id="flt-target-type">
-                <option value="">전체</option>
-                <option value="일반기사(프렌즈)">일반기사(프렌즈)</option>
-                <option value="NVP지점기사">NVP지점기사</option>
-              </select>
-              <label>미션명</label>
-              <input id="flt-name" type="text" placeholder="미션명 입력" />
-              <button type="button" class="btn-search-icon" id="btn-search" title="검색" aria-label="검색">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"/><path d="M15 15l4.5 4.5"/></svg>
-              </button>
+          <div class="list-stack">
+          <div class="panel panel--pad filter-panel">
+            <div class="panel-title">검색 조건</div>
+            <div class="filter-grid">
+              <div class="filter-field">
+                <span class="filter-label" id="lbl-flt-status">상태</span>
+                <select id="flt-status" aria-labelledby="lbl-flt-status">
+                  <option value="">전체</option>
+                  <option value="예정">예정</option>
+                  <option value="진행">진행</option>
+                  <option value="완료">완료</option>
+                  <option value="중단">중단</option>
+                </select>
+              </div>
+              <div class="filter-field">
+                <span class="filter-label" id="lbl-flt-purpose">목적</span>
+                <select id="flt-purpose" aria-labelledby="lbl-flt-purpose">
+                  <option value="">전체</option>
+                  <option value="전환">전환</option>
+                  <option value="활성화">활성화</option>
+                </select>
+              </div>
+              <div class="filter-field">
+                <span class="filter-label" id="lbl-flt-target">적용대상 유형</span>
+                <select id="flt-target-type" aria-labelledby="lbl-flt-target">
+                  <option value="">전체</option>
+                  <option value="일반기사(프렌즈)">일반기사(프렌즈)</option>
+                  <option value="NVP지점기사">NVP지점기사</option>
+                </select>
+              </div>
+              <div class="filter-field filter-field--wide">
+                <span class="filter-label" id="lbl-flt-name">미션명</span>
+                <input id="flt-name" type="text" placeholder="키워드 검색" aria-labelledby="lbl-flt-name" />
+              </div>
+              <div class="filter-field filter-field--btn">
+                <span class="filter-label" aria-hidden="true" style="visibility:hidden">검색</span>
+                <button type="button" class="btn primary" id="btn-search">검색</button>
+              </div>
             </div>
           </div>
 
           <div class="table-wrap">
             <table class="data-table">
               <colgroup>
-                <col style="width:16%"><col style="width:7%"><col style="width:7%"><col style="width:9%"><col style="width:10%"><col style="width:10%"><col style="width:11%"><col style="width:11%"><col style="width:6%"><col style="width:13%">
+                <col style="width:18%"><col style="width:9%"><col style="width:10%"><col style="width:11%"><col style="width:11%"><col style="width:12%"><col style="width:12%"><col style="width:7%"><col style="width:12%">
               </colgroup>
               <thead>
                 <tr>
                   <th>미션명</th>
                   <th>목적</th>
-                  <th>운영 방식</th>
                   <th>기간</th>
                   <th>적용대상 유형</th>
-                  <th title="프렌즈: 지역·기사활동지역 · NVP: ZONE">적용 범위</th>
+                  <th title="프렌즈: 미션 대상 지역(동)·기사활동지역(구) · NVP: ZONE">적용 범위</th>
                   <th title="이 미션에 배정된 지급 상한(캠페인 단위)">예산 한도</th>
                   <th title="예산 한도 − 누적 집행액. 막대는 잔여 비율(남은 한도 ÷ 예산 한도)">남은 한도</th>
                   <th>상태</th>
@@ -274,19 +534,20 @@
           </div>
 
           <div class="list-footer">
-            <button type="button" class="btn-add" id="btn-open-register">+ 추가</button>
-            <div class="pagination-mock" aria-hidden="true"><span>1</span></div>
             <span class="list-count-footer" id="list-count-footer">총 0건</span>
+            <div class="pagination-mock" aria-hidden="true"><span>1</span></div>
+            <button type="button" class="btn primary btn-lg" id="btn-open-register">미션 추가</button>
+          </div>
           </div>
         </section>
 
         <!-- 화면 2: 미션 캠페인 등록 (원페이지) -->
         <section id="screen-register" class="screen">
-          <div class="form-shell">
+          <div class="form-shell panel panel--pad">
             <div class="warn" id="warn-box"></div>
 
             <div class="form-single-page" id="form-single-page">
-              <h2 class="form-section-title">기본 정보</h2>
+              <h2 class="panel-title">기본 정보</h2>
               <div class="form-row" data-key="name">
                 <label>미션명<span class="req">*</span></label>
                 <div class="field">
@@ -314,17 +575,18 @@
                 </div>
               </div>
 
-              <div class="form-row" data-key="mode">
-                <label>운영 방식<span class="req">*</span></label>
+              <div class="form-row" id="row-structure" data-key="structure" hidden aria-live="polite">
+                <label>지급 구조<span class="req">*</span></label>
                 <div class="field">
                   <div class="radio-group">
-                    <label class="pill"><input type="radio" name="mode" value="정적" /> 정적</label>
-                    <label class="pill"><input type="radio" name="mode" value="동적" /> 동적</label>
+                    <label class="pill"><input type="radio" name="structure" value="단계" /> 단계형</label>
+                    <label class="pill"><input type="radio" name="structure" value="단일" checked /> 단일</label>
                   </div>
+                  <div class="help"><strong>단계형</strong>: 구간별 목표·지급(아래 단계 지급 표). <strong>단일</strong>: 목표 건수 1회 달성 시 지급. <strong>전환</strong> 목적은 단일 지급 고정(이 항목은 활성화일 때만 설정).</div>
                 </div>
               </div>
 
-              <h2 class="form-section-title">적용 조건</h2>
+              <h2 class="panel-title">적용 조건</h2>
               <div class="form-row" data-key="period">
                 <label>기간 설정<span class="req">*</span></label>
                 <div class="field">
@@ -403,34 +665,80 @@
                     <label class="pill"><input type="checkbox" value="일반기사(프렌즈)" id="chk-friends" /> 일반기사(프렌즈)</label>
                     <label class="pill"><input type="checkbox" value="NVP지점기사" /> NVP지점기사</label>
                   </div>
-                  <div class="help">유형을 복수 선택하면 아래에 <strong>대상별 조건 블록</strong>이 나뉘어 표시됩니다. 프렌즈는 <strong>지역</strong>, NVP는 <strong>ZONE</strong>으로 범위를 지정합니다.</div>
+                  <div class="help">유형을 복수 선택하면 아래에 <strong>대상별 조건 블록</strong>이 나뉩니다. 프렌즈는 <strong>미션 대상 지역(동)</strong>과 <strong>기사활동지역(구)</strong>, NVP는 <strong>ZONE</strong>으로 범위를 지정합니다.</div>
                 </div>
               </div>
 
               <div class="target-panel" id="panel-target-friends" style="display:none;">
                 <div class="target-panel-hd">일반기사(프렌즈) 조건</div>
                 <div class="form-row" data-key="regions" id="row-regions" style="align-items:flex-start;">
-                  <label>지역<span class="req">*</span></label>
+                  <label>미션 대상 지역<span class="req">*</span></label>
                   <div class="field">
                     <div id="region-tags" class="geo-tag-wrap" aria-live="polite"></div>
-                    <div class="geo-add-row">
-                      <select id="f-region-add" class="geo-add-select" aria-label="지역 추가">
-                        <option value="">추가 선택…</option>
-                      </select>
+                    <div class="geo-cascade-wrap">
+                      <div class="geo-cascade-row" role="group" aria-label="미션 대상 지역 선택">
+                        <div class="geo-cascade-field">
+                          <span class="geo-mini-label">시/도</span>
+                          <select id="f-target-sido" aria-label="시/도">
+                            <option value="">(선택없음)</option>
+                          </select>
+                        </div>
+                        <div class="geo-cascade-field">
+                          <span class="geo-mini-label">시/군/구</span>
+                          <select id="f-target-sgg" aria-label="시/군/구" disabled>
+                            <option value="">(선택없음)</option>
+                          </select>
+                        </div>
+                        <div class="geo-cascade-field">
+                          <span class="geo-mini-label">읍/면/동</span>
+                          <select id="f-target-dong" aria-label="읍/면/동" disabled>
+                            <option value="">(선택없음)</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="geo-cascade-actions">
+                        <button type="button" class="btn ghost" id="btn-target-add">+ 지역 추가</button>
+                        <button type="button" class="btn ghost" id="btn-target-manual-toggle">+ 직접 추가</button>
+                        <button type="button" class="btn ghost" id="btn-target-all">전체지역</button>
+                      </div>
+                      <div id="target-manual-row" class="geo-manual-row">
+                        <input type="text" id="f-target-manual" placeholder="예: 서울특별시 강남구 역삼동" autocomplete="off" />
+                        <button type="button" class="btn ghost" id="btn-target-manual-ok">추가</button>
+                      </div>
                     </div>
-                    <div class="help">미션 <strong>적용</strong> 행정구역(시·군·구) · 아래에서 선택 후 태그로 쌓입니다 · 중복 불가</div>
+                    <div class="help"><strong>미션 적용 범위</strong>를 <strong>읍·면·동</strong> 단위로 지정합니다. 드롭다운으로 고르거나 직접 입력할 수 있습니다. <strong>전체지역</strong>은 다른 항목과 함께 둘 수 없습니다. 기사활동지역(구)과는 별도 개념입니다.</div>
                   </div>
                 </div>
                 <div class="form-row" data-key="activityRegions" id="row-activity-regions" style="align-items:flex-start;">
                   <label>기사활동지역<span class="req">*</span></label>
                   <div class="field">
                     <div id="activity-tags" class="geo-tag-wrap" aria-live="polite"></div>
-                    <div class="geo-add-row">
-                      <select id="f-activity-add" class="geo-add-select" aria-label="기사활동지역 추가">
-                        <option value="">추가 선택…</option>
-                      </select>
+                    <div class="geo-cascade-wrap">
+                      <div class="geo-cascade-row" role="group" aria-label="기사활동지역 선택">
+                        <div class="geo-cascade-field">
+                          <span class="geo-mini-label">시/도</span>
+                          <select id="f-activity-sido" aria-label="기사활동 시/도">
+                            <option value="">(선택없음)</option>
+                          </select>
+                        </div>
+                        <div class="geo-cascade-field">
+                          <span class="geo-mini-label">시/군/구</span>
+                          <select id="f-activity-sgg" aria-label="기사활동 시/군/구" disabled>
+                            <option value="">(선택없음)</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="geo-cascade-actions">
+                        <button type="button" class="btn ghost" id="btn-activity-add">+ 지역 추가</button>
+                        <button type="button" class="btn ghost" id="btn-activity-manual-toggle">+ 직접 추가</button>
+                        <button type="button" class="btn ghost" id="btn-activity-all">전체지역</button>
+                      </div>
+                      <div id="activity-manual-row" class="geo-manual-row">
+                        <input type="text" id="f-activity-manual" placeholder="예: 서울특별시 서초구" autocomplete="off" />
+                        <button type="button" class="btn ghost" id="btn-activity-manual-ok">추가</button>
+                      </div>
                     </div>
-                    <div class="help">라이더 <strong>활동·배차</strong>를 볼 행정구역(시·군·구) · 지역과 다르게 둘 수 있습니다 · 중복 불가</div>
+                    <div class="help">라이더 <strong>활동·배차 기준</strong>을 <strong>시·군·구</strong> 단위로 지정합니다. 미션 대상 지역(동)과 구분되며, 필요 시 서로 다르게 설정할 수 있습니다. <strong>전체지역</strong>은 다른 구 단위 항목과 함께 둘 수 없습니다.</div>
                   </div>
                 </div>
 
@@ -475,7 +783,7 @@
                 </div>
               </div>
 
-              <h2 class="form-section-title">달성 조건</h2>
+              <h2 class="panel-title">달성 조건</h2>
               <div id="dyn-note" class="warn" style="display:none;">달성 조건은 S&OP 연동 후 자동 설정됩니다</div>
 
               <h3 class="form-subsection-title">미션 운영기준</h3>
@@ -540,9 +848,9 @@
 
             <div class="actions">
               <div class="actions-left"></div>
-              <div style="display:flex; gap:10px;">
-                <button type="button" class="btn ghost" id="btn-cancel">목록으로</button>
-                <button type="button" class="btn primary" id="btn-submit">저장</button>
+              <div class="actions-btns">
+                <button type="button" class="btn ghost btn-lg" id="btn-cancel">목록으로</button>
+                <button type="button" class="btn primary btn-lg" id="btn-submit">저장</button>
               </div>
             </div>
           </div>
@@ -603,7 +911,7 @@
         if (headerRegister) headerRegister.style.display = 'flex';
         if ($('f-name')) $('f-name').value = '';
         if ($('f-desc')) $('f-desc').value = '';
-        document.querySelectorAll('input[name="purpose"], input[name="mode"]').forEach((el) => { el.checked = false; });
+        document.querySelectorAll('input[name="purpose"]').forEach((el) => { el.checked = false; });
         state.times = [];
         if ($('f-time-start')) $('f-time-start').value = '';
         if ($('f-time-end')) $('f-time-end').value = '';
@@ -612,6 +920,7 @@
         if ($('f-shipper')) { $('f-shipper').value = '전체'; syncShipperDetail(); }
         if ($('f-shipper-detail')) $('f-shipper-detail').value = '';
         document.querySelectorAll('#targets input[type="checkbox"]').forEach((x) => { x.checked = false; });
+        document.querySelectorAll('input[name="structure"]').forEach((x) => { x.checked = x.value === '단일'; });
         document.querySelectorAll('#seg-activity input[type="checkbox"], #seg-commute input[type="checkbox"]').forEach((x) => { x.checked = false; });
         readStep1();
         syncUIByPurposeStructure();
@@ -637,17 +946,17 @@
         const t = todayISO();
         const add = (n) => addDaysISO(t, n);
         const demo = [
-          { id: 'MS-DEMO-01', name: '도심 점심 피크 사전 집중 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(14), end: add(28), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], regions: ['서울특별시 강남구'], activityRegions: ['서울특별시 서초구'], zones: [], budgetTotal: 12000000, budgetSpent: 0, createdAt: t, off: false },
-          { id: 'MS-DEMO-02', name: '서초구 주간 피크 달성형 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-2), end: add(10), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], regions: ['서울특별시 서초구'], activityRegions: ['서울특별시 서초구'], zones: [], budgetTotal: 8000000, budgetSpent: 3250000, createdAt: t, off: false },
+          { id: 'MS-DEMO-01', name: '도심 점심 피크 사전 집중 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(14), end: add(28), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], regions: ['서울특별시 강남구 역삼동'], activityRegions: ['서울특별시 서초구'], zones: [], budgetTotal: 12000000, budgetSpent: 0, createdAt: t, off: false },
+          { id: 'MS-DEMO-02', name: '서초구 주간 피크 달성형 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-2), end: add(10), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], regions: ['전체지역'], activityRegions: ['서울특별시 서초구'], zones: [], budgetTotal: 8000000, budgetSpent: 3250000, createdAt: t, off: false },
           { id: 'MS-DEMO-03', name: '연수 NVP 야간 구간 인센티브', purpose: '활성화', structure: '단일', mode: '정적', start: add(-40), end: add(-5), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], regions: [], activityRegions: [], zones: ['인천 연수ZONE'], budgetTotal: 5500000, budgetSpent: 5500000, createdAt: t, off: false },
-          { id: 'MS-DEMO-04', name: '해운대 프렌즈 주말 스탬프 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(8), end: add(22), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], regions: ['부산광역시 해운대구'], activityRegions: ['부산광역시 해운대구', '대구광역시 수성구'], zones: [], budgetTotal: 3000000, budgetSpent: 0, createdAt: t, off: true },
+          { id: 'MS-DEMO-04', name: '해운대 프렌즈 주말 스탬프 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(8), end: add(22), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], regions: ['부산광역시 해운대구 우동', '부산광역시 해운대구 중동'], activityRegions: ['전체지역'], zones: [], budgetTotal: 3000000, budgetSpent: 0, createdAt: t, off: true },
           { id: 'MS-DEMO-05', name: '서울 강남ZONE NVP 동선 최적화 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-3), end: add(9), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], regions: [], activityRegions: [], zones: ['서울 강남ZONE'], budgetTotal: 15000000, budgetSpent: 7800000, createdAt: t, off: true },
         ];
         const samples = [
-          { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전'], regions: ['서울특별시 강남구'], activityRegions: ['서울특별시 강남구'], zones: [], budgetTotal: 20000000, budgetSpent: 9100000, createdAt: '2026-03-31', off: false },
-          { id: 'MS-2026-002', name: '주말 단일 지급 미션', purpose: '활성화', structure: '단일', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전', '저녁'], regions: ['부산광역시 해운대구'], activityRegions: ['부산광역시 해운대구'], zones: [], budgetTotal: 4000000, budgetSpent: 1200000, createdAt: '2026-03-31', off: true },
-          { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', purpose: '활성화', structure: '단계', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], regions: [], activityRegions: [], zones: ['대구 수성ZONE'], budgetTotal: 30000000, budgetSpent: 30000000, createdAt: '2026-03-10', off: false },
-          { id: 'MS-2026-004', name: '신규 라이더 전환 미션', purpose: '전환', structure: '단일', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['일반기사(프렌즈)'], segmentActivity: ['중간'], segmentCommute: ['오후', '저녁'], regions: ['서울특별시 강남구'], activityRegions: ['서울특별시 서초구', '인천광역시 연수구'], zones: [], budgetTotal: 50000000, budgetSpent: 12400000, createdAt: '2026-03-28', off: false },
+          { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전'], regions: ['서울특별시 강남구 역삼동', '서울특별시 강남구 삼성동'], activityRegions: ['서울특별시 강남구'], zones: [], budgetTotal: 20000000, budgetSpent: 9100000, createdAt: '2026-03-31', off: false },
+          { id: 'MS-2026-002', name: '주말 단일 지급 미션', purpose: '활성화', structure: '단일', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전', '저녁'], regions: ['부산광역시 해운대구 우동'], activityRegions: ['부산광역시 해운대구'], zones: [], budgetTotal: 4000000, budgetSpent: 1200000, createdAt: '2026-03-31', off: true },
+          { id: 'MS-2026-003', name: '야간 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], regions: [], activityRegions: [], zones: ['대구 수성ZONE'], budgetTotal: 30000000, budgetSpent: 30000000, createdAt: '2026-03-10', off: false },
+          { id: 'MS-2026-004', name: '신규 라이더 전환 미션', purpose: '전환', structure: '단일', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['일반기사(프렌즈)'], segmentActivity: ['중간'], segmentCommute: ['오후', '저녁'], regions: ['서울특별시 강남구 청담동'], activityRegions: ['서울특별시 서초구', '인천광역시 연수구'], zones: [], budgetTotal: 50000000, budgetSpent: 12400000, createdAt: '2026-03-28', off: false },
         ];
         return demo.concat(samples);
       })();
@@ -705,8 +1014,8 @@
         const regions = (c.regions && c.regions.length) ? c.regions : ((c.sgg && c.sgg.length) ? c.sgg : []);
         const act = (c.activityRegions && c.activityRegions.length) ? c.activityRegions : [];
         const zones = (c.zones && c.zones.length) ? c.zones : [];
-        if (regions.length) bits.push('지역 ' + regions.join(', '));
-        if (act.length) bits.push('활동 ' + act.join(', '));
+        if (regions.length) bits.push('미션대상 ' + regions.join(', '));
+        if (act.length) bits.push('활동구역 ' + act.join(', '));
         if (zones.length) bits.push('ZONE ' + zones.join(', '));
         return bits.length ? bits.join(' · ') : '-';
       }
@@ -741,7 +1050,6 @@
           tr.innerHTML =
             '<td title="' + c.id + '">' + c.name + '</td>' +
             '<td>' + c.purpose + '</td>' +
-            '<td>' + c.mode + '</td>' +
             '<td>' + fmtPeriod(c) + '</td>' +
             '<td>' + c.targets.join(', ') + '</td>' +
             '<td>' + fmtGeoCell(c) + '</td>' +
@@ -782,7 +1090,7 @@
         description: '',
         purpose: '',
         structure: '',
-        mode: '',
+        mode: '정적',
         start: '',
         end: '',
         times: [],
@@ -806,9 +1114,26 @@
         shipperDetail: '',
       };
 
-      const REGION_OPTIONS = [
-        '서울특별시 강남구', '서울특별시 서초구', '부산광역시 해운대구', '대구광역시 수성구', '인천광역시 연수구', '광주광역시 동구',
-      ];
+      /** 행정구역 목업: 대상=동까지, 활동=구까지 */
+      const GEO_ALL = '전체지역';
+      const GEO_TREE = {
+        '서울특별시': {
+          '강남구': ['역삼동', '삼성동', '청담동'],
+          '서초구': ['서초동', '반포동'],
+        },
+        '부산광역시': {
+          '해운대구': ['우동', '중동'],
+        },
+        '대구광역시': {
+          '수성구': ['범어동', '황금동'],
+        },
+        '인천광역시': {
+          '연수구': ['송도동', '옥련동'],
+        },
+        '광주광역시': {
+          '동구': ['계림동', '산수동'],
+        },
+      };
       const ZONE_OPTIONS = [
         '서울 중랑ZONE', '경기 원미ZONE', '서울 강남ZONE', '부산 해운대ZONE', '대구 수성ZONE', '인천 연수ZONE',
       ];
@@ -830,9 +1155,142 @@
         });
       }
 
+      function geoSidoKeys() {
+        return Object.keys(GEO_TREE).sort();
+      }
+
+      function fillSelect(sel, values, placeholder, disabled) {
+        if (!sel) return;
+        sel.innerHTML = '';
+        const ph = document.createElement('option');
+        ph.value = '';
+        ph.textContent = placeholder || '(선택없음)';
+        sel.appendChild(ph);
+        values.forEach((v) => {
+          const o = document.createElement('option');
+          o.value = v;
+          o.textContent = v;
+          sel.appendChild(o);
+        });
+        sel.disabled = !!disabled;
+      }
+
+      function initGeoCascadeSelects() {
+        fillSelect($('f-target-sido'), geoSidoKeys(), '(선택없음)', false);
+        fillSelect($('f-target-sgg'), [], '(선택없음)', true);
+        fillSelect($('f-target-dong'), [], '(선택없음)', true);
+        fillSelect($('f-activity-sido'), geoSidoKeys(), '(선택없음)', false);
+        fillSelect($('f-activity-sgg'), [], '(선택없음)', true);
+      }
+
+      function onTargetSidoChange() {
+        const sido = $('f-target-sido').value;
+        if (!sido) {
+          fillSelect($('f-target-sgg'), [], '(선택없음)', true);
+          fillSelect($('f-target-dong'), [], '(선택없음)', true);
+          return;
+        }
+        const sggs = Object.keys(GEO_TREE[sido] || {}).sort();
+        fillSelect($('f-target-sgg'), sggs, '(선택없음)', sggs.length === 0);
+        fillSelect($('f-target-dong'), [], '(선택없음)', true);
+      }
+
+      function onTargetSggChange() {
+        const sido = $('f-target-sido').value;
+        const sgg = $('f-target-sgg').value;
+        if (!sido || !sgg) {
+          fillSelect($('f-target-dong'), [], '(선택없음)', true);
+          return;
+        }
+        const dongs = (GEO_TREE[sido] && GEO_TREE[sido][sgg]) ? GEO_TREE[sido][sgg].slice().sort() : [];
+        fillSelect($('f-target-dong'), dongs, '(선택없음)', dongs.length === 0);
+      }
+
+      function onActivitySidoChange() {
+        const sido = $('f-activity-sido').value;
+        if (!sido) {
+          fillSelect($('f-activity-sgg'), [], '(선택없음)', true);
+          return;
+        }
+        const sggs = Object.keys(GEO_TREE[sido] || {}).sort();
+        fillSelect($('f-activity-sgg'), sggs, '(선택없음)', sggs.length === 0);
+      }
+
+      function pushGeoUnique(arr, label, v) {
+        const t = String(v || '').trim();
+        if (!t) {
+          showToast(label + ' 값을 입력해 주세요.');
+          return false;
+        }
+        if (arr.includes(GEO_ALL) && t !== GEO_ALL) {
+          showToast('「전체지역」이 선택되어 있으면 다른 항목을 추가할 수 없습니다. 먼저 전체지역 태그를 삭제해 주세요.');
+          return false;
+        }
+        if (t === GEO_ALL) {
+          arr.length = 0;
+          arr.push(GEO_ALL);
+          return true;
+        }
+        if (arr.includes(t)) {
+          showToast('이미 추가된 항목입니다.');
+          return false;
+        }
+        const iAll = arr.indexOf(GEO_ALL);
+        if (iAll >= 0) arr.splice(iAll, 1);
+        arr.push(t);
+        return true;
+      }
+
+      function addTargetFromCascade() {
+        const sido = $('f-target-sido').value;
+        const sgg = $('f-target-sgg').value;
+        const dong = $('f-target-dong').value;
+        if (!sido || !sgg || !dong) {
+          showToast('시/도 · 시/군/구 · 읍/면/동을 모두 선택한 뒤 「+ 지역 추가」를 눌러 주세요.');
+          return;
+        }
+        const full = sido + ' ' + sgg + ' ' + dong;
+        if (pushGeoUnique(state.regions, '미션 대상 지역', full)) {
+          renderGeoTags();
+          refreshGeoAddSelects();
+        }
+      }
+
+      function addActivityFromCascade() {
+        const sido = $('f-activity-sido').value;
+        const sgg = $('f-activity-sgg').value;
+        if (!sido || !sgg) {
+          showToast('시/도 · 시/군/구를 선택한 뒤 「+ 지역 추가」를 눌러 주세요.');
+          return;
+        }
+        const full = sido + ' ' + sgg;
+        if (pushGeoUnique(state.activityRegions, '기사활동지역', full)) {
+          renderGeoTags();
+          refreshGeoAddSelects();
+        }
+      }
+
+      function setRegionsAll() {
+        state.regions.length = 0;
+        state.regions.push(GEO_ALL);
+        renderGeoTags();
+        refreshGeoAddSelects();
+        initGeoCascadeSelects();
+        $('target-manual-row').classList.remove('show');
+        if ($('f-target-manual')) $('f-target-manual').value = '';
+      }
+
+      function setActivityAll() {
+        state.activityRegions.length = 0;
+        state.activityRegions.push(GEO_ALL);
+        renderGeoTags();
+        refreshGeoAddSelects();
+        initGeoCascadeSelects();
+        $('activity-manual-row').classList.remove('show');
+        if ($('f-activity-manual')) $('f-activity-manual').value = '';
+      }
+
       function refreshGeoAddSelects() {
-        fillGeoAddSelect($('f-region-add'), REGION_OPTIONS, state.regions);
-        fillGeoAddSelect($('f-activity-add'), REGION_OPTIONS, state.activityRegions);
         fillGeoAddSelect($('f-zone-add'), ZONE_OPTIONS, state.zones);
       }
 
@@ -876,15 +1334,18 @@
         state.regions.length = 0;
         state.activityRegions.length = 0;
         state.zones.length = 0;
-        if ($('f-region-add')) $('f-region-add').value = '';
-        if ($('f-activity-add')) $('f-activity-add').value = '';
         if ($('f-zone-add')) $('f-zone-add').value = '';
+        initGeoCascadeSelects();
+        const tm = $('target-manual-row');
+        const am = $('activity-manual-row');
+        if (tm) { tm.classList.remove('show'); if ($('f-target-manual')) $('f-target-manual').value = ''; }
+        if (am) { am.classList.remove('show'); if ($('f-activity-manual')) $('f-activity-manual').value = ''; }
         renderGeoTags();
         refreshGeoAddSelects();
       }
 
       function wireGeoTagAdds() {
-        const bind = (sel, arr) => {
+        const bindZone = (sel, arr) => {
           if (!sel) return;
           sel.addEventListener('change', () => {
             const v = sel.value;
@@ -898,9 +1359,42 @@
             refreshGeoAddSelects();
           });
         };
-        bind($('f-region-add'), state.regions);
-        bind($('f-activity-add'), state.activityRegions);
-        bind($('f-zone-add'), state.zones);
+        bindZone($('f-zone-add'), state.zones);
+
+        $('f-target-sido').addEventListener('change', onTargetSidoChange);
+        $('f-target-sgg').addEventListener('change', onTargetSggChange);
+        $('f-activity-sido').addEventListener('change', onActivitySidoChange);
+
+        $('btn-target-add').addEventListener('click', () => { addTargetFromCascade(); });
+        $('btn-target-all').addEventListener('click', () => { setRegionsAll(); showToast('미션 대상 지역: 전체지역으로 설정했습니다.'); });
+
+        $('btn-target-manual-toggle').addEventListener('click', () => {
+          const row = $('target-manual-row');
+          row.classList.toggle('show');
+        });
+        $('btn-target-manual-ok').addEventListener('click', () => {
+          const raw = $('f-target-manual').value;
+          if (pushGeoUnique(state.regions, '미션 대상 지역', raw)) {
+            $('f-target-manual').value = '';
+            renderGeoTags();
+            refreshGeoAddSelects();
+          }
+        });
+
+        $('btn-activity-add').addEventListener('click', () => { addActivityFromCascade(); });
+        $('btn-activity-all').addEventListener('click', () => { setActivityAll(); showToast('기사활동지역: 전체지역으로 설정했습니다.'); });
+
+        $('btn-activity-manual-toggle').addEventListener('click', () => {
+          $('activity-manual-row').classList.toggle('show');
+        });
+        $('btn-activity-manual-ok').addEventListener('click', () => {
+          const raw = $('f-activity-manual').value;
+          if (pushGeoUnique(state.activityRegions, '기사활동지역', raw)) {
+            $('f-activity-manual').value = '';
+            renderGeoTags();
+            refreshGeoAddSelects();
+          }
+        });
       }
 
       function scrollFirstInvalid() {
@@ -979,11 +1473,17 @@
       }
 
       function readStep1() {
+        const reg = $('screen-register');
         state.name = $('f-name').value;
         state.description = $('f-desc') ? String($('f-desc').value || '').trim() : '';
-        state.purpose = (document.querySelector('input[name="purpose"]:checked') || {}).value || '';
-        state.structure = '단일';
-        state.mode = (document.querySelector('input[name="mode"]:checked') || {}).value || '';
+        const scope = reg || document;
+        state.purpose = (scope.querySelector('input[name="purpose"]:checked') || {}).value || '';
+        if (state.purpose === '활성화') {
+          state.structure = (scope.querySelector('input[name="structure"]:checked') || {}).value || '';
+        } else {
+          state.structure = '단일';
+        }
+        state.mode = '정적';
       }
       function renderTimeTags() {
         const el = $('time-tags');
@@ -1078,7 +1578,7 @@
         if (/\s/.test(state.name)) return { ok:false, key:'name', msg:'미션명은 공백 없이 입력해 주세요.' };
         if (state.description.length > 500) return { ok:false, key:'desc', msg:'미션 설명은 500자 이하로 입력해 주세요.' };
         if (!state.purpose) return { ok:false, key:'purpose', msg:'목적을 선택해 주세요.' };
-        if (!state.mode) return { ok:false, key:'mode', msg:'운영 방식을 선택해 주세요.' };
+        if (state.purpose === '활성화' && !state.structure) return { ok:false, key:'structure', msg:'지급 구조(단계형/단일)를 선택해 주세요.' };
         return { ok:true };
       }
 
@@ -1107,10 +1607,10 @@
         const hasFriends = state.targets.includes('일반기사(프렌즈)');
         const needsZone = state.targets.includes('NVP지점기사');
         if (hasFriends && state.regions.length === 0) {
-          return { ok:false, key:'regions', msg:'일반기사(프렌즈) 선택 시 지역을 1개 이상 추가해 주세요.' };
+          return { ok:false, key:'regions', msg:'일반기사(프렌즈) 선택 시 미션 대상 지역을 1개 이상 추가하거나 전체지역을 선택해 주세요.' };
         }
         if (hasFriends && state.activityRegions.length === 0) {
-          return { ok:false, key:'activityRegions', msg:'일반기사(프렌즈) 선택 시 기사활동지역을 1개 이상 추가해 주세요.' };
+          return { ok:false, key:'activityRegions', msg:'일반기사(프렌즈) 선택 시 기사활동지역을 1개 이상 추가하거나 전체지역을 선택해 주세요.' };
         }
         if (needsZone && state.zones.length === 0) {
           return { ok:false, key:'zones', msg:'NVP지점기사를 포함하면 ZONE을 1개 이상 선택해 주세요.' };
@@ -1157,9 +1657,6 @@
 
       function validateStep3() {
         readStep3();
-        if (state.mode === '동적') {
-          // 동적은 Step3 자동 설정 안내 (입력은 허용)
-        }
         if (state.purpose !== '전환') {
           const o = intOrEmpty(state.offday);
           if (!o.ok) return { ok:false, key:'offday', msg:'미션 운영기준(휴무)는 0 이상 정수로 입력해 주세요.' };
@@ -1171,7 +1668,10 @@
           if (!/^\d+$/.test(String(state.firstPayAmount)) || Number(state.firstPayAmount) <= 0) {
             return { ok:false, key:'firstPay', msg:'1회 지급 금액은 0원 초과로 입력해 주세요.' };
           }
-        } else {
+        } else if (state.purpose === '활성화' && state.structure === '단계') {
+          const vs = validateStagesAscending();
+          if (!vs.ok) return { ok:false, key:'stages', msg: vs.msg };
+        } else if (state.purpose === '활성화' && state.structure === '단일') {
           if (!/^\d+$/.test(String(state.singleCount)) || Number(state.singleCount) <= 0) return { ok:false, key:'single', msg:'목표 건수는 0 초과 정수로 입력해 주세요.' };
           if (!/^\d+$/.test(String(state.singleAmount)) || Number(state.singleAmount) <= 0) return { ok:false, key:'single', msg:'지급 금액은 0원 초과로 입력해 주세요.' };
         }
@@ -1186,6 +1686,17 @@
         if (!show) d.value = '';
       }
 
+      /** 목적=활성화일 때만 지급 구조 블록 표시 (state와 무관하게 DOM 기준으로도 반영) */
+      function updatePayStructureVisibility() {
+        const row = $('row-structure');
+        if (!row) return;
+        const reg = $('screen-register');
+        const el = reg && reg.querySelector('input[name="purpose"][value="활성화"]');
+        const on = !!(el && el.checked);
+        if (on) row.removeAttribute('hidden');
+        else row.setAttribute('hidden', '');
+      }
+
       function syncGeoRows() {
         const t = Array.from(document.querySelectorAll('#targets input[type="checkbox"]:checked')).map((i) => i.value);
         const hasF = t.includes('일반기사(프렌즈)');
@@ -1197,6 +1708,11 @@
         if (!hasF) {
           state.regions.length = 0;
           state.activityRegions.length = 0;
+          initGeoCascadeSelects();
+          const tm = $('target-manual-row');
+          const am = $('activity-manual-row');
+          if (tm) { tm.classList.remove('show'); if ($('f-target-manual')) $('f-target-manual').value = ''; }
+          if (am) { am.classList.remove('show'); if ($('f-activity-manual')) $('f-activity-manual').value = ''; }
         }
         if (!hasZ) state.zones.length = 0;
         renderGeoTags();
@@ -1205,6 +1721,7 @@
 
       function syncUIByPurposeStructure() {
         readStep1();
+        updatePayStructureVisibility();
         const isConversion = state.purpose === '전환';
         $('conversion-desc').style.display = isConversion ? 'block' : 'none';
         $('row-first-signup').style.display = isConversion ? 'flex' : 'none';
@@ -1226,17 +1743,22 @@
         const oc = $('row-off-cancel-wrap');
         if (oc) oc.style.display = isConversion ? 'none' : 'block';
 
-        const friendsChecked = document.getElementById('chk-friends').checked;
-        $('row-seg-activity').style.display = friendsChecked ? 'flex' : 'none';
-        $('row-seg-commute').style.display = friendsChecked ? 'flex' : 'none';
+        const chkFriends = document.getElementById('chk-friends');
+        const friendsChecked = chkFriends ? chkFriends.checked : false;
+        const rsa = $('row-seg-activity');
+        const rsc = $('row-seg-commute');
+        if (rsa) rsa.style.display = friendsChecked ? 'flex' : 'none';
+        if (rsc) rsc.style.display = friendsChecked ? 'flex' : 'none';
 
-        $('block-step').style.display = 'none';
-        const isSingleActive = state.purpose === '활성화';
+        const isStage = state.purpose === '활성화' && state.structure === '단계';
+        const isSingleActive = state.purpose === '활성화' && state.structure === '단일';
+        $('block-step').style.display = isStage ? 'block' : 'none';
         $('block-single').style.display = isSingleActive ? 'block' : 'none';
         $('block-first').style.display = isConversion ? 'block' : 'none';
 
-        $('dyn-note').style.display = state.mode === '동적' ? 'block' : 'none';
+        if ($('dyn-note')) $('dyn-note').style.display = 'none';
         syncGeoRows();
+        updatePayStructureVisibility();
       }
 
       // Step3 stage rows
@@ -1318,7 +1840,7 @@
           description: state.description || '',
           purpose: state.purpose,
           structure: state.structure,
-          mode: state.mode,
+          mode: '정적',
           start: state.start,
           end: state.end,
           targets: state.targets,
@@ -1339,9 +1861,29 @@
         showToast('저장 완료: ' + state.name);
       });
 
-      // change listeners for step1
-      document.querySelectorAll('input[name="purpose"]').forEach(r => r.addEventListener('change', () => { readStep1(); syncUIByPurposeStructure(); }));
-      document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener('change', () => { readStep1(); syncUIByPurposeStructure(); }));
+      // 목적·지급구조: 등록 화면에서 위임 + 목적 라벨 click 보조
+      const regScreen = $('screen-register');
+      if (regScreen) {
+        regScreen.addEventListener('change', (e) => {
+          const t = e.target;
+          if (!t || !t.matches) return;
+          if (t.matches('input[name="purpose"], input[name="structure"]')) {
+            readStep1();
+            syncUIByPurposeStructure();
+          }
+        });
+        regScreen.addEventListener('click', (e) => {
+          const t = e.target;
+          if (!t || !t.closest) return;
+          const lab = t.closest('label.pill');
+          if (!lab) return;
+          if (!lab.querySelector('input[name="purpose"]') && !lab.querySelector('input[name="structure"]')) return;
+          requestAnimationFrame(() => {
+            readStep1();
+            syncUIByPurposeStructure();
+          });
+        });
+      }
       $('f-shipper').addEventListener('change', syncShipperDetail);
 
       // default dates for UX
@@ -1350,6 +1892,7 @@
       $('f-publish').value = todayISO();
 
       // init
+      initGeoCascadeSelects();
       wireGeoTagAdds();
       renderGeoTags();
       refreshGeoAddSelects();
