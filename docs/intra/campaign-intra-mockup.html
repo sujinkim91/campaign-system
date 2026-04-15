@@ -795,14 +795,6 @@
                     <div class="help">미션 운영기준 · 선택 달성 조건 · 회/주</div>
                   </div>
                 </div>
-
-                <div class="form-row" data-key="cancel">
-                  <label>취소 건수</label>
-                  <div class="field">
-                    <input id="f-cancel" type="number" min="0" step="1" placeholder="0 이상 정수 (건/주)" />
-                    <div class="help">미션 운영기준 · 선택 달성 조건 · 건/주</div>
-                  </div>
-                </div>
               </div>
 
               <div id="block-step">
@@ -865,9 +857,8 @@
       <div class="hd" id="modal-title">저장 실패</div>
       <div class="bd" id="modal-body"></div>
       <div class="ft" id="modal-ft">
-        <button class="btn ghost" id="modal-off-cancel" type="button" style="display:none">취소</button>
-        <button class="btn primary" id="modal-off-confirm" type="button" style="display:none">중단</button>
         <button class="btn ghost" id="modal-close" type="button">확인</button>
+        <button class="btn primary" id="modal-off-confirm" type="button" style="display:none">중단</button>
       </div>
     </div>
   </div>
@@ -1103,7 +1094,6 @@
         activityRegions: [],
         zones: [],
         offday: '',
-        cancel: '',
         stages: [{ count: '', amount: '' }],
         singleCount: '',
         singleAmount: '',
@@ -1413,15 +1403,14 @@
 
       function setModalFooter(mode) {
         const closeEl = $('modal-close');
-        const cancelEl = $('modal-off-cancel');
         const confirmEl = $('modal-off-confirm');
         if (mode === 'confirm') {
-          closeEl.style.display = 'none';
-          cancelEl.style.display = '';
+          closeEl.style.display = '';
+          closeEl.textContent = '닫기';
           confirmEl.style.display = '';
         } else {
           closeEl.style.display = '';
-          cancelEl.style.display = 'none';
+          closeEl.textContent = '확인';
           confirmEl.style.display = 'none';
         }
       }
@@ -1447,7 +1436,6 @@
         $('modal').style.display = 'flex';
       }
       $('modal-close').addEventListener('click', hideModal);
-      $('modal-off-cancel').addEventListener('click', hideModal);
       $('modal-off-confirm').addEventListener('click', () => {
         if (!pendingOffId) { hideModal(); return; }
         CAMPAIGNS = CAMPAIGNS.map((c) => c.id === pendingOffId ? ({ ...c, off: true }) : c);
@@ -1558,10 +1546,8 @@
       function readStep3() {
         if (state.purpose === '전환') {
           state.offday = '';
-          state.cancel = '';
         } else {
           state.offday = $('f-offday').value;
-          state.cancel = $('f-cancel').value;
         }
         if (state.purpose === '전환') {
           state.firstPayAmount = $('f-first-amount').value;
@@ -1660,8 +1646,6 @@
         if (state.purpose !== '전환') {
           const o = intOrEmpty(state.offday);
           if (!o.ok) return { ok:false, key:'offday', msg:'미션 운영기준(휴무)는 0 이상 정수로 입력해 주세요.' };
-          const c = intOrEmpty(state.cancel);
-          if (!c.ok) return { ok:false, key:'cancel', msg:'미션 운영기준(취소 건수)는 0 이상 정수로 입력해 주세요.' };
         }
 
         if (state.purpose === '전환') {
@@ -1733,7 +1717,6 @@
           if ($('f-time-start')) { $('f-time-start').value = ''; $('f-time-end').value = ''; }
           renderTimeTags();
           $('f-offday').value = '';
-          $('f-cancel').value = '';
         }
         if (!isConversion) {
           $('f-first-days').value = '';
