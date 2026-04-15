@@ -942,10 +942,10 @@
         const regions = (c.regions && c.regions.length) ? c.regions : ((c.sgg && c.sgg.length) ? c.sgg : []);
         const act = (c.activityRegions && c.activityRegions.length) ? c.activityRegions : [];
         const zones = (c.zones && c.zones.length) ? c.zones : [];
-        if (regions.length) bits.push('미션대상 ' + regions.join(', '));
-        if (act.length) bits.push('활동구역 ' + act.join(', '));
-        if (zones.length) bits.push('ZONE ' + zones.join(', '));
-        return bits.length ? bits.join(' · ') : '-';
+        if (regions.length) bits.push(...regions);
+        if (act.length) bits.push(...act);
+        if (zones.length) bits.push(...zones);
+        return bits.length ? bits.join(', ') : '-';
       }
 
       function renderList() {
