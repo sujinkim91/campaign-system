@@ -275,7 +275,8 @@
     .row-inline > * { flex: 1; }
     .help { margin-top: 6px; font-size: 12px; color: var(--text-muted); line-height: 1.45; }
 
-    /* 활성화 시에만 보이는 지급 구조 행 */
+    /* 활성화 시에만 보이는 지급 구조 행 — [hidden]은 .form-row(display:flex)에 밀리지 않도록 명시 */
+    #row-structure[hidden] { display: none !important; }
     #row-structure.form-row.invalid {
       outline: 2px solid #c62828;
       outline-offset: 2px;
@@ -492,7 +493,7 @@
                     <label class="pill"><input type="radio" name="structure" value="단계" /> 단계형</label>
                     <label class="pill"><input type="radio" name="structure" value="단일" checked /> 단일</label>
                   </div>
-                  <div class="help"><strong>단계형</strong>: 구간별 목표·지급(아래 단계 지급 표). <strong>단일</strong>: 목표 건수 1회 달성 시 지급. <strong>전환</strong> 목적은 단일 지급 고정(이 항목은 활성화일 때만 설정).</div>
+                  <div class="help"><strong>활성화</strong> 목적일 때만 선택합니다. <strong>단계형</strong>: 구간별 목표·지급(아래 단계 지급 표). <strong>단일</strong>: 목표 건수 1회 달성 시 지급. <strong>전환</strong> 목적은 단일 지급 고정으로 이 블록은 표시되지 않습니다.</div>
                 </div>
               </div>
 
@@ -1587,8 +1588,12 @@
         const reg = $('screen-register');
         const el = reg && reg.querySelector('input[name="purpose"][value="활성화"]');
         const on = !!(el && el.checked);
-        if (on) row.removeAttribute('hidden');
-        else row.setAttribute('hidden', '');
+        if (on) {
+          row.removeAttribute('hidden');
+          row.classList.remove('invalid');
+        } else {
+          row.setAttribute('hidden', '');
+        }
       }
 
       function syncGeoRows() {
