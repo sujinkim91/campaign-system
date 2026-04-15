@@ -437,11 +437,12 @@
                 <label>지역・ZONE<span class="req">*</span></label>
                 <div class="field">
                   <select id="f-zones" multiple style="height:140px; width:100%;">
-                    <option value="서울/강남 Z1">서울/강남 Z1</option>
-                    <option value="부산/해운대 Z2">부산/해운대 Z2</option>
-                    <option value="대구 Z3">대구 Z3</option>
-                    <option value="인천/송도 Z4">인천/송도 Z4</option>
-                    <option value="광주 Z5">광주 Z5</option>
+                    <option value="서울 중랑ZONE">서울 중랑ZONE</option>
+                    <option value="경기 원미ZONE">경기 원미ZONE</option>
+                    <option value="서울 강남ZONE">서울 강남ZONE</option>
+                    <option value="부산 해운대ZONE">부산 해운대ZONE</option>
+                    <option value="대구 수성ZONE">대구 수성ZONE</option>
+                    <option value="인천 연수ZONE">인천 연수ZONE</option>
                   </select>
                   <div class="help">NVP지점기사·벤더기사 적용 시 <strong>ZONE</strong> 다중 선택 · Ctrl(⌘)+클릭 · 일반기사(프렌즈)만 선택한 경우에는 시군구만 사용</div>
                 </div>
@@ -610,14 +611,14 @@
         const demo = [
           { id: 'MS-DEMO-01', name: '도심 점심 피크 사전 집중 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(14), end: add(28), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['서울특별시 강남구'], zones: [], createdAt: t, off: false },
           { id: 'MS-DEMO-02', name: '서초구 주간 피크 달성형 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-2), end: add(10), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['서울특별시 서초구'], zones: [], createdAt: t, off: false },
-          { id: 'MS-DEMO-03', name: '송도 NVP 야간 구간 인센티브', purpose: '활성화', structure: '단일', mode: '정적', start: add(-40), end: add(-5), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['인천/송도 Z4'], createdAt: t, off: false },
+          { id: 'MS-DEMO-03', name: '연수 NVP 야간 구간 인센티브', purpose: '활성화', structure: '단일', mode: '정적', start: add(-40), end: add(-5), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['인천 연수ZONE'], createdAt: t, off: false },
           { id: 'MS-DEMO-04', name: '해운대 프렌즈 주말 스탬프 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(8), end: add(22), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['부산광역시 해운대구'], zones: [], createdAt: t, off: true },
-          { id: 'MS-DEMO-05', name: '강남 Z1 벤더 동선 최적화 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-3), end: add(9), targets: ['벤더기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['서울/강남 Z1'], createdAt: t, off: true },
+          { id: 'MS-DEMO-05', name: '서울 강남ZONE 벤더 동선 최적화 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-3), end: add(9), targets: ['벤더기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['서울 강남ZONE'], createdAt: t, off: true },
         ];
         const samples = [
           { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전'], sgg: ['서울특별시 강남구'], zones: [], createdAt: '2026-03-31', off: false },
           { id: 'MS-2026-002', name: '주말 단일 지급 미션', purpose: '활성화', structure: '단일', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전', '저녁'], sgg: ['부산광역시 해운대구'], zones: [], createdAt: '2026-03-31', off: true },
-          { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', purpose: '활성화', structure: '단계', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['대구 Z3'], createdAt: '2026-03-10', off: false },
+          { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', purpose: '활성화', structure: '단계', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['대구 수성ZONE'], createdAt: '2026-03-10', off: false },
           { id: 'MS-2026-004', name: '신규 라이더 전환 미션', purpose: '전환', structure: '단일', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['일반기사(프렌즈)'], segmentActivity: ['중간'], segmentCommute: ['오후', '저녁'], sgg: ['서울특별시 강남구'], zones: [], createdAt: '2026-03-28', off: false },
         ];
         return demo.concat(samples);
