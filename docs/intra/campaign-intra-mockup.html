@@ -30,6 +30,8 @@
       --radius-sm: 8px;
       --radius-xs: 6px;
       --control-h: 40px;
+      /* 목록·등록 동일: 메인 본문 가로 여백 (0 = 사이드바 제외 영역 끝까지) */
+      --content-pad-x: 0px;
     }
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); line-height: 1.5; }
@@ -76,7 +78,7 @@
     .btn-reset { padding: 8px 16px; font-size: 13px; font-weight: 700; color: var(--danger); background: #fff; border: 1px solid var(--danger); border-radius: 4px; cursor: pointer; }
     .btn-reset:hover { background: var(--danger-soft); }
 
-    .content { flex: 1; padding: 22px 24px 32px; overflow: auto; }
+    .content { flex: 1; padding: 22px var(--content-pad-x) 32px; overflow: auto; }
 
     .screen { display: none; }
     .screen.active { display: block; }
@@ -159,9 +161,9 @@
     label.pill.slot-pill { flex-direction: column; align-items: flex-start; align-self: flex-start; gap: 4px; padding-top: 10px; padding-bottom: 10px; }
     label.pill.slot-pill input { margin-top: 2px; }
     .slot-pill .slot-range { font-size: 11px; font-weight: 700; color: var(--text-muted); line-height: 1.25; }
-    #f-desc { max-width: 720px; min-height: 88px; font-family: inherit; }
+    #f-desc { max-width: none; width: 100%; min-height: 88px; font-family: inherit; }
 
-    .list-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding: 12px 0 0; gap: 16px; flex-wrap: wrap; }
+    .list-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding: 12px 20px 0; gap: 16px; flex-wrap: wrap; }
     .btn-add { padding: 10px 22px; font-size: 14px; font-weight: 800; color: #fff; background: var(--primary); border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 8px rgba(36,59,85,.25); }
     .btn-add:hover { background: var(--primary-hover); }
     .pagination-mock { flex: 1; display: flex; justify-content: center; align-items: center; gap: 6px; }
@@ -174,6 +176,12 @@
 
     .form-shell.panel { padding: 22px 22px 20px; width: 100%; box-sizing: border-box; }
     #screen-register { width: 100%; max-width: 100%; }
+    /* 등록 패널을 목록 필터 영역처럼 메인 폭에 맞춤 */
+    #screen-register .form-shell.panel {
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+    }
     .form-subsection-title {
       font-size: 13px;
       font-weight: 800;
@@ -239,14 +247,14 @@
     .geo-add-row .geo-add-select {
       flex: 1;
       min-width: 200px;
-      max-width: 440px;
+      max-width: none;
       min-height: var(--control-h);
       border-radius: var(--radius-xs);
       padding: 0 12px;
     }
     .geo-cascade-wrap { margin-top: 6px; }
     .geo-cascade-row { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: flex-end; }
-    .geo-cascade-field { display: flex; flex-direction: column; gap: 4px; min-width: 140px; flex: 1; max-width: 220px; }
+    .geo-cascade-field { display: flex; flex-direction: column; gap: 4px; min-width: 140px; flex: 1 1 160px; max-width: none; }
     .geo-cascade-field select {
       width: 100%;
       min-height: var(--control-h);
@@ -262,7 +270,7 @@
     .geo-cascade-actions .btn { padding: 8px 14px; font-size: 13px; border-radius: 999px; }
     .geo-manual-row { display: none; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
     .geo-manual-row.show { display: flex; }
-    .geo-manual-row input { flex: 1; min-width: 200px; max-width: 420px; }
+    .geo-manual-row input { flex: 1; min-width: 200px; max-width: none; }
     .row-inline { display:flex; gap: 10px; align-items:center; }
     .row-inline > * { flex: 1; }
     .help { margin-top: 6px; font-size: 12px; color: var(--text-muted); line-height: 1.45; }
@@ -341,6 +349,7 @@
 
     @media (max-width: 720px) {
       .header-title-row { align-items: flex-start; }
+      .content { padding-left: 12px; padding-right: 12px; }
     }
   </style>
 </head>
