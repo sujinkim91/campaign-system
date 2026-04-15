@@ -99,12 +99,11 @@
     .badge.danger { color: var(--danger); border-color: #ffcdd2; background: #ffebee; }
     .manage-na { font-size: 12px; color: var(--text-muted); user-select: none; cursor: default; }
     .data-table .td-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-    .data-table .td-spend { text-align: right; vertical-align: top; }
-    .td-spend-wrap { display: inline-block; min-width: 7.5rem; width: 100%; max-width: 13rem; margin-left: auto; text-align: right; }
-    .td-spend-wrap .spend-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: 4px; font-size: 11px; color: var(--text-muted); line-height: 1.35; }
-    .td-spend-wrap .spend-pct { font-variant-numeric: tabular-nums; flex-shrink: 0; font-weight: 600; }
-    .td-spend-wrap .spend-bar { height: 4px; background: #e8ecf1; border-radius: 2px; margin-top: 6px; overflow: hidden; }
-    .td-spend-wrap .spend-bar-fill { display: block; height: 100%; max-width: 100%; background: var(--navy); border-radius: 2px; opacity: 0.5; }
+    .data-table .td-remain { text-align: right; vertical-align: top; }
+    .td-remain-wrap { display: inline-block; min-width: 6.5rem; width: 100%; max-width: 11rem; margin-left: auto; text-align: right; }
+    .td-remain-wrap .remain-meta { margin-top: 3px; font-size: 11px; font-weight: 600; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .td-remain-wrap .remain-bar { height: 4px; background: #e8ecf1; border-radius: 2px; margin-top: 6px; overflow: hidden; }
+    .td-remain-wrap .remain-bar-fill { display: block; height: 100%; max-width: 100%; background: var(--ok); border-radius: 2px; opacity: 0.55; }
 
     .list-guide { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.55; }
 
@@ -246,7 +245,7 @@
           <div class="table-wrap">
             <table class="data-table">
               <colgroup>
-                <col style="width:15%"><col style="width:7%"><col style="width:7%"><col style="width:10%"><col style="width:11%"><col style="width:11%"><col style="width:8%"><col style="width:11%"><col style="width:7%"><col style="width:13%">
+                <col style="width:14%"><col style="width:7%"><col style="width:7%"><col style="width:9%"><col style="width:10%"><col style="width:10%"><col style="width:9%"><col style="width:9%"><col style="width:10%"><col style="width:6%"><col style="width:9%">
               </colgroup>
               <thead>
                 <tr>
@@ -256,8 +255,9 @@
                   <th>기간</th>
                   <th>적용대상 유형</th>
                   <th>지역・ZONE</th>
-                  <th>총 예산</th>
-                  <th title="누적 소진액·잔여 예산·사용 비율">소진액</th>
+                  <th title="누적 지급·집행액">소진액</th>
+                  <th title="이 미션에 배정된 지급 상한(캠페인 단위)">예산 한도</th>
+                  <th title="예산 한도 − 소진액. 막대는 잔여 비율(남은 한도 ÷ 예산 한도)">남은 한도</th>
                   <th>상태</th>
                   <th>관리</th>
                 </tr>
@@ -650,26 +650,26 @@
         return v.toLocaleString('ko-KR') + '원';
       }
 
-      /** 총 예산 유지 + 소진액 주요 표시, 같은 셀에 잔여·사용 비율·막대(목업) */
-      function fmtSpendCell(c) {
+      /** 예산 한도·소진·남은 한도 계산. 목록 3컬럼(소진액 → 예산 한도 → 남은 한도)에 사용 */
+      function budgetDerived(c) {
         const total = Number(c.budgetTotal);
         const spentRaw = Number(c.budgetSpent);
-        if (!Number.isFinite(total) || total < 0) {
-          return '<div class="td-spend-wrap"><span class="td-num">—</span></div>';
-        }
+        if (!Number.isFinite(total) || total < 0) return null;
         const spent = (Number.isFinite(spentRaw) && spentRaw >= 0) ? spentRaw : 0;
         const remain = Math.max(0, Math.round(total - spent));
-        const pct = total > 0 ? Math.min(100, Math.round((spent / total) * 100)) : 0;
-        const aria = '예산 대비 소진 ' + pct + '퍼센트, 잔여 ' + remain.toLocaleString('ko-KR') + '원';
+        const remainPct = total > 0 ? Math.min(100, Math.max(0, Math.round((remain / total) * 100))) : 0;
+        return { total, spent, remain, remainPct };
+      }
+
+      function fmtRemainInner(d) {
+        if (!d) return '<span class="td-num">—</span>';
+        const aria = '남은 한도 ' + fmtWon(d.remain) + ', 예산 한도 대비 잔여 ' + d.remainPct + '퍼센트';
         return (
-          '<div class="td-spend-wrap">' +
-            '<div class="td-num">' + fmtWon(spent) + '</div>' +
-            '<div class="spend-meta">' +
-              '<span class="spend-remain">잔여 ' + fmtWon(remain) + '</span>' +
-              '<span class="spend-pct">' + pct + '%</span>' +
-            '</div>' +
-            '<div class="spend-bar" role="img" aria-label="' + aria + '">' +
-              '<span class="spend-bar-fill" style="width:' + pct + '%;"></span>' +
+          '<div class="td-remain-wrap">' +
+            '<div class="td-num">' + fmtWon(d.remain) + '</div>' +
+            '<div class="remain-meta">' + d.remainPct + '% 남음</div>' +
+            '<div class="remain-bar" role="img" aria-label="' + aria + '">' +
+              '<span class="remain-bar-fill" style="width:' + d.remainPct + '%;"></span>' +
             '</div>' +
           '</div>'
         );
@@ -714,6 +714,7 @@
           const manageTd = ended
             ? '<span class="manage-na" title="종료일이 지난 미션은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
             : '<a href="#" class="link btn-toggle" data-id="' + c.id + '">' + (c.off ? 'ON' : 'OFF') + '</a>';
+          const b = budgetDerived(c);
           const tr = document.createElement('tr');
           tr.innerHTML =
             '<td title="' + c.id + '">' + c.name + '</td>' +
@@ -722,8 +723,9 @@
             '<td>' + fmtPeriod(c) + '</td>' +
             '<td>' + c.targets.join(', ') + '</td>' +
             '<td>' + fmtGeoCell(c) + '</td>' +
-            '<td class="td-num">' + fmtWon(c.budgetTotal) + '</td>' +
-            '<td class="td-spend">' + fmtSpendCell(c) + '</td>' +
+            '<td class="td-num">' + (b ? fmtWon(b.spent) : '—') + '</td>' +
+            '<td class="td-num">' + (b ? fmtWon(b.total) : '—') + '</td>' +
+            '<td class="td-remain">' + fmtRemainInner(b) + '</td>' +
             '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>' +
             '<td>' + manageTd + '</td>';
           tb.appendChild(tr);
