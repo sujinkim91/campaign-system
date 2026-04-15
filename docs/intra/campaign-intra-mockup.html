@@ -168,7 +168,7 @@
     .modal { width: 100%; max-width: 480px; background: #fff; border-radius: 6px; box-shadow: 0 12px 40px rgba(0,0,0,.2); border: 1px solid var(--border); }
     .modal .hd { padding: 16px 18px; border-bottom: 1px solid var(--border); font-weight: 800; font-size: 16px; color: var(--navy); }
     .modal .bd { padding: 18px; color: var(--text); font-size: 14px; line-height: 1.55; }
-    .modal .ft { padding: 14px 18px; border-top: 1px solid var(--border); display:flex; justify-content: flex-end; gap: 10px; }
+    .modal .ft { padding: 14px 18px; border-top: 1px solid var(--border); display:flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
   </style>
 </head>
 <body>
@@ -536,7 +536,9 @@
     <div class="modal">
       <div class="hd" id="modal-title">저장 실패</div>
       <div class="bd" id="modal-body"></div>
-      <div class="ft">
+      <div class="ft" id="modal-ft">
+        <button class="btn ghost" id="modal-off-cancel" type="button" style="display:none">취소</button>
+        <button class="btn primary" id="modal-off-confirm" type="button" style="display:none">중단</button>
         <button class="btn ghost" id="modal-close" type="button">확인</button>
       </div>
     </div>
@@ -737,6 +739,10 @@
               showToast('종료일이 지난 미션은 관리(ON/OFF)를 변경할 수 없습니다.');
               return;
             }
+            if (row && !row.off) {
+              openOffConfirmModal(id);
+              return;
+            }
             CAMPAIGNS = CAMPAIGNS.map((c) => c.id === id ? ({ ...c, off: !c.off }) : c);
             renderList();
           });
@@ -790,13 +796,52 @@
         setTimeout(() => t.classList.remove('show'), 1700);
       }
 
+      let pendingOffId = null;
+
+      function setModalFooter(mode) {
+        const closeEl = $('modal-close');
+        const cancelEl = $('modal-off-cancel');
+        const confirmEl = $('modal-off-confirm');
+        if (mode === 'confirm') {
+          closeEl.style.display = 'none';
+          cancelEl.style.display = '';
+          confirmEl.style.display = '';
+        } else {
+          closeEl.style.display = '';
+          cancelEl.style.display = 'none';
+          confirmEl.style.display = 'none';
+        }
+      }
+
+      function hideModal() {
+        $('modal').style.display = 'none';
+        pendingOffId = null;
+        setModalFooter('single');
+      }
+
+      function openOffConfirmModal(id) {
+        pendingOffId = id;
+        setModalFooter('confirm');
+        $('modal-title').textContent = '미션 중단';
+        $('modal-body').textContent = '미션을 중단하시겠습니까? 진행 중인 미션을 중단하면 라이더에게 더 이상 노출되지 않습니다';
+        $('modal').style.display = 'flex';
+      }
+
       function showFailModal(msg) {
+        setModalFooter('single');
         $('modal-title').textContent = '저장 실패';
         $('modal-body').textContent = msg;
         $('modal').style.display = 'flex';
       }
-      $('modal-close').addEventListener('click', () => $('modal').style.display = 'none');
-      $('modal').addEventListener('click', (e) => { if (e.target === $('modal')) $('modal').style.display = 'none'; });
+      $('modal-close').addEventListener('click', hideModal);
+      $('modal-off-cancel').addEventListener('click', hideModal);
+      $('modal-off-confirm').addEventListener('click', () => {
+        if (!pendingOffId) { hideModal(); return; }
+        CAMPAIGNS = CAMPAIGNS.map((c) => c.id === pendingOffId ? ({ ...c, off: true }) : c);
+        hideModal();
+        renderList();
+      });
+      $('modal').addEventListener('click', (e) => { if (e.target === $('modal')) hideModal(); });
 
       function clearInvalid() {
         document.querySelectorAll('.invalid').forEach((x) => x.classList.remove('invalid'));
