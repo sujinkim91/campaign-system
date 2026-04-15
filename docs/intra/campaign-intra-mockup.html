@@ -240,7 +240,7 @@
           <div class="table-wrap">
             <table class="data-table">
               <colgroup>
-                <col style="width:16%"><col style="width:8%"><col style="width:8%"><col style="width:12%"><col style="width:12%"><col style="width:10%"><col style="width:10%"><col style="width:14%"><col style="width:7%"><col style="width:7%">
+                <col style="width:20%"><col style="width:9%"><col style="width:9%"><col style="width:13%"><col style="width:15%"><col style="width:19%"><col style="width:8%"><col style="width:7%">
               </colgroup>
               <thead>
                 <tr>
@@ -249,9 +249,7 @@
                   <th>운영 방식</th>
                   <th>기간</th>
                   <th>적용대상 유형</th>
-                  <th>세그먼트1</th>
-                  <th>세그먼트2</th>
-                  <th>지역/ZONE</th>
+                  <th>지역・ZONE</th>
                   <th>상태</th>
                   <th>관리</th>
                 </tr>
@@ -395,7 +393,22 @@
                     <label class="pill"><input type="checkbox" value="NVP지점기사" /> NVP지점기사</label>
                     <label class="pill"><input type="checkbox" value="벤더기사" /> 벤더기사</label>
                   </div>
-                  <div class="help">Notion 적용 대상 · 일반기사(프렌즈) · NVP지점기사 · 벤더기사 중 1개 이상</div>
+                  <div class="help">일반기사(프렌즈)는 아래 <strong>시군구</strong> 단위, NVP지점기사·벤더기사는 <strong>ZONE</strong> 단위로 적용 범위를 지정합니다.</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="sgg" id="row-sgg" style="display:none;align-items:flex-start;">
+                <label>시군구<span class="req">*</span></label>
+                <div class="field">
+                  <select id="f-sgg" multiple style="height:140px; width:100%;">
+                    <option value="서울특별시 강남구">서울특별시 강남구</option>
+                    <option value="서울특별시 서초구">서울특별시 서초구</option>
+                    <option value="부산광역시 해운대구">부산광역시 해운대구</option>
+                    <option value="대구광역시 수성구">대구광역시 수성구</option>
+                    <option value="인천광역시 연수구">인천광역시 연수구</option>
+                    <option value="광주광역시 동구">광주광역시 동구</option>
+                  </select>
+                  <div class="help">일반기사(프렌즈) 적용 시 <strong>행정구역(시군구)</strong> 다중 선택 · Ctrl(⌘)+클릭 · ZONE과 별도</div>
                 </div>
               </div>
 
@@ -423,8 +436,8 @@
                 </div>
               </div>
 
-              <div class="form-row" data-key="zones" style="align-items:flex-start;">
-                <label>지역/ZONE<span class="req">*</span></label>
+              <div class="form-row" data-key="zones" id="row-zones" style="align-items:flex-start;">
+                <label>지역・ZONE<span class="req">*</span></label>
                 <div class="field">
                   <select id="f-zones" multiple style="height:140px; width:100%;">
                     <option value="서울/강남 Z1">서울/강남 Z1</option>
@@ -433,7 +446,7 @@
                     <option value="인천/송도 Z4">인천/송도 Z4</option>
                     <option value="광주 Z5">광주 Z5</option>
                   </select>
-                  <div class="help">Notion 공통 조건 · Ctrl(⌘)+클릭으로 다중 선택 · 1개 이상</div>
+                  <div class="help">NVP지점기사·벤더기사 적용 시 <strong>ZONE</strong> 다중 선택 · Ctrl(⌘)+클릭 · 일반기사(프렌즈)만 선택한 경우에는 시군구만 사용</div>
                 </div>
               </div>
 
@@ -561,6 +574,7 @@
         if ($('f-time-end')) $('f-time-end').value = '';
         renderTimeTags();
         if ($('f-zones')) Array.from($('f-zones').options).forEach((o) => { o.selected = false; });
+        if ($('f-sgg')) Array.from($('f-sgg').options).forEach((o) => { o.selected = false; });
         if ($('f-shipper')) { $('f-shipper').value = '전체'; syncShipperDetail(); }
         if ($('f-shipper-detail')) $('f-shipper-detail').value = '';
         if ($('chk-first-auto')) $('chk-first-auto').checked = false;
@@ -586,10 +600,10 @@
 
       // ===== 데이터(목록) =====
       let CAMPAIGNS = [
-        { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전'], zones: ['서울/강남 Z1'], createdAt: '2026-03-31', off: false },
-        { id: 'MS-2026-002', name: '주말 단일 지급 미션', purpose: '활성화', structure: '단일', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전', '저녁'], zones: ['부산/해운대 Z2'], createdAt: '2026-03-31', off: true },
-        { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', purpose: '활성화', structure: '단계', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], zones: ['대구 Z3'], createdAt: '2026-03-10', off: false },
-        { id: 'MS-2026-004', name: '신규 라이더 전환 미션', purpose: '전환', structure: '단일', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['일반기사(프렌즈)'], segmentActivity: ['중간'], segmentCommute: ['오후', '저녁'], zones: ['서울/강남 Z1'], createdAt: '2026-03-28', off: false },
+        { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전'], sgg: ['서울특별시 강남구'], zones: [], createdAt: '2026-03-31', off: false },
+        { id: 'MS-2026-002', name: '주말 단일 지급 미션', purpose: '활성화', structure: '단일', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전', '저녁'], sgg: ['부산광역시 해운대구'], zones: [], createdAt: '2026-03-31', off: true },
+        { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', purpose: '활성화', structure: '단계', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['대구 Z3'], createdAt: '2026-03-10', off: false },
+        { id: 'MS-2026-004', name: '신규 라이더 전환 미션', purpose: '전환', structure: '단일', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['일반기사(프렌즈)'], segmentActivity: ['중간'], segmentCommute: ['오후', '저녁'], sgg: ['서울특별시 강남구'], zones: [], createdAt: '2026-03-28', off: false },
       ];
 
       function statusOf(c) {
@@ -609,13 +623,13 @@
         return c.targets.includes(flt);
       }
 
-      function fmtSeg1List(c) {
-        if (!c.targets.includes('일반기사(프렌즈)')) return '-';
-        return (c.segmentActivity && c.segmentActivity.length) ? c.segmentActivity.join(', ') : '-';
-      }
-      function fmtSeg2List(c) {
-        if (!c.targets.includes('일반기사(프렌즈)')) return '-';
-        return (c.segmentCommute && c.segmentCommute.length) ? c.segmentCommute.join(', ') : '-';
+      function fmtGeoCell(c) {
+        const bits = [];
+        const sgg = (c.sgg && c.sgg.length) ? c.sgg : [];
+        const zones = (c.zones && c.zones.length) ? c.zones : [];
+        if (sgg.length) bits.push('시군구: ' + sgg.join(', '));
+        if (zones.length) bits.push('ZONE: ' + zones.join(', '));
+        return bits.length ? bits.join(' · ') : '-';
       }
 
       function renderList() {
@@ -646,9 +660,7 @@
             '<td>' + c.mode + '</td>' +
             '<td>' + fmtPeriod(c) + '</td>' +
             '<td>' + c.targets.join(', ') + '</td>' +
-            '<td>' + fmtSeg1List(c) + '</td>' +
-            '<td>' + fmtSeg2List(c) + '</td>' +
-            '<td>' + c.zones.join(', ') + '</td>' +
+            '<td>' + fmtGeoCell(c) + '</td>' +
             '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>' +
             '<td>' + (st.key === '완료' ? '' : '<a href="#" class="link btn-toggle" data-id="' + c.id + '">' + (c.off ? 'ON' : 'OFF') + '</a>') + '</td>';
           tb.appendChild(tr);
@@ -683,6 +695,7 @@
         targets: [],
         segmentActivity: [],
         segmentCommute: [],
+        sgg: [],
         zones: [],
         offday: '',
         cancel: '',
@@ -794,10 +807,11 @@
         state.end = $('f-end').value;
         state.publish = $('f-publish').value;
         state.budget = $('f-budget').value;
-        state.zones = Array.from($('f-zones').selectedOptions).map((o) => o.value);
+        state.targets = Array.from(document.querySelectorAll('#targets input[type="checkbox"]:checked')).map(i => i.value);
+        state.zones = $('f-zones') ? Array.from($('f-zones').selectedOptions).map((o) => o.value) : [];
+        state.sgg = $('f-sgg') ? Array.from($('f-sgg').selectedOptions).map((o) => o.value) : [];
         state.shipper = $('f-shipper').value || '전체';
         state.shipperDetail = ($('f-shipper-detail').value || '').trim();
-        state.targets = Array.from(document.querySelectorAll('#targets input[type="checkbox"]:checked')).map(i => i.value);
         state.segmentActivity = Array.from(document.querySelectorAll('#seg-activity input[type="checkbox"]:checked')).map(i => i.value);
         state.segmentCommute = Array.from(document.querySelectorAll('#seg-commute input[type="checkbox"]:checked')).map(i => i.value);
         if (state.purpose === '전환') {
@@ -858,7 +872,14 @@
             return { ok:false, key:'segment2', msg:'일반기사(프렌즈) 선택 시 세그먼트2(주요 출근 시간)을 1개 이상 선택해 주세요.' };
           }
         }
-        if (state.zones.length === 0) return { ok:false, key:'zones', msg:'지역/ZONE은 1개 이상 선택해 주세요.' };
+        const hasFriends = state.targets.includes('일반기사(프렌즈)');
+        const needsZone = state.targets.includes('NVP지점기사') || state.targets.includes('벤더기사');
+        if (hasFriends && state.sgg.length === 0) {
+          return { ok:false, key:'sgg', msg:'일반기사(프렌즈) 선택 시 시군구를 1개 이상 선택해 주세요.' };
+        }
+        if (needsZone && state.zones.length === 0) {
+          return { ok:false, key:'zones', msg:'NVP지점기사 또는 벤더기사를 포함하면 ZONE을 1개 이상 선택해 주세요.' };
+        }
         if (state.purpose !== '전환' && state.times.length > 0) {
           const norm = state.times.map((t) => t.replace(/\s+/g, ''));
           const uniq = new Set(norm);
@@ -930,6 +951,22 @@
         if (!show) d.value = '';
       }
 
+      function syncGeoRows() {
+        const t = Array.from(document.querySelectorAll('#targets input[type="checkbox"]:checked')).map((i) => i.value);
+        const hasF = t.includes('일반기사(프렌즈)');
+        const hasZ = t.includes('NVP지점기사') || t.includes('벤더기사');
+        const rowSgg = $('row-sgg');
+        const rowZones = $('row-zones');
+        if (rowSgg) {
+          rowSgg.style.display = hasF ? 'flex' : 'none';
+          if (!hasF && $('f-sgg')) Array.from($('f-sgg').options).forEach((o) => { o.selected = false; });
+        }
+        if (rowZones) {
+          rowZones.style.display = hasZ ? 'flex' : 'none';
+          if (!hasZ && $('f-zones')) Array.from($('f-zones').options).forEach((o) => { o.selected = false; });
+        }
+      }
+
       function syncUIByPurposeStructure() {
         readStep1();
         const isConversion = state.purpose === '전환';
@@ -966,6 +1003,7 @@
         $('block-first').style.display = isConversion ? 'block' : 'none';
 
         $('dyn-note').style.display = state.mode === '동적' ? 'block' : 'none';
+        syncGeoRows();
       }
 
       // Step3 stage rows
@@ -1050,7 +1088,8 @@
           targets: state.targets,
           segmentActivity: state.targets.includes('일반기사(프렌즈)') ? state.segmentActivity.slice() : [],
           segmentCommute: state.targets.includes('일반기사(프렌즈)') ? state.segmentCommute.slice() : [],
-          zones: state.zones,
+          sgg: state.targets.includes('일반기사(프렌즈)') ? state.sgg.slice() : [],
+          zones: state.zones.slice(),
           shipper: state.shipper,
           shipperDetail: state.shipperDetail,
           firstAutoApply: state.firstAutoApply,
