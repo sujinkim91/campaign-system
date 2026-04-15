@@ -99,7 +99,6 @@
     .badge.danger { color: var(--danger); border-color: #ffcdd2; background: #ffebee; }
 
     .list-guide { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.55; }
-    .page-note { margin-top: 12px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
 
     .list-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding: 12px 0 0; gap: 16px; flex-wrap: wrap; }
     .btn-add { padding: 10px 22px; font-size: 14px; font-weight: 800; color: #fff; background: var(--primary); border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 8px rgba(36,59,85,.25); }
@@ -163,12 +162,6 @@
     .modal .hd { padding: 16px 18px; border-bottom: 1px solid var(--border); font-weight: 800; font-size: 16px; color: var(--navy); }
     .modal .bd { padding: 18px; color: var(--text); font-size: 14px; line-height: 1.55; }
     .modal .ft { padding: 14px 18px; border-top: 1px solid var(--border); display:flex; justify-content: flex-end; gap: 10px; }
-    .state-rules-wrap { margin: 0 0 18px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: #fafbfc; }
-    .state-rules-wrap .state-rules-caption { padding: 10px 14px; font-weight: 800; font-size: 13px; color: var(--navy); border-bottom: 1px solid var(--border); background: #eef2f7; }
-    .state-rules-table { width: 100%; border-collapse: collapse; font-size: 12px; line-height: 1.45; }
-    .state-rules-table th, .state-rules-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
-    .state-rules-table th { background: #f5f7fa; font-weight: 700; color: var(--navy); white-space: nowrap; }
-    .state-rules-table tr:last-child td { border-bottom: none; }
   </style>
 </head>
 <body>
@@ -243,28 +236,6 @@
             </div>
           </div>
 
-          <div class="state-rules-wrap" aria-label="상태 전이 규칙 참고표">
-            <div class="state-rules-caption">상태 전이 규칙 (참고) · 아래 표에 각 상태가 한 줄씩 보이도록 샘플 미션을 함께 두었습니다.</div>
-            <table class="state-rules-table">
-              <thead>
-                <tr>
-                  <th>현재 상태</th>
-                  <th>조건</th>
-                  <th>변경 후 상태</th>
-                  <th>비고</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td>예정</td><td>시작일 도달</td><td>진행</td><td>자동</td></tr>
-                <tr><td>진행</td><td>종료일 경과</td><td>완료</td><td>자동</td></tr>
-                <tr><td>예정・진행</td><td>관리자 <code>OFF</code></td><td>중단</td><td>수동</td></tr>
-                <tr><td>중단</td><td>관리자 <code>ON</code> + 현재 시각 &lt; 시작일</td><td>예정</td><td>아직 시작 전이므로 예정으로 복구</td></tr>
-                <tr><td>중단</td><td>관리자 <code>ON</code> + 시작일 ≤ 현재 시각 ≤ 종료일</td><td>진행</td><td>기간 내이므로 즉시 진행으로 복구</td></tr>
-                <tr><td>중단</td><td>종료일 경과</td><td>완료</td><td>자동 · <code>ON</code> 불가</td></tr>
-              </tbody>
-            </table>
-          </div>
-
           <div class="table-wrap">
             <table class="data-table">
               <colgroup>
@@ -291,8 +262,6 @@
             <div class="pagination-mock" aria-hidden="true"><span>1</span></div>
             <span class="list-count-footer" id="list-count-footer">총 0건</span>
           </div>
-
-          <p class="page-note">* 목록의 <strong>상태</strong>는 시작일·종료일로 예정/진행/완료를 자동 산출하고, <strong>관리 OFF</strong>이면 그 구간에서 중단으로 표시됩니다. 완료(종료 경과) 행은 관리 토글이 없습니다.</p>
         </section>
 
         <!-- 화면 2: 미션 캠페인 등록 (원페이지) -->
