@@ -226,7 +226,6 @@
                 <option value="">전체</option>
                 <option value="일반기사(프렌즈)">일반기사(프렌즈)</option>
                 <option value="NVP지점기사">NVP지점기사</option>
-                <option value="벤더기사">벤더기사</option>
               </select>
               <label>미션명</label>
               <input id="flt-name" type="text" placeholder="미션명 입력" />
@@ -388,9 +387,8 @@
                   <div class="check-group" id="targets">
                     <label class="pill"><input type="checkbox" value="일반기사(프렌즈)" id="chk-friends" /> 일반기사(프렌즈)</label>
                     <label class="pill"><input type="checkbox" value="NVP지점기사" /> NVP지점기사</label>
-                    <label class="pill"><input type="checkbox" value="벤더기사" /> 벤더기사</label>
                   </div>
-                  <div class="help">일반기사(프렌즈)는 아래 <strong>시군구</strong> 단위, NVP지점기사·벤더기사는 <strong>ZONE</strong> 단위로 적용 범위를 지정합니다.</div>
+                  <div class="help">일반기사(프렌즈)는 아래 <strong>시군구</strong> 단위, NVP지점기사는 <strong>ZONE</strong> 단위로 적용 범위를 지정합니다.</div>
                 </div>
               </div>
 
@@ -444,7 +442,7 @@
                     <option value="대구 수성ZONE">대구 수성ZONE</option>
                     <option value="인천 연수ZONE">인천 연수ZONE</option>
                   </select>
-                  <div class="help">NVP지점기사·벤더기사 적용 시 <strong>ZONE</strong> 다중 선택 · Ctrl(⌘)+클릭 · 일반기사(프렌즈)만 선택한 경우에는 시군구만 사용</div>
+                  <div class="help">NVP지점기사 적용 시 <strong>ZONE</strong> 다중 선택 · Ctrl(⌘)+클릭 · 일반기사(프렌즈)만 선택한 경우에는 시군구만 사용</div>
                 </div>
               </div>
 
@@ -613,7 +611,7 @@
           { id: 'MS-DEMO-02', name: '서초구 주간 피크 달성형 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-2), end: add(10), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['서울특별시 서초구'], zones: [], createdAt: t, off: false },
           { id: 'MS-DEMO-03', name: '연수 NVP 야간 구간 인센티브', purpose: '활성화', structure: '단일', mode: '정적', start: add(-40), end: add(-5), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['인천 연수ZONE'], createdAt: t, off: false },
           { id: 'MS-DEMO-04', name: '해운대 프렌즈 주말 스탬프 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(8), end: add(22), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['부산광역시 해운대구'], zones: [], createdAt: t, off: true },
-          { id: 'MS-DEMO-05', name: '서울 강남ZONE 벤더 동선 최적화 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-3), end: add(9), targets: ['벤더기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['서울 강남ZONE'], createdAt: t, off: true },
+          { id: 'MS-DEMO-05', name: '서울 강남ZONE NVP 동선 최적화 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-3), end: add(9), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['서울 강남ZONE'], createdAt: t, off: true },
         ];
         const samples = [
           { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전'], sgg: ['서울특별시 강남구'], zones: [], createdAt: '2026-03-31', off: false },
@@ -891,12 +889,12 @@
           }
         }
         const hasFriends = state.targets.includes('일반기사(프렌즈)');
-        const needsZone = state.targets.includes('NVP지점기사') || state.targets.includes('벤더기사');
+        const needsZone = state.targets.includes('NVP지점기사');
         if (hasFriends && state.sgg.length === 0) {
           return { ok:false, key:'sgg', msg:'일반기사(프렌즈) 선택 시 시군구를 1개 이상 선택해 주세요.' };
         }
         if (needsZone && state.zones.length === 0) {
-          return { ok:false, key:'zones', msg:'NVP지점기사 또는 벤더기사를 포함하면 ZONE을 1개 이상 선택해 주세요.' };
+          return { ok:false, key:'zones', msg:'NVP지점기사를 포함하면 ZONE을 1개 이상 선택해 주세요.' };
         }
         if (state.purpose !== '전환' && state.times.length > 0) {
           const norm = state.times.map((t) => t.replace(/\s+/g, ''));
@@ -972,7 +970,7 @@
       function syncGeoRows() {
         const t = Array.from(document.querySelectorAll('#targets input[type="checkbox"]:checked')).map((i) => i.value);
         const hasF = t.includes('일반기사(프렌즈)');
-        const hasZ = t.includes('NVP지점기사') || t.includes('벤더기사');
+        const hasZ = t.includes('NVP지점기사');
         const rowSgg = $('row-sgg');
         const rowZones = $('row-zones');
         if (rowSgg) {
