@@ -203,7 +203,7 @@
     }
     .req { color: var(--req-dot); font-weight: 900; margin-left: 3px; }
     .field { flex: 1; min-width: 0; }
-    .field input:not([type="radio"]):not([type="checkbox"]),
+    .field input:not([type="radio"]):not([type="checkbox"]):not([type="time"]),
     .field select,
     .field textarea {
       width: 100%;
@@ -217,7 +217,7 @@
       transition: border-color .15s, box-shadow .15s;
     }
     .field textarea { min-height: 120px; padding: 10px 12px; resize: vertical; line-height: 1.5; }
-    .field input:not([type="radio"]):not([type="checkbox"]):focus,
+    .field input:not([type="radio"]):not([type="checkbox"]):not([type="time"]):focus,
     .field select:focus,
     .field textarea:focus {
       outline: none;
@@ -225,18 +225,34 @@
       box-shadow: 0 0 0 3px rgba(36, 59, 85, 0.1);
     }
 
-    .time-slot-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+    .time-slot-row {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 10px 12px;
+      min-width: 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
+    }
     .time-slot-row input[type="time"] {
       width: auto;
-      min-width: 120px;
+      min-width: 7.25rem;
+      max-width: 9.5rem;
+      flex: 0 0 auto;
       min-height: var(--control-h);
       padding: 0 12px;
       font-size: 14px;
       border: 1px solid var(--border);
       border-radius: var(--radius-xs);
       background: #fff;
+      color: var(--text);
     }
-    .time-slot-sep { color: var(--text-muted); font-weight: 800; font-size: 14px; user-select: none; }
+    .time-slot-row #btn-add-time {
+      flex: 0 0 auto;
+      margin-left: 4px;
+    }
+    .time-slot-sep { color: var(--text-muted); font-weight: 800; font-size: 14px; user-select: none; flex: 0 0 auto; }
     .time-tag-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; min-height: 0; }
     .time-tag-wrap:empty { margin-top: 0; }
     .time-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: #e8eef8; border: 1px solid #c5d4e8; border-radius: var(--radius-xs); font-size: 13px; font-weight: 600; color: var(--navy); }
@@ -516,7 +532,7 @@
                     <input type="time" id="f-time-start" step="60" />
                     <span class="time-slot-sep">~</span>
                     <input type="time" id="f-time-end" step="60" />
-                    <button type="button" class="btn ghost" id="btn-add-time">추가</button>
+                    <button type="button" class="btn primary" id="btn-add-time">추가</button>
                   </div>
                   <div id="time-tags" class="time-tag-wrap" aria-live="polite"></div>
                   <div class="help">활성화 목적일 때 사용 · 전환 목적은 미사용 · 시작·종료 시각 후 <strong>추가</strong> · 다중 구간 · 태그 × 삭제 · 미등록 시 전일/미설정 · 중복 불가</div>
@@ -1657,6 +1673,8 @@
         if ($('dyn-note')) $('dyn-note').style.display = 'none';
         syncGeoRows();
         updatePayStructureVisibility();
+        const btnAddTime = $('btn-add-time');
+        if (btnAddTime) btnAddTime.disabled = false;
       }
 
       // Step3 stage rows
