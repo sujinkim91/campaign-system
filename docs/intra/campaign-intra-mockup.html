@@ -245,7 +245,7 @@
           <div class="table-wrap">
             <table class="data-table">
               <colgroup>
-                <col style="width:14%"><col style="width:7%"><col style="width:7%"><col style="width:9%"><col style="width:10%"><col style="width:10%"><col style="width:9%"><col style="width:9%"><col style="width:10%"><col style="width:6%"><col style="width:9%">
+                <col style="width:16%"><col style="width:7%"><col style="width:7%"><col style="width:9%"><col style="width:10%"><col style="width:10%"><col style="width:11%"><col style="width:11%"><col style="width:6%"><col style="width:13%">
               </colgroup>
               <thead>
                 <tr>
@@ -255,9 +255,8 @@
                   <th>기간</th>
                   <th>적용대상 유형</th>
                   <th>지역・ZONE</th>
-                  <th title="누적 지급·집행액">소진액</th>
                   <th title="이 미션에 배정된 지급 상한(캠페인 단위)">예산 한도</th>
-                  <th title="예산 한도 − 소진액. 막대는 잔여 비율(남은 한도 ÷ 예산 한도)">남은 한도</th>
+                  <th title="예산 한도 − 누적 집행액. 막대는 잔여 비율(남은 한도 ÷ 예산 한도)">남은 한도</th>
                   <th>상태</th>
                   <th>관리</th>
                 </tr>
@@ -650,7 +649,7 @@
         return v.toLocaleString('ko-KR') + '원';
       }
 
-      /** 예산 한도·소진·남은 한도 계산. 목록 3컬럼(소진액 → 예산 한도 → 남은 한도)에 사용 */
+      /** 예산 한도·소진(데이터)·남은 한도 계산. 목록은 예산 한도·남은 한도만 표시 */
       function budgetDerived(c) {
         const total = Number(c.budgetTotal);
         const spentRaw = Number(c.budgetSpent);
@@ -723,7 +722,6 @@
             '<td>' + fmtPeriod(c) + '</td>' +
             '<td>' + c.targets.join(', ') + '</td>' +
             '<td>' + fmtGeoCell(c) + '</td>' +
-            '<td class="td-num">' + (b ? fmtWon(b.spent) : '—') + '</td>' +
             '<td class="td-num">' + (b ? fmtWon(b.total) : '—') + '</td>' +
             '<td class="td-remain">' + fmtRemainInner(b) + '</td>' +
             '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>' +
