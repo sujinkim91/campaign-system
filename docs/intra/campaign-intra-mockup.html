@@ -644,8 +644,8 @@
         const bits = [];
         const sgg = (c.sgg && c.sgg.length) ? c.sgg : [];
         const zones = (c.zones && c.zones.length) ? c.zones : [];
-        if (sgg.length) bits.push('시군구: ' + sgg.join(', '));
-        if (zones.length) bits.push('ZONE: ' + zones.join(', '));
+        if (sgg.length) bits.push(sgg.join(', '));
+        if (zones.length) bits.push(zones.join(', '));
         return bits.length ? bits.join(' · ') : '-';
       }
 
