@@ -163,6 +163,12 @@
     .modal .hd { padding: 16px 18px; border-bottom: 1px solid var(--border); font-weight: 800; font-size: 16px; color: var(--navy); }
     .modal .bd { padding: 18px; color: var(--text); font-size: 14px; line-height: 1.55; }
     .modal .ft { padding: 14px 18px; border-top: 1px solid var(--border); display:flex; justify-content: flex-end; gap: 10px; }
+    .state-rules-wrap { margin: 0 0 18px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: #fafbfc; }
+    .state-rules-wrap .state-rules-caption { padding: 10px 14px; font-weight: 800; font-size: 13px; color: var(--navy); border-bottom: 1px solid var(--border); background: #eef2f7; }
+    .state-rules-table { width: 100%; border-collapse: collapse; font-size: 12px; line-height: 1.45; }
+    .state-rules-table th, .state-rules-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+    .state-rules-table th { background: #f5f7fa; font-weight: 700; color: var(--navy); white-space: nowrap; }
+    .state-rules-table tr:last-child td { border-bottom: none; }
   </style>
 </head>
 <body>
@@ -237,6 +243,28 @@
             </div>
           </div>
 
+          <div class="state-rules-wrap" aria-label="상태 전이 규칙 참고표">
+            <div class="state-rules-caption">상태 전이 규칙 (참고) · 아래 표에 각 상태가 한 줄씩 보이도록 샘플 미션을 함께 두었습니다.</div>
+            <table class="state-rules-table">
+              <thead>
+                <tr>
+                  <th>현재 상태</th>
+                  <th>조건</th>
+                  <th>변경 후 상태</th>
+                  <th>비고</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>예정</td><td>시작일 도달</td><td>진행</td><td>자동</td></tr>
+                <tr><td>진행</td><td>종료일 경과</td><td>완료</td><td>자동</td></tr>
+                <tr><td>예정・진행</td><td>관리자 <code>OFF</code></td><td>중단</td><td>수동</td></tr>
+                <tr><td>중단</td><td>관리자 <code>ON</code> + 현재 시각 &lt; 시작일</td><td>예정</td><td>아직 시작 전이므로 예정으로 복구</td></tr>
+                <tr><td>중단</td><td>관리자 <code>ON</code> + 시작일 ≤ 현재 시각 ≤ 종료일</td><td>진행</td><td>기간 내이므로 즉시 진행으로 복구</td></tr>
+                <tr><td>중단</td><td>종료일 경과</td><td>완료</td><td>자동 · <code>ON</code> 불가</td></tr>
+              </tbody>
+            </table>
+          </div>
+
           <div class="table-wrap">
             <table class="data-table">
               <colgroup>
@@ -264,7 +292,7 @@
             <span class="list-count-footer" id="list-count-footer">총 0건</span>
           </div>
 
-          <p class="page-note">* 상태는 시작일/종료일 기준 자동 판단(예정/진행/완료). 관리자 off 시 중단.</p>
+          <p class="page-note">* 목록의 <strong>상태</strong>는 시작일·종료일로 예정/진행/완료를 자동 산출하고, <strong>관리 OFF</strong>이면 그 구간에서 중단으로 표시됩니다. 완료(종료 경과) 행은 관리 토글이 없습니다.</p>
         </section>
 
         <!-- 화면 2: 미션 캠페인 등록 (원페이지) -->
@@ -541,6 +569,13 @@
     (function() {
       const $ = (id) => document.getElementById(id);
       const todayISO = () => new Date().toISOString().slice(0,10);
+      /** 로컬 달력 기준 YYYY-MM-DD + n일 (목업 목록 고정 시나리오용) */
+      function addDaysISO(iso, n) {
+        const p = iso.split('-').map(Number);
+        const d = new Date(p[0], p[1] - 1, p[2] + n);
+        const pad = (x) => String(x).padStart(2, '0');
+        return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+      }
 
       // ===== 화면 전환 =====
       const navList = $('nav-list');
@@ -599,12 +634,25 @@
       $('btn-logout-mock').addEventListener('click', () => showToast('목업: 로그아웃 동작 없음'));
 
       // ===== 데이터(목록) =====
-      let CAMPAIGNS = [
-        { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전'], sgg: ['서울특별시 강남구'], zones: [], createdAt: '2026-03-31', off: false },
-        { id: 'MS-2026-002', name: '주말 단일 지급 미션', purpose: '활성화', structure: '단일', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전', '저녁'], sgg: ['부산광역시 해운대구'], zones: [], createdAt: '2026-03-31', off: true },
-        { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', purpose: '활성화', structure: '단계', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['대구 Z3'], createdAt: '2026-03-10', off: false },
-        { id: 'MS-2026-004', name: '신규 라이더 전환 미션', purpose: '전환', structure: '단일', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['일반기사(프렌즈)'], segmentActivity: ['중간'], segmentCommute: ['오후', '저녁'], sgg: ['서울특별시 강남구'], zones: [], createdAt: '2026-03-28', off: false },
-      ];
+      // 상단에 오늘 기준으로 예정/진행/완료/중단(시작 전)/중단(기간 내) 샘플 5건을 두어 필터·표와 대조 가능
+      let CAMPAIGNS = (function initCampaigns() {
+        const t = todayISO();
+        const add = (n) => addDaysISO(t, n);
+        const demo = [
+          { id: 'MS-DEMO-01', name: '[상태 샘플] 예정 — 시작일 도달 시 → 진행(자동)', purpose: '활성화', structure: '단일', mode: '정적', start: add(14), end: add(28), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['서울특별시 강남구'], zones: [], createdAt: t, off: false },
+          { id: 'MS-DEMO-02', name: '[상태 샘플] 진행 — 종료일 경과 시 → 완료(자동)', purpose: '활성화', structure: '단일', mode: '정적', start: add(-2), end: add(10), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['서울특별시 서초구'], zones: [], createdAt: t, off: false },
+          { id: 'MS-DEMO-03', name: '[상태 샘플] 완료 — 종료 경과·관리 ON 불가', purpose: '활성화', structure: '단일', mode: '정적', start: add(-40), end: add(-5), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['인천/송도 Z4'], createdAt: t, off: false },
+          { id: 'MS-DEMO-04', name: '[상태 샘플] 중단(시작 전 OFF) — ON 시 → 예정', purpose: '활성화', structure: '단일', mode: '정적', start: add(8), end: add(22), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['부산광역시 해운대구'], zones: [], createdAt: t, off: true },
+          { id: 'MS-DEMO-05', name: '[상태 샘플] 중단(기간 내 OFF) — ON 시 → 진행', purpose: '활성화', structure: '단일', mode: '정적', start: add(-3), end: add(9), targets: ['벤더기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['서울/강남 Z1'], createdAt: t, off: true },
+        ];
+        const samples = [
+          { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전'], sgg: ['서울특별시 강남구'], zones: [], createdAt: '2026-03-31', off: false },
+          { id: 'MS-2026-002', name: '주말 단일 지급 미션', purpose: '활성화', structure: '단일', mode: '정적', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전', '저녁'], sgg: ['부산광역시 해운대구'], zones: [], createdAt: '2026-03-31', off: true },
+          { id: 'MS-2026-003', name: '야간 피크 단계형(동적) 미션', purpose: '활성화', structure: '단계', mode: '동적', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['대구 Z3'], createdAt: '2026-03-10', off: false },
+          { id: 'MS-2026-004', name: '신규 라이더 전환 미션', purpose: '전환', structure: '단일', mode: '정적', start: '2026-04-01', end: '2026-06-30', targets: ['일반기사(프렌즈)'], segmentActivity: ['중간'], segmentCommute: ['오후', '저녁'], sgg: ['서울특별시 강남구'], zones: [], createdAt: '2026-03-28', off: false },
+        ];
+        return demo.concat(samples);
+      })();
 
       function statusOf(c) {
         const now = new Date();
