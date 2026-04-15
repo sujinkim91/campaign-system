@@ -603,16 +603,16 @@
       $('btn-logout-mock').addEventListener('click', () => showToast('목업: 로그아웃 동작 없음'));
 
       // ===== 데이터(목록) =====
-      // 상단에 오늘 기준으로 예정/진행/완료/중단(시작 전)/중단(기간 내) 샘플 5건을 두어 필터·표와 대조 가능
+      // 오늘 기준 기간·OFF 조합으로 예정/진행/완료/중단(시작 전·기간 내) 목업 5건
       let CAMPAIGNS = (function initCampaigns() {
         const t = todayISO();
         const add = (n) => addDaysISO(t, n);
         const demo = [
-          { id: 'MS-DEMO-01', name: '[상태 샘플] 예정 — 시작일 도달 시 → 진행(자동)', purpose: '활성화', structure: '단일', mode: '정적', start: add(14), end: add(28), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['서울특별시 강남구'], zones: [], createdAt: t, off: false },
-          { id: 'MS-DEMO-02', name: '[상태 샘플] 진행 — 종료일 경과 시 → 완료(자동)', purpose: '활성화', structure: '단일', mode: '정적', start: add(-2), end: add(10), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['서울특별시 서초구'], zones: [], createdAt: t, off: false },
-          { id: 'MS-DEMO-03', name: '[상태 샘플] 완료 — 종료 경과·관리 ON 불가', purpose: '활성화', structure: '단일', mode: '정적', start: add(-40), end: add(-5), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['인천/송도 Z4'], createdAt: t, off: false },
-          { id: 'MS-DEMO-04', name: '[상태 샘플] 중단(시작 전 OFF) — ON 시 → 예정', purpose: '활성화', structure: '단일', mode: '정적', start: add(8), end: add(22), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['부산광역시 해운대구'], zones: [], createdAt: t, off: true },
-          { id: 'MS-DEMO-05', name: '[상태 샘플] 중단(기간 내 OFF) — ON 시 → 진행', purpose: '활성화', structure: '단일', mode: '정적', start: add(-3), end: add(9), targets: ['벤더기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['서울/강남 Z1'], createdAt: t, off: true },
+          { id: 'MS-DEMO-01', name: '도심 점심 피크 사전 집중 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(14), end: add(28), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['서울특별시 강남구'], zones: [], createdAt: t, off: false },
+          { id: 'MS-DEMO-02', name: '서초구 주간 피크 달성형 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-2), end: add(10), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['서울특별시 서초구'], zones: [], createdAt: t, off: false },
+          { id: 'MS-DEMO-03', name: '송도 NVP 야간 구간 인센티브', purpose: '활성화', structure: '단일', mode: '정적', start: add(-40), end: add(-5), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['인천/송도 Z4'], createdAt: t, off: false },
+          { id: 'MS-DEMO-04', name: '해운대 프렌즈 주말 스탬프 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(8), end: add(22), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], sgg: ['부산광역시 해운대구'], zones: [], createdAt: t, off: true },
+          { id: 'MS-DEMO-05', name: '강남 Z1 벤더 동선 최적화 미션', purpose: '활성화', structure: '단일', mode: '정적', start: add(-3), end: add(9), targets: ['벤더기사'], segmentActivity: [], segmentCommute: [], sgg: [], zones: ['서울/강남 Z1'], createdAt: t, off: true },
         ];
         const samples = [
           { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['높음', '중간'], segmentCommute: ['오전'], sgg: ['서울특별시 강남구'], zones: [], createdAt: '2026-03-31', off: false },
