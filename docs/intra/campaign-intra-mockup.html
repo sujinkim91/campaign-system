@@ -30,7 +30,6 @@
       --radius-sm: 8px;
       --radius-xs: 6px;
       --control-h: 40px;
-      --content-max: 1080px;
     }
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); line-height: 1.5; }
@@ -81,13 +80,6 @@
 
     .screen { display: none; }
     .screen.active { display: block; }
-
-    /* 등록 화면만 폭 제한 */
-    #screen-register.screen.active {
-      max-width: var(--content-max);
-      margin: 0 auto;
-      width: 100%;
-    }
 
     /* 카드형 패널 (등록 폼) */
     .panel {
