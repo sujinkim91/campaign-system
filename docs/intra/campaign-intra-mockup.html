@@ -1860,6 +1860,8 @@
           const zat = $('zone-all-toggle');
           if (zat) zat.checked = false;
           updateZonePickUI();
+          const rz = $('row-zones');
+          if (rz) rz.classList.remove('invalid');
         }
         renderGeoTags();
         refreshGeoAddSelects();
