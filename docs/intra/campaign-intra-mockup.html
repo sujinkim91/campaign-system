@@ -553,7 +553,7 @@
               <div class="form-row" data-key="name">
                 <label>미션명<span class="req">*</span></label>
                 <div class="field">
-                  <input id="f-name" type="text" maxlength="50" placeholder="최대 50자, 공백 불가" />
+                  <input id="f-name" type="text" maxlength="50" placeholder="최대 50자" />
                 </div>
               </div>
 
@@ -643,10 +643,11 @@
               </div>
 
               <div class="form-row" data-key="budget">
-                <label>1인당 예산한도<span class="req">*</span></label>
+                <label>예산한도<span class="req">*</span></label>
                 <div class="field">
-                  <input id="f-budget" type="number" min="1" step="1" placeholder="1인당 예산 한도(원) 입력" />
-                  <div class="help">0원 초과 · 예산 소진 시 해당 미션 지급 중단</div>
+                  <input id="f-budget" type="number" min="1" step="1" placeholder="총 예산(원) 입력" />
+                  <div class="help">0원 초과 · 예산 소진 시 지급 중단</div>
+                  <div class="help" id="budget-hint" style="display:none;"></div>
                 </div>
               </div>
 
@@ -1057,6 +1058,46 @@
         const v = Number(n);
         if (!Number.isFinite(v) || v < 0) return '—';
         return v.toLocaleString('ko-KR') + '원';
+      }
+
+      function intOrNull(v) {
+        const t = String(v ?? '').trim();
+        if (!t) return null;
+        if (!/^\d+$/.test(t)) return null;
+        const n = Number(t);
+        return Number.isFinite(n) ? n : null;
+      }
+
+      function maxRewardPerPerson() {
+        readStep1();
+        readStep3();
+        if (state.purpose === '전환') {
+          return intOrNull(state.firstPayAmount);
+        }
+        if (state.purpose === '활성화' && state.structure === '단일') {
+          return intOrNull(state.singleAmount);
+        }
+        if (state.purpose === '활성화' && state.structure === '단계') {
+          const amts = (state.stages || []).map((s) => intOrNull(s.amount)).filter((x) => x !== null);
+          if (amts.length === 0) return null;
+          return Math.max(...amts);
+        }
+        return null;
+      }
+
+      function updateBudgetHint() {
+        const el = $('budget-hint');
+        if (!el) return;
+        const total = intOrNull($('f-budget') ? $('f-budget').value : '');
+        const per = maxRewardPerPerson();
+        if (!total || !per || per <= 0) {
+          el.style.display = 'none';
+          el.textContent = '';
+          return;
+        }
+        const maxN = Math.floor(total / per);
+        el.style.display = 'block';
+        el.textContent = '최대 참여 가능 인원 ' + maxN.toLocaleString('ko-KR') + '명 · 1인당 지급 ' + fmtWon(per);
       }
 
       /** 예산 한도·소진(데이터)·남은 한도 계산. 목록은 예산 한도·남은 한도만 표시 */
@@ -1713,12 +1754,8 @@
         }
       }
       function readStep3() {
-        if (state.purpose === '전환') {
-          state.offday = '';
-        } else {
-          state.offday = $('f-offday').value;
-        }
-        state.cancelCount = ($('f-cancel-count') && state.purpose !== '전환') ? $('f-cancel-count').value : '';
+        state.offday = $('f-offday') ? $('f-offday').value : '';
+        state.cancelCount = $('f-cancel-count') ? $('f-cancel-count').value : '';
         if (state.purpose === '전환') {
           state.firstPayAmount = $('f-first-amount').value;
         } else {
@@ -1731,7 +1768,6 @@
       function validateStep1() {
         readStep1();
         if (!state.name) return { ok:false, key:'name', msg:'미션명은 필수입니다.' };
-        if (/\s/.test(state.name)) return { ok:false, key:'name', msg:'미션명은 공백 없이 입력해 주세요.' };
         if (state.description.length > 500) return { ok:false, key:'desc', msg:'미션 설명은 500자 이하로 입력해 주세요.' };
         if (!state.purpose) return { ok:false, key:'purpose', msg:'목적을 선택해 주세요.' };
         if (state.purpose === '활성화' && !state.structure) return { ok:false, key:'structure', msg:'지급 구조(단계형/단일)를 선택해 주세요.' };
@@ -1748,7 +1784,7 @@
         if (state.end <= state.start) return { ok:false, key:'period', msg:'종료일은 시작일보다 이후여야 합니다.' };
         if (!state.publish) return { ok:false, key:'publish', msg:'미션 공개일은 필수입니다.' };
         if (state.publish > state.start) return { ok:false, key:'publish', msg:'미션 공개일은 시작일이거나 시작일 이전이어야 합니다.' };
-        if (!state.budget || Number(state.budget) <= 0) return { ok:false, key:'budget', msg:'1인당 예산한도는 0원 초과로 입력해 주세요.' };
+        if (!state.budget || Number(state.budget) <= 0) return { ok:false, key:'budget', msg:'예산한도는 0원 초과로 입력해 주세요.' };
         if (state.targets.length === 0) return { ok:false, key:'targets', msg:'적용대상 유형은 1개 이상 선택해 주세요.' };
         if (!document.getElementById('chk-friends').checked) {
           state.segmentActivity = [];
@@ -1896,7 +1932,6 @@
           state.times = [];
           if ($('f-time-start')) { $('f-time-start').value = ''; $('f-time-end').value = ''; }
           renderTimeTags();
-          $('f-offday').value = '';
         }
         if (!isConversion) {
           $('f-first-days').value = '';
@@ -1904,7 +1939,7 @@
           $('f-first-amount').value = '';
         }
         const oc = $('row-off-cancel-wrap');
-        if (oc) oc.style.display = isConversion ? 'none' : 'block';
+        if (oc) oc.style.display = 'block';
 
         const chkFriends = document.getElementById('chk-friends');
         const friendsChecked = chkFriends ? chkFriends.checked : false;
@@ -1924,6 +1959,7 @@
         updatePayStructureVisibility();
         const btnAddTime = $('btn-add-time');
         if (btnAddTime) btnAddTime.disabled = false;
+        updateBudgetHint();
       }
 
       // Step3 stage rows
@@ -1946,6 +1982,7 @@
             const i = Number(inp.getAttribute('data-i'));
             const k = inp.getAttribute('data-k');
             state.stages[i][k] = inp.value;
+            updateBudgetHint();
           });
         });
         stagesBody.querySelectorAll('button[data-i]').forEach((btn) => {
@@ -1961,6 +1998,7 @@
         if (state.stages.length >= 10) return;
         state.stages.push({ count:'', amount:'' });
         renderStages();
+        updateBudgetHint();
       });
       renderStages();
 
@@ -2000,14 +2038,14 @@
 
         // mock submit: sometimes fail if budget too huge (just for demo)
         if (Number(state.budget) > 999999999) {
-          showFailModal('1인당 예산한도 최대값(TBD)을 초과했습니다.');
+          showFailModal('예산한도 최대값(TBD)을 초과했습니다.');
           return;
         }
 
         // append to list
         const nextId = 'MS-2026-' + String(100 + CAMPAIGNS.length + 1).padStart(3,'0');
-        const per = Number(state.budget);
-        const pool = Number.isFinite(per) && per > 0 ? Math.max(per * 200, 500000) : 0;
+        const totalBudget = Number(state.budget);
+        const pool = Number.isFinite(totalBudget) && totalBudget > 0 ? totalBudget : 0;
         const zoneAllSaved = state.targets.includes('NVP지점기사') && !!state.zoneAll;
         const zonesSaved = state.targets.includes('NVP지점기사') ? (zoneAllSaved ? [] : state.zones.slice()) : [];
         CAMPAIGNS.unshift({
@@ -2045,6 +2083,14 @@
         setRegisterMode('view', nextId);
         showToast('저장 완료');
       });
+
+      // budget hint updates (total budget + reward amounts)
+      const budgetEl = $('f-budget');
+      if (budgetEl) budgetEl.addEventListener('input', updateBudgetHint);
+      const singleAmtEl = $('f-single-amount');
+      if (singleAmtEl) singleAmtEl.addEventListener('input', updateBudgetHint);
+      const firstAmtEl = $('f-first-amount');
+      if (firstAmtEl) firstAmtEl.addEventListener('input', updateBudgetHint);
 
       // 목적·지급구조: 등록 화면에서 위임 + 목적 라벨 click 보조
       const regScreen = $('screen-register');
