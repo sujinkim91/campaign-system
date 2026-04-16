@@ -682,6 +682,19 @@
                 </div>
               </div>
 
+              <div class="form-row" data-key="segment2" id="row-seg-commute" style="display:none;">
+                <label>주요 출근 시간</label>
+                <div class="field">
+                  <div class="check-group" id="seg-commute">
+                    <label class="pill"><input type="checkbox" value="오전" /> 오전</label>
+                    <label class="pill"><input type="checkbox" value="오후" /> 오후</label>
+                    <label class="pill"><input type="checkbox" value="저녁" /> 저녁</label>
+                    <label class="pill"><input type="checkbox" value="새벽" /> 새벽</label>
+                  </div>
+                  <div class="help">선택 · 각 분류 기준은 추후 확정 예정</div>
+                </div>
+              </div>
+
               <div class="target-panel" id="panel-target-nvp" style="display:none;">
                 <div class="target-panel-hd">NVP지점기사 조건</div>
                 <div class="form-row" data-key="zones" id="row-zones" style="align-items:flex-start;">
@@ -986,6 +999,7 @@
         document.querySelectorAll('#targets input[type="checkbox"]').forEach((x) => { x.checked = false; });
         document.querySelectorAll('input[name="structure"]').forEach((x) => { x.checked = x.value === '단일'; });
         document.querySelectorAll('#seg-activity input[type="checkbox"]').forEach((x) => { x.checked = false; });
+        document.querySelectorAll('#seg-commute input[type="checkbox"]').forEach((x) => { x.checked = false; });
         readStep1();
         syncUIByPurposeStructure();
         clearInvalid();
@@ -1689,7 +1703,7 @@
         state.shipper = $('f-shipper').value || '전체';
         state.shipperDetail = ($('f-shipper-detail').value || '').trim();
         state.segmentActivity = Array.from(document.querySelectorAll('#seg-activity input[type="checkbox"]:checked')).map(i => i.value);
-        state.segmentCommute = [];
+        state.segmentCommute = Array.from(document.querySelectorAll('#seg-commute input[type="checkbox"]:checked')).map(i => i.value);
         if (state.purpose === '전환') {
           state.firstSignupDays = $('f-first-days').value;
           state.firstTargetCount = $('f-first-count').value;
@@ -1739,6 +1753,8 @@
         if (!document.getElementById('chk-friends').checked) {
           state.segmentActivity = [];
           document.querySelectorAll('#seg-activity input[type="checkbox"]').forEach(i => { i.checked = false; });
+          state.segmentCommute = [];
+          document.querySelectorAll('#seg-commute input[type="checkbox"]').forEach(i => { i.checked = false; });
         }
         const hasFriends = state.targets.includes('일반기사(프렌즈)');
         const needsZone = state.targets.includes('NVP지점기사');
@@ -1894,6 +1910,8 @@
         const friendsChecked = chkFriends ? chkFriends.checked : false;
         const rsa = $('row-seg-activity');
         if (rsa) rsa.style.display = friendsChecked ? 'flex' : 'none';
+        const rsc = $('row-seg-commute');
+        if (rsc) rsc.style.display = friendsChecked ? 'flex' : 'none';
 
         const isStage = state.purpose === '활성화' && state.structure === '단계';
         const isSingleActive = state.purpose === '활성화' && state.structure === '단일';
@@ -1951,6 +1969,7 @@
         c.addEventListener('change', () => {
           if (!document.getElementById('chk-friends').checked) {
             document.querySelectorAll('#seg-activity input[type="checkbox"]').forEach(i => { i.checked = false; });
+            document.querySelectorAll('#seg-commute input[type="checkbox"]').forEach(i => { i.checked = false; });
           }
           syncUIByPurposeStructure();
         });
@@ -2004,7 +2023,7 @@
           end: state.end,
           targets: state.targets,
           segmentActivity: state.targets.includes('일반기사(프렌즈)') ? state.segmentActivity.slice() : [],
-          segmentCommute: [],
+          segmentCommute: state.targets.includes('일반기사(프렌즈)') ? state.segmentCommute.slice() : [],
           regions: state.targets.includes('일반기사(프렌즈)') ? state.regions.slice() : [],
           activityRegions: state.targets.includes('일반기사(프렌즈)') ? state.activityRegions.slice() : [],
           zones: zonesSaved,
