@@ -776,24 +776,6 @@
               <h2 class="panel-title">달성 조건</h2>
               <div id="dyn-note" class="warn" style="display:none;">달성 조건은 S&OP 연동 후 자동 설정됩니다</div>
 
-              <h3 class="form-subsection-title">미션 운영기준</h3>
-              <div id="row-off-cancel-wrap">
-                <div class="form-row" data-key="offday">
-                  <label>휴무</label>
-                  <div class="field">
-                    <input id="f-offday" type="number" min="0" step="1" placeholder="0 이상 정수 (회)" />
-                    <div class="help">미션 운영기준 · 선택 · 단위: <strong>회</strong>(PRD 기준)</div>
-                  </div>
-                </div>
-                <div class="form-row" data-key="cancelCount" id="row-cancel-count">
-                  <label>취소건수</label>
-                  <div class="field">
-                    <input id="f-cancel-count" type="number" min="0" step="1" placeholder="0 이상 정수 (건)" />
-                    <div class="help">미션 운영기준 · 선택 · 단위: <strong>건</strong>(PRD 기준)</div>
-                  </div>
-                </div>
-              </div>
-
               <div class="form-row mission-conversion-only" data-key="firstTarget" id="row-first-target" style="display:none;">
                 <label>첫 배달 목표 건수<span class="req">*</span></label>
                 <div class="field">
@@ -838,6 +820,24 @@
                   <div class="field">
                     <input id="f-first-amount" type="number" min="1" step="1" placeholder="원" />
                     <div class="help">전환 목적 달성 시 1회 지급(단일 고정)</div>
+                  </div>
+                </div>
+              </div>
+
+              <h3 class="form-subsection-title">미션 운영기준</h3>
+              <div id="row-off-cancel-wrap">
+                <div class="form-row" data-key="offday">
+                  <label>휴무</label>
+                  <div class="field">
+                    <input id="f-offday" type="number" min="0" step="1" placeholder="0 이상 정수 (회)" />
+                    <div class="help">미션 운영기준 · 선택 · 단위: <strong>회</strong>(PRD 기준)</div>
+                  </div>
+                </div>
+                <div class="form-row" data-key="cancelCount" id="row-cancel-count">
+                  <label>취소건수</label>
+                  <div class="field">
+                    <input id="f-cancel-count" type="number" min="0" step="1" placeholder="0 이상 정수 (건)" />
+                    <div class="help">미션 운영기준 · 선택 · 단위: <strong>건</strong>(PRD 기준)</div>
                   </div>
                 </div>
               </div>
