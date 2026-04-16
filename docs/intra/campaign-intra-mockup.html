@@ -989,6 +989,71 @@
         const content = document.querySelector('.content');
         if (content) content.scrollTop = 0;
       }
+
+      function showRegisterView(id) {
+        const row = CAMPAIGNS.find((x) => x.id === id);
+        if (!row) return;
+
+        navList.classList.add('active');
+        screenList.classList.remove('active');
+        if (screenDetail) screenDetail.classList.remove('active');
+        screenRegister.classList.add('active');
+
+        pageTitle.textContent = '미션 조회';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 미션 관리 > 조회';
+        if (headerList) headerList.style.display = 'none';
+        if (headerRegister) headerRegister.style.display = 'flex';
+        if (headerDetail) headerDetail.style.display = 'none';
+
+        // enable controls to populate values first
+        setRegisterMode('edit', '');
+        clearInvalid();
+
+        if ($('f-name')) $('f-name').value = row.name || '';
+        if ($('f-desc')) $('f-desc').value = row.description || '';
+        document.querySelectorAll('input[name="purpose"]').forEach((el) => { el.checked = el.value === row.purpose; });
+        document.querySelectorAll('input[name="structure"]').forEach((el) => { el.checked = el.value === (row.structure || '단일'); });
+
+        if ($('f-mission-open')) $('f-mission-open').value = row.missionOpen || row.start || '';
+        if ($('f-start')) $('f-start').value = row.start || '';
+        if ($('f-end')) $('f-end').value = row.end || '';
+        if ($('f-publish')) $('f-publish').value = row.publish || row.start || '';
+        if ($('f-budget')) $('f-budget').value = String(row.budgetTotal ?? '');
+
+        if ($('f-shipper')) { $('f-shipper').value = row.shipper || '전체'; syncShipperDetail(); }
+        if ($('f-shipper-detail')) $('f-shipper-detail').value = row.shipperDetail || '';
+
+        // targets
+        document.querySelectorAll('#targets input[type="checkbox"]').forEach((x) => {
+          x.checked = (row.targets || []).includes(x.value);
+        });
+
+        // segments (friends)
+        document.querySelectorAll('#seg-activity input[type="checkbox"]').forEach((x) => {
+          x.checked = (row.segmentActivity || []).includes(x.value);
+        });
+
+        // geo tags state
+        state.regions = Array.isArray(row.regions) ? row.regions.slice() : [];
+        state.activityRegions = Array.isArray(row.activityRegions) ? row.activityRegions.slice() : [];
+        state.zoneAll = !!row.zoneAll;
+        state.zones = Array.isArray(row.zones) ? row.zones.slice() : [];
+        const zat = $('zone-all-toggle');
+        if (zat) zat.checked = !!state.zoneAll;
+
+        initGeoCascadeSelects();
+        renderGeoTags();
+        refreshGeoAddSelects();
+        updateZonePickUI();
+        syncUIByPurposeStructure();
+        updateBudgetHint();
+
+        // switch to view mode and fill budget panels
+        setRegisterMode('view', id);
+
+        const content = document.querySelector('.content');
+        if (content) content.scrollTop = 0;
+      }
       function showRegister() {
         navList.classList.remove('active');
         screenList.classList.remove('active');
@@ -1227,7 +1292,7 @@
           a.addEventListener('click', (e) => {
             e.preventDefault();
             const id = a.getAttribute('data-id');
-            if (id) showDetail(id);
+            if (id) showRegisterView(id);
           });
         });
         tb.querySelectorAll('.btn-toggle').forEach((a) => {
