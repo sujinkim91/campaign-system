@@ -960,6 +960,10 @@
           if ($('v2-budget-remain')) $('v2-budget-remain').textContent = d ? fmtWon(d.remain) : '-';
           if ($('v2-budget-pct')) $('v2-budget-pct').textContent = d ? (d.remainPct + '% 남음') : '-';
           if ($('v2-budget-bar')) $('v2-budget-bar').style.width = d ? (d.remainPct + '%') : '0%';
+
+          // 예정만 수정 허용 (PRD)
+          const st = c ? statusOf(c).key : '';
+          if (btnEdit) btnEdit.style.display = (st === '예정') ? 'inline-flex' : 'none';
         }
       }
       function showList() {
@@ -993,20 +997,22 @@
       function showRegisterView(id) {
         const row = CAMPAIGNS.find((x) => x.id === id);
         if (!row) return;
+        const st = statusOf(row).key;
+        const editable = st === '예정';
 
         navList.classList.add('active');
         screenList.classList.remove('active');
         if (screenDetail) screenDetail.classList.remove('active');
         screenRegister.classList.add('active');
 
-        pageTitle.textContent = '미션 조회';
-        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 미션 관리 > 조회';
+        pageTitle.textContent = editable ? '미션 수정' : '미션 조회';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = editable ? '캠페인 관리 > 미션 관리 > 수정' : '캠페인 관리 > 미션 관리 > 조회';
         if (headerList) headerList.style.display = 'none';
         if (headerRegister) headerRegister.style.display = 'flex';
         if (headerDetail) headerDetail.style.display = 'none';
 
         // enable controls to populate values first
-        setRegisterMode('edit', '');
+        setRegisterMode('edit', id);
         clearInvalid();
 
         if ($('f-name')) $('f-name').value = row.name || '';
@@ -1049,7 +1055,7 @@
         updateBudgetHint();
 
         // switch to view mode and fill budget panels
-        setRegisterMode('view', id);
+        if (!editable) setRegisterMode('view', id);
 
         const content = document.querySelector('.content');
         if (content) content.scrollTop = 0;
@@ -2187,14 +2193,17 @@
           return;
         }
 
-        // append to list
-        const nextId = 'MS-2026-' + String(100 + CAMPAIGNS.length + 1).padStart(3,'0');
         const totalBudget = Number(state.budget);
         const pool = Number.isFinite(totalBudget) && totalBudget > 0 ? totalBudget : 0;
         const zoneAllSaved = state.targets.includes('NVP지점기사') && !!state.zoneAll;
         const zonesSaved = state.targets.includes('NVP지점기사') ? (zoneAllSaved ? [] : state.zones.slice()) : [];
-        CAMPAIGNS.unshift({
-          id: nextId,
+
+        const isUpdate = !!registerViewId && CAMPAIGNS.some((c) => c.id === registerViewId);
+        const saveId = isUpdate ? registerViewId : ('MS-2026-' + String(100 + CAMPAIGNS.length + 1).padStart(3,'0'));
+        const prev = isUpdate ? CAMPAIGNS.find((c) => c.id === registerViewId) : null;
+
+        const saved = {
+          id: saveId,
           name: state.name,
           description: state.description || '',
           purpose: state.purpose,
@@ -2213,10 +2222,16 @@
           shipper: state.shipper,
           shipperDetail: state.shipperDetail,
           budgetTotal: pool,
-          budgetSpent: 0,
-          createdAt: todayISO(),
-          off: false
-        });
+          budgetSpent: prev ? (prev.budgetSpent || 0) : 0,
+          createdAt: prev ? (prev.createdAt || todayISO()) : todayISO(),
+          off: prev ? !!prev.off : false
+        };
+
+        if (isUpdate) {
+          CAMPAIGNS = CAMPAIGNS.map((c) => c.id === registerViewId ? ({ ...c, ...saved }) : c);
+        } else {
+          CAMPAIGNS.unshift(saved);
+        }
         renderList();
         // PRD: 저장 성공 시 동일 페이지에서 조회 모드로 전환
         pageTitle.textContent = '미션 조회';
@@ -2224,7 +2239,7 @@
         if (headerList) headerList.style.display = 'none';
         if (headerRegister) headerRegister.style.display = 'flex';
         if (headerDetail) headerDetail.style.display = 'none';
-        setRegisterMode('view', nextId);
+        setRegisterMode('view', saveId);
         showToast('저장 완료');
       });
 
