@@ -549,6 +549,30 @@
             </div>
 
             <div class="form-single-page" id="form-single-page">
+              <div class="target-panel" id="panel-budget-view" style="display:none;">
+                <div class="target-panel-hd">예산 현황</div>
+                <div class="form-row">
+                  <label>예산 한도</label>
+                  <div class="field">
+                    <div id="v2-budget-total">-</div>
+                  </div>
+                </div>
+                <div class="form-row" style="align-items:flex-start;">
+                  <label>남은 한도</label>
+                  <div class="field">
+                    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                      <div id="v2-budget-remain">-</div>
+                      <div id="v2-budget-pct" style="color:var(--text-muted);font-weight:700;">-</div>
+                    </div>
+                    <div class="td-remain-wrap" style="max-width: 480px; margin-top: 10px;">
+                      <div class="remain-bar" role="img" aria-label="잔여 예산 비율">
+                        <span class="remain-bar-fill" id="v2-budget-bar" style="width:0%;"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <h2 class="panel-title">기본 정보</h2>
               <div class="form-row" data-key="name">
                 <label>미션명<span class="req">*</span></label>
@@ -912,11 +936,13 @@
         registerViewId = campaignId || '';
         const reg = $('screen-register');
         const box = $('view-mode-box');
+        const budgetPanel = $('panel-budget-view');
         const btnEdit = $('btn-view-edit');
         if (!reg) return;
 
         const onView = mode === 'view';
         if (box) box.style.display = onView ? 'block' : 'none';
+        if (budgetPanel) budgetPanel.style.display = onView ? 'block' : 'none';
         if (btnEdit) btnEdit.style.display = onView ? 'inline-flex' : 'none';
         if ($('btn-submit')) $('btn-submit').style.display = onView ? 'none' : 'inline-flex';
 
@@ -942,6 +968,11 @@
           if ($('v-id')) $('v-id').textContent = campaignId;
           if ($('v-budget-total')) $('v-budget-total').textContent = d ? fmtWon(d.total) : '-';
           if ($('v-budget-remain')) $('v-budget-remain').textContent = d ? (fmtWon(d.remain) + ' (' + d.remainPct + '% 남음)') : '-';
+
+          if ($('v2-budget-total')) $('v2-budget-total').textContent = d ? fmtWon(d.total) : '-';
+          if ($('v2-budget-remain')) $('v2-budget-remain').textContent = d ? fmtWon(d.remain) : '-';
+          if ($('v2-budget-pct')) $('v2-budget-pct').textContent = d ? (d.remainPct + '% 남음') : '-';
+          if ($('v2-budget-bar')) $('v2-budget-bar').style.width = d ? (d.remainPct + '%') : '0%';
         }
       }
       function showList() {
