@@ -707,19 +707,6 @@
                 </div>
               </div>
 
-              <div class="form-row" data-key="segment2" id="row-seg-commute" style="display:none;">
-                <label>주요 출근 시간</label>
-                <div class="field">
-                  <div class="check-group" id="seg-commute">
-                    <label class="pill"><input type="checkbox" value="오전" /> 오전</label>
-                    <label class="pill"><input type="checkbox" value="오후" /> 오후</label>
-                    <label class="pill"><input type="checkbox" value="저녁" /> 저녁</label>
-                    <label class="pill"><input type="checkbox" value="새벽" /> 새벽</label>
-                  </div>
-                  <div class="help">선택 · 각 분류 기준은 추후 확정 예정</div>
-                </div>
-              </div>
-
               <div class="target-panel" id="panel-target-nvp" style="display:none;">
                 <div class="target-panel-hd">NVP지점기사 조건</div>
                 <div class="form-row" data-key="zones" id="row-zones" style="align-items:flex-start;">
@@ -1031,7 +1018,6 @@
         document.querySelectorAll('#targets input[type="checkbox"]').forEach((x) => { x.checked = false; });
         document.querySelectorAll('input[name="structure"]').forEach((x) => { x.checked = x.value === '단일'; });
         document.querySelectorAll('#seg-activity input[type="checkbox"]').forEach((x) => { x.checked = false; });
-        document.querySelectorAll('#seg-commute input[type="checkbox"]').forEach((x) => { x.checked = false; });
         readStep1();
         syncUIByPurposeStructure();
         clearInvalid();
@@ -1058,17 +1044,17 @@
         const t = todayISO();
         const add = (n) => addDaysISO(t, n);
         const demo = [
-          { id: 'MS-DEMO-01', name: '도심 점심 피크 사전 집중 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(14), publish: add(14), start: add(14), end: add(28), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], regions: ['서울특별시 강남구 역삼동'], activityRegions: ['서울특별시 서초구'], zones: [], zoneAll: false, budgetTotal: 12000000, budgetSpent: 0, createdAt: t, off: false },
-          { id: 'MS-DEMO-02', name: '서초구 주간 피크 달성형 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(-5), publish: add(-5), start: add(-2), end: add(10), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], regions: ['전체지역'], activityRegions: ['서울특별시 서초구'], zones: [], zoneAll: false, budgetTotal: 8000000, budgetSpent: 3250000, createdAt: t, off: false },
-          { id: 'MS-DEMO-03', name: '연수 NVP 야간 구간 인센티브', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(-45), publish: add(-45), start: add(-40), end: add(-5), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], regions: [], activityRegions: [], zones: ['인천 연수ZONE'], zoneAll: false, budgetTotal: 5500000, budgetSpent: 5500000, createdAt: t, off: false },
-          { id: 'MS-DEMO-04', name: '해운대 프렌즈 주말 스탬프 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(8), publish: add(8), start: add(8), end: add(22), targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], regions: ['부산광역시 해운대구 우동', '부산광역시 해운대구 중동'], activityRegions: ['전체지역'], zones: [], zoneAll: false, budgetTotal: 3000000, budgetSpent: 0, createdAt: t, off: true },
-          { id: 'MS-DEMO-05', name: '서울 강남ZONE NVP 동선 최적화 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(-5), publish: add(-5), start: add(-3), end: add(9), targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], regions: [], activityRegions: [], zones: ['서울 강남ZONE'], zoneAll: false, budgetTotal: 15000000, budgetSpent: 7800000, createdAt: t, off: true },
+          { id: 'MS-DEMO-01', name: '도심 점심 피크 사전 집중 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(14), publish: add(14), start: add(14), end: add(28), targets: ['일반기사(프렌즈)'], segmentActivity: [], regions: ['서울특별시 강남구 역삼동'], activityRegions: ['서울특별시 서초구'], zones: [], zoneAll: false, budgetTotal: 12000000, budgetSpent: 0, createdAt: t, off: false },
+          { id: 'MS-DEMO-02', name: '서초구 주간 피크 달성형 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(-5), publish: add(-5), start: add(-2), end: add(10), targets: ['일반기사(프렌즈)'], segmentActivity: [], regions: ['전체지역'], activityRegions: ['서울특별시 서초구'], zones: [], zoneAll: false, budgetTotal: 8000000, budgetSpent: 3250000, createdAt: t, off: false },
+          { id: 'MS-DEMO-03', name: '연수 NVP 야간 구간 인센티브', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(-45), publish: add(-45), start: add(-40), end: add(-5), targets: ['NVP지점기사'], segmentActivity: [], regions: [], activityRegions: [], zones: ['인천 연수ZONE'], zoneAll: false, budgetTotal: 5500000, budgetSpent: 5500000, createdAt: t, off: false },
+          { id: 'MS-DEMO-04', name: '해운대 프렌즈 주말 스탬프 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(8), publish: add(8), start: add(8), end: add(22), targets: ['일반기사(프렌즈)'], segmentActivity: [], regions: ['부산광역시 해운대구 우동', '부산광역시 해운대구 중동'], activityRegions: ['전체지역'], zones: [], zoneAll: false, budgetTotal: 3000000, budgetSpent: 0, createdAt: t, off: true },
+          { id: 'MS-DEMO-05', name: '서울 강남ZONE NVP 동선 최적화 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(-5), publish: add(-5), start: add(-3), end: add(9), targets: ['NVP지점기사'], segmentActivity: [], regions: [], activityRegions: [], zones: ['서울 강남ZONE'], zoneAll: false, budgetTotal: 15000000, budgetSpent: 7800000, createdAt: t, off: true },
         ];
         const samples = [
-          { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', missionOpen: '2026-04-01', publish: '2026-04-01', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['고물량·고품질', '고물량·저품질'], segmentCommute: [], regions: ['서울특별시 강남구 역삼동', '서울특별시 강남구 삼성동'], activityRegions: ['서울특별시 강남구'], zones: [], zoneAll: false, budgetTotal: 20000000, budgetSpent: 9100000, createdAt: '2026-03-31', off: false },
-          { id: 'MS-2026-002', name: '주말 단일 지급 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: '2026-04-06', publish: '2026-04-06', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], segmentActivity: ['저물량·고품질'], segmentCommute: [], regions: ['부산광역시 해운대구 우동'], activityRegions: ['부산광역시 해운대구'], zones: [], zoneAll: false, budgetTotal: 4000000, budgetSpent: 1200000, createdAt: '2026-03-31', off: true },
-          { id: 'MS-2026-003', name: '야간 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', missionOpen: '2026-03-12', publish: '2026-03-12', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], segmentCommute: [], regions: [], activityRegions: [], zones: [], zoneAll: true, budgetTotal: 30000000, budgetSpent: 30000000, createdAt: '2026-03-10', off: false },
-          { id: 'MS-2026-004', name: '신규 라이더 전환 미션', purpose: '전환', structure: '단일', mode: '정적', missionOpen: '2026-04-01', publish: '2026-04-01', start: '2026-04-01', end: '2026-06-30', targets: ['일반기사(프렌즈)'], segmentActivity: [], segmentCommute: [], regions: ['서울특별시 강남구 청담동'], activityRegions: ['서울특별시 서초구', '인천광역시 연수구'], zones: [], zoneAll: false, budgetTotal: 50000000, budgetSpent: 12400000, createdAt: '2026-03-28', off: false },
+          { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', missionOpen: '2026-04-01', publish: '2026-04-01', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['고물량·고품질', '고물량·저품질'], regions: ['서울특별시 강남구 역삼동', '서울특별시 강남구 삼성동'], activityRegions: ['서울특별시 강남구'], zones: [], zoneAll: false, budgetTotal: 20000000, budgetSpent: 9100000, createdAt: '2026-03-31', off: false },
+          { id: 'MS-2026-002', name: '주말 단일 지급 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: '2026-04-06', publish: '2026-04-06', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], segmentActivity: ['저물량·고품질'], regions: ['부산광역시 해운대구 우동'], activityRegions: ['부산광역시 해운대구'], zones: [], zoneAll: false, budgetTotal: 4000000, budgetSpent: 1200000, createdAt: '2026-03-31', off: true },
+          { id: 'MS-2026-003', name: '야간 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', missionOpen: '2026-03-12', publish: '2026-03-12', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], regions: [], activityRegions: [], zones: [], zoneAll: true, budgetTotal: 30000000, budgetSpent: 30000000, createdAt: '2026-03-10', off: false },
+          { id: 'MS-2026-004', name: '신규 라이더 전환 미션', purpose: '전환', structure: '단일', mode: '정적', missionOpen: '2026-04-01', publish: '2026-04-01', start: '2026-04-01', end: '2026-06-30', targets: ['일반기사(프렌즈)'], segmentActivity: [], regions: ['서울특별시 강남구 청담동'], activityRegions: ['서울특별시 서초구', '인천광역시 연수구'], zones: [], zoneAll: false, budgetTotal: 50000000, budgetSpent: 12400000, createdAt: '2026-03-28', off: false },
         ];
         return demo.concat(samples);
       })();
@@ -1285,7 +1271,6 @@
         zoneAll: false,
         targets: [],
         segmentActivity: [],
-        segmentCommute: [],
         regions: [],
         activityRegions: [],
         zones: [],
@@ -1846,7 +1831,6 @@
         state.shipper = $('f-shipper').value || '전체';
         state.shipperDetail = ($('f-shipper-detail').value || '').trim();
         state.segmentActivity = Array.from(document.querySelectorAll('#seg-activity input[type="checkbox"]:checked')).map(i => i.value);
-        state.segmentCommute = Array.from(document.querySelectorAll('#seg-commute input[type="checkbox"]:checked')).map(i => i.value);
         if (state.purpose === '전환') {
           state.firstSignupDays = $('f-first-days').value;
           state.firstTargetCount = $('f-first-count').value;
@@ -1891,8 +1875,6 @@
         if (!document.getElementById('chk-friends').checked) {
           state.segmentActivity = [];
           document.querySelectorAll('#seg-activity input[type="checkbox"]').forEach(i => { i.checked = false; });
-          state.segmentCommute = [];
-          document.querySelectorAll('#seg-commute input[type="checkbox"]').forEach(i => { i.checked = false; });
         }
         const hasFriends = state.targets.includes('일반기사(프렌즈)');
         const needsZone = state.targets.includes('NVP지점기사');
@@ -2047,9 +2029,6 @@
         const friendsChecked = chkFriends ? chkFriends.checked : false;
         const rsa = $('row-seg-activity');
         if (rsa) rsa.style.display = friendsChecked ? 'flex' : 'none';
-        const rsc = $('row-seg-commute');
-        if (rsc) rsc.style.display = friendsChecked ? 'flex' : 'none';
-
         const isStage = state.purpose === '활성화' && state.structure === '단계';
         const isSingleActive = state.purpose === '활성화' && state.structure === '단일';
         $('block-step').style.display = isStage ? 'block' : 'none';
@@ -2109,7 +2088,6 @@
         c.addEventListener('change', () => {
           if (!document.getElementById('chk-friends').checked) {
             document.querySelectorAll('#seg-activity input[type="checkbox"]').forEach(i => { i.checked = false; });
-            document.querySelectorAll('#seg-commute input[type="checkbox"]').forEach(i => { i.checked = false; });
           }
           syncUIByPurposeStructure();
         });
@@ -2163,7 +2141,6 @@
           end: state.end,
           targets: state.targets,
           segmentActivity: state.targets.includes('일반기사(프렌즈)') ? state.segmentActivity.slice() : [],
-          segmentCommute: state.targets.includes('일반기사(프렌즈)') ? state.segmentCommute.slice() : [],
           regions: state.targets.includes('일반기사(프렌즈)') ? state.regions.slice() : [],
           activityRegions: state.targets.includes('일반기사(프렌즈)') ? state.activityRegions.slice() : [],
           zones: zonesSaved,
