@@ -534,6 +534,19 @@
         <section id="screen-register" class="screen">
           <div class="form-shell panel panel--pad">
             <div class="warn" id="warn-box"></div>
+            <div class="warn" id="view-mode-box" style="display:none;">
+              <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;">
+                <div>
+                  <strong>저장 완료</strong> · 조회 모드(읽기전용)로 전환되었습니다.
+                  <div style="margin-top:6px;opacity:.9;font-size:13px;line-height:1.4;">
+                    미션 ID: <span id="v-id">-</span> · 예산 한도: <span id="v-budget-total">-</span> · 남은 한도: <span id="v-budget-remain">-</span>
+                  </div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <button type="button" class="btn ghost" id="btn-view-edit">수정</button>
+                </div>
+              </div>
+            </div>
 
             <div class="form-single-page" id="form-single-page">
               <h2 class="panel-title">기본 정보</h2>
@@ -877,6 +890,46 @@
       const headerList = $('header-actions-list');
       const headerRegister = $('header-actions-register');
       const headerDetail = $('header-actions-detail');
+      let registerViewId = '';
+      let registerMode = 'edit'; // edit | view
+
+      function setRegisterMode(mode, campaignId) {
+        registerMode = mode;
+        registerViewId = campaignId || '';
+        const reg = $('screen-register');
+        const box = $('view-mode-box');
+        const btnEdit = $('btn-view-edit');
+        if (!reg) return;
+
+        const onView = mode === 'view';
+        if (box) box.style.display = onView ? 'block' : 'none';
+        if (btnEdit) btnEdit.style.display = onView ? 'inline-flex' : 'none';
+        if ($('btn-submit')) $('btn-submit').style.display = onView ? 'none' : 'inline-flex';
+
+        // disable form controls in view mode (keep navigation buttons enabled)
+        reg.querySelectorAll('input, select, textarea, button').forEach((el) => {
+          const id = el.id || '';
+          const keep = id === 'btn-cancel' || id === 'btn-view-edit';
+          if (keep) return;
+          if (onView) {
+            el.setAttribute('disabled', '');
+          } else {
+            el.removeAttribute('disabled');
+          }
+        });
+
+        // keep zone picker UI consistent when toggling
+        updateZonePickUI();
+
+        // fill view summary info
+        if (onView && campaignId) {
+          const c = CAMPAIGNS.find((x) => x.id === campaignId);
+          const d = c ? budgetDerived(c) : null;
+          if ($('v-id')) $('v-id').textContent = campaignId;
+          if ($('v-budget-total')) $('v-budget-total').textContent = d ? fmtWon(d.total) : '-';
+          if ($('v-budget-remain')) $('v-budget-remain').textContent = d ? (fmtWon(d.remain) + ' (' + d.remainPct + '% 남음)') : '-';
+        }
+      }
       function showList() {
         navList.classList.add('active');
         screenList.classList.add('active');
@@ -914,6 +967,7 @@
         if (headerList) headerList.style.display = 'none';
         if (headerRegister) headerRegister.style.display = 'flex';
         if (headerDetail) headerDetail.style.display = 'none';
+        setRegisterMode('edit', '');
         if ($('f-name')) $('f-name').value = '';
         if ($('f-desc')) $('f-desc').value = '';
         document.querySelectorAll('input[name="purpose"]').forEach((el) => { el.checked = false; });
@@ -1902,8 +1956,16 @@
 
       const btnCancel = $('btn-cancel');
       const btnSubmit = $('btn-submit');
+      const btnViewEdit = $('btn-view-edit');
 
       btnCancel.addEventListener('click', () => { showList(); });
+      if (btnViewEdit) {
+        btnViewEdit.addEventListener('click', () => {
+          // 목업: 조회 모드에서 수정으로 전환(동일 화면)
+          setRegisterMode('edit', registerViewId);
+          showToast('수정 모드로 전환했습니다.');
+        });
+      }
 
       btnSubmit.addEventListener('click', () => {
         clearInvalid();
@@ -1953,8 +2015,14 @@
           off: false
         });
         renderList();
-        showToast('저장되었습니다. 상세 화면에서 확인할 수 있습니다.');
-        showDetail(nextId);
+        // PRD: 저장 성공 시 동일 페이지에서 조회 모드로 전환
+        pageTitle.textContent = '미션 조회';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 미션 관리 > 조회';
+        if (headerList) headerList.style.display = 'none';
+        if (headerRegister) headerRegister.style.display = 'flex';
+        if (headerDetail) headerDetail.style.display = 'none';
+        setRegisterMode('view', nextId);
+        showToast('저장 완료');
       });
 
       // 목적·지급구조: 등록 화면에서 위임 + 목적 라벨 click 보조
