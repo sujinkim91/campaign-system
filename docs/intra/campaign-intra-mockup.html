@@ -856,14 +856,14 @@
                 <label>휴무</label>
                 <div class="field">
                   <input id="f-offday" type="number" min="0" step="1" placeholder="0 이상 정수 (회)" />
-                  <div class="help">미션 운영기준 · 선택 · 단위: <strong>회</strong>(PRD 기준)</div>
+                  <div class="help">미션 기간 내 최대 휴무 횟수(선택) · 하루 중 부릉플러스 앱 → 오더받기 ON 상태가 한 번도 없는 날을 휴무로 산정 · 단위: <strong>회</strong></div>
                 </div>
               </div>
               <div class="form-row" data-key="cancelCount" id="row-cancel-count">
                 <label>취소건수</label>
                 <div class="field">
                   <input id="f-cancel-count" type="number" min="0" step="1" placeholder="0 이상 정수 (건)" />
-                  <div class="help">미션 운영기준 · 선택 · 단위: <strong>건</strong>(PRD 기준)</div>
+                  <div class="help">미션 기간 내 취소 건수(선택) · 라이더가 직접 배차 취소한 건에 한정 · 단위: <strong>건</strong></div>
                 </div>
               </div>
             </div>
@@ -961,9 +961,8 @@
           if ($('v2-budget-pct')) $('v2-budget-pct').textContent = d ? (d.remainPct + '% 남음') : '-';
           if ($('v2-budget-bar')) $('v2-budget-bar').style.width = d ? (d.remainPct + '%') : '0%';
 
-          // 예정만 수정 허용 (PRD)
-          const st = c ? statusOf(c).key : '';
-          if (btnEdit) btnEdit.style.display = (st === '예정') ? 'inline-flex' : 'none';
+          // PRD: 미션 오픈일이 도래하지 않은 `예정`만 전 항목 수정 허용
+          if (btnEdit) btnEdit.style.display = (c && editableCampaignByPRD(c)) ? 'inline-flex' : 'none';
         }
       }
       function showList() {
@@ -997,8 +996,7 @@
       function showRegisterView(id) {
         const row = CAMPAIGNS.find((x) => x.id === id);
         if (!row) return;
-        const st = statusOf(row).key;
-        const editable = st === '예정';
+        const editable = editableCampaignByPRD(row);
 
         navList.classList.add('active');
         screenList.classList.remove('active');
@@ -1138,6 +1136,17 @@
         const base = (now < s) ? '예정' : '진행';
         if (c.off) return { key: '중단', cls: 'danger' };
         return { key: base, cls: base === '진행' ? 'ok' : 'muted' };
+      }
+
+      /** PRD: 미션 오픈일이 “도래하지 않음” = 달력 기준 오픈일이 아직 내일 이후 */
+      function missionOpenNotArrived(c) {
+        const mo = String((c && (c.missionOpen || c.start)) || '');
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(mo)) return false;
+        return mo > todayISO();
+      }
+
+      function editableCampaignByPRD(c) {
+        return statusOf(c).key === '예정' && missionOpenNotArrived(c);
       }
 
       function fmtPeriod(c) { return c.start.slice(5).replace('-', '/') + '~' + c.end.slice(5).replace('-', '/'); }
@@ -2171,6 +2180,11 @@
       btnCancel.addEventListener('click', () => { showList(); });
       if (btnViewEdit) {
         btnViewEdit.addEventListener('click', () => {
+          const c = CAMPAIGNS.find((x) => x.id === registerViewId);
+          if (!c || !editableCampaignByPRD(c)) {
+            showToast('PRD 기준: 미션 오픈일이 도래한 뒤에는 내용 수정이 제한됩니다.');
+            return;
+          }
           // 목업: 조회 모드에서 수정으로 전환(동일 화면)
           setRegisterMode('edit', registerViewId);
           showToast('수정 모드로 전환했습니다.');
