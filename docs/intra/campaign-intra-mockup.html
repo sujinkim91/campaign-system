@@ -1280,6 +1280,7 @@
       let registerMode = 'edit'; // edit | view
       let activeCampaignId = '';
       let activeSchemeRef = { campaignId: '', schemeId: '' };
+      let addFlow = 'campaignCreate'; // campaignCreate | schemeAdd | missionAdd
       let addDraft = { campaign: null, scheme: null, mission: null };
 
       function setSubnavActive(id) {
@@ -1296,9 +1297,9 @@
         const m = $('subnav-step-mission');
         const isAdd = mode === 'add';
         if (list) list.style.display = isAdd ? 'none' : 'flex';
-        if (c) c.style.display = isAdd ? 'flex' : 'none';
-        if (s) s.style.display = isAdd ? 'flex' : 'none';
-        if (m) m.style.display = isAdd ? 'flex' : 'none';
+        if (c) c.style.display = (isAdd && addFlow === 'campaignCreate') ? 'flex' : 'none';
+        if (s) s.style.display = (isAdd && (addFlow === 'campaignCreate' || addFlow === 'schemeAdd')) ? 'flex' : 'none';
+        if (m) m.style.display = (isAdd && (addFlow === 'campaignCreate' || addFlow === 'missionAdd')) ? 'flex' : 'none';
         if (!isAdd) setSubnavActive('subnav-campaign-list');
       }
 
@@ -1405,6 +1406,7 @@
       }
 
       function showCampaignAdd() {
+        addFlow = 'campaignCreate';
         addDraft = { campaign: null, scheme: null, mission: null };
         navList.classList.add('active');
         screenList.classList.remove('active');
@@ -1443,6 +1445,11 @@
 
       function showSchemeStep() {
         if (!screenSchemeAdd) return;
+        // 스킴 추가는 "기존 캠페인에 붙이기" 플로우도 지원
+        if (addFlow === 'schemeAdd' && !addDraft.campaign) {
+          showToast('스킴 추가: 캠페인 설정(선택)이 필요합니다.');
+          return;
+        }
         navList.classList.add('active');
         screenList.classList.remove('active');
         if (screenDetail) screenDetail.classList.remove('active');
@@ -1489,6 +1496,11 @@
 
       function showMissionStep() {
         if (!screenMissionAdd) return;
+        // 미션 추가는 "기존 스킴에 붙이기" 플로우도 지원
+        if (addFlow === 'missionAdd' && !addDraft.scheme) {
+          showToast('미션 추가: 스킴 설정(선택)이 필요합니다.');
+          return;
+        }
         navList.classList.add('active');
         screenList.classList.remove('active');
         if (screenDetail) screenDetail.classList.remove('active');
@@ -1713,6 +1725,7 @@
       if (btnAddSchemeFromStatus) btnAddSchemeFromStatus.addEventListener('click', () => {
         const c = CAMPAIGNS.find((x) => x.id === activeCampaignId);
         if (!c) return showToast('스킴 추가: 캠페인 설정(선택)이 필요합니다.');
+        addFlow = 'schemeAdd';
         addDraft = { campaign: { id: c.id, name: c.name, purpose: c.purpose, start: c.start, end: c.end }, scheme: null, mission: null };
         showSchemeStep();
       });
@@ -1722,6 +1735,7 @@
         const c = CAMPAIGNS.find((x) => x.id === activeSchemeRef.campaignId);
         const s = c && Array.isArray(c.schemes) ? c.schemes.find((x) => x.id === activeSchemeRef.schemeId) : null;
         if (!c || !s) return showToast('미션 추가: 스킴 설정(선택)이 필요합니다.');
+        addFlow = 'missionAdd';
         addDraft = {
           campaign: { id: c.id, name: c.name, purpose: c.purpose, start: c.start, end: c.end },
           scheme: { ...s, missions: [] },
@@ -1735,6 +1749,10 @@
       const btnCpSave = $('btn-cp-save');
       if (btnCpCancel) btnCpCancel.addEventListener('click', showList);
       if (btnCpSave) btnCpSave.addEventListener('click', () => {
+        if (addFlow !== 'campaignCreate') {
+          showToast('이 플로우에서는 캠페인 생성 단계를 사용하지 않습니다.');
+          return;
+        }
         const importId = $('cp-import') ? String($('cp-import').value || '') : '';
         if (importId) {
           const c0 = CAMPAIGNS.find((x) => x.id === importId);
@@ -1760,7 +1778,10 @@
 
       const btnScCancel = $('btn-sc-cancel');
       const btnScSave = $('btn-sc-save');
-      if (btnScCancel) btnScCancel.addEventListener('click', showCampaignAdd);
+      if (btnScCancel) btnScCancel.addEventListener('click', () => {
+        if (addFlow === 'campaignCreate') return showCampaignAdd();
+        return showList();
+      });
       if (btnScSave) btnScSave.addEventListener('click', () => {
         const importId = $('sc-import') ? String($('sc-import').value || '') : '';
         const cp = addDraft.campaign;
@@ -1769,6 +1790,15 @@
           const s0 = c0 && Array.isArray(c0.schemes) ? c0.schemes.find((x) => x.id === importId) : null;
           if (!s0) return showToast('선택한 스킴을 찾을 수 없습니다.');
           addDraft.scheme = { ...s0, missions: [] };
+          if (addFlow === 'schemeAdd') {
+            showToast('기존 스킴을 가져왔습니다.');
+            // 스킴 추가 플로우는 "가져오기"로 끝(실제 저장 변화 없음)
+            setSubnavMode('list');
+            renderList();
+            renderStatusSchemes();
+            activateStatusTab('sc');
+            return;
+          }
           showToast('기존 스킴을 가져왔습니다. 다음 단계로 이동합니다.');
           showMissionStep();
           return;
@@ -1788,15 +1818,34 @@
         if (publish > start) return showToast('미션 공개일은 시작일 이전이어야 합니다.');
         if (!Number.isFinite(budget) || budget <= 0) return showToast('총 예산은 0원 초과여야 합니다.');
         if (purpose === '전환' && (!Number.isFinite(firstSignup) || firstSignup <= 0)) return showToast('가입 후 유효 일수는 0 초과 정수로 입력해 주세요.');
-        const sid = 'SC-' + String(101).padStart(3,'0');
+        const sid = 'SC-' + String(100 + Math.floor(Math.random() * 900) + 1).padStart(3,'0');
         addDraft.scheme = { id: sid, name, purpose, start, end, publish, budgetTotal: budget, budgetSpent: 0, off:false, targets: [], regions: [], activityRegions: [], zones: [], missions: [] };
+        if (addFlow === 'schemeAdd') {
+          // 기존 캠페인에 스킴만 추가
+          const c0 = cp && cp.id ? CAMPAIGNS.find((x) => x.id === cp.id) : null;
+          if (!c0) return showToast('캠페인 설정(선택)이 필요합니다.');
+          c0.schemes = Array.isArray(c0.schemes) ? c0.schemes : [];
+          c0.schemes.unshift({ ...addDraft.scheme, missions: [] });
+          addDraft = { campaign: null, scheme: null, mission: null };
+          setSubnavMode('list');
+          renderList();
+          hydratePickCampaign();
+          hydratePickScheme();
+          renderStatusSchemes();
+          activateStatusTab('sc');
+          showToast('스킴을 추가했습니다.');
+          return;
+        }
         showToast('스킴 조건을 저장했습니다. 다음 단계로 이동합니다.');
         showMissionStep();
       });
 
       const btnMsCancel = $('btn-ms-cancel');
       const btnMsSave = $('btn-ms-save');
-      if (btnMsCancel) btnMsCancel.addEventListener('click', showSchemeStep);
+      if (btnMsCancel) btnMsCancel.addEventListener('click', () => {
+        if (addFlow === 'campaignCreate') return showSchemeStep();
+        return showList();
+      });
       if (btnMsSave) btnMsSave.addEventListener('click', () => {
         const schemeId = $('ms-scheme') ? $('ms-scheme').value : '';
         const s = addDraft.scheme && addDraft.scheme.id === schemeId ? addDraft.scheme : null;
@@ -1816,7 +1865,25 @@
         const mid = 'MS-' + String(101).padStart(3,'0');
         addDraft.mission = { id: mid, name, description: desc, structure, shipper, shipperDetail, times: [], goalCount: 0, rewardAmount: 0, start, end, off:false };
 
-        // 최종 저장
+        if (addFlow === 'missionAdd') {
+          // 기존 스킴에 미션만 추가
+          const c0 = CAMPAIGNS.find((x) => x.id === activeSchemeRef.campaignId);
+          const s0 = c0 && Array.isArray(c0.schemes) ? c0.schemes.find((x) => x.id === activeSchemeRef.schemeId) : null;
+          if (!c0 || !s0) return showToast('스킴 설정(선택)이 필요합니다.');
+          s0.missions = Array.isArray(s0.missions) ? s0.missions : [];
+          s0.missions.unshift(addDraft.mission);
+          addDraft = { campaign: null, scheme: null, mission: null };
+          setSubnavMode('list');
+          renderList();
+          hydratePickCampaign();
+          hydratePickScheme();
+          renderStatusMissions();
+          activateStatusTab('ms');
+          showToast('미션을 추가했습니다.');
+          return;
+        }
+
+        // 최종 저장(캠페인 생성 플로우)
         const cp = addDraft.campaign;
         if (!cp) return;
         const existingCampaign = CAMPAIGNS.find((x) => x.id === cp.id);
