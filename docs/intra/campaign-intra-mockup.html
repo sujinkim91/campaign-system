@@ -740,16 +740,6 @@
               <h2 class="panel-title">스킴</h2>
               <div class="warn" style="margin-bottom:14px;">캠페인: <strong id="sc-parent-name">-</strong></div>
 
-              <div class="form-row" data-key="sc-import">
-                <label>기존 스킴 가져오기</label>
-                <div class="field">
-                  <select id="sc-import">
-                    <option value="">신규 스킴 생성</option>
-                  </select>
-                  <div class="help">캠페인을 선택한 뒤, 해당 캠페인의 기존 스킴을 가져올 수 있습니다.</div>
-                </div>
-              </div>
-
               <div class="form-row" data-key="sc-name">
                 <label>스킴명<span class="req">*</span></label>
                 <div class="field">
@@ -1615,21 +1605,6 @@
         const c = addDraft.campaign;
         if ($('sc-parent-name')) $('sc-parent-name').textContent = c ? c.name : '-';
 
-        // hydrate scheme import (for chosen campaign)
-        const sel = $('sc-import');
-        if (sel) {
-          sel.innerHTML = '<option value=\"\">신규 스킴 생성</option>';
-          const src = c && c.id ? CAMPAIGNS.find((x) => x.id === c.id) : null;
-          const schemes = src && Array.isArray(src.schemes) ? src.schemes : [];
-          schemes.forEach((s) => {
-            const opt = document.createElement('option');
-            opt.value = s.id;
-            opt.textContent = s.name;
-            sel.appendChild(opt);
-          });
-          sel.value = '';
-        }
-
         if ($('sc-name')) $('sc-name').value = '';
         document.querySelectorAll('input[name="sc-purpose"]').forEach((el) => { el.checked = c ? (el.value === c.purpose) : false; });
         // 대상/세그먼트 reset
@@ -1950,26 +1925,7 @@
         return showList();
       });
       if (btnScSave) btnScSave.addEventListener('click', () => {
-        const importId = $('sc-import') ? String($('sc-import').value || '') : '';
         const cp = addDraft.campaign;
-        if (importId && cp && cp.id) {
-          const c0 = CAMPAIGNS.find((x) => x.id === cp.id);
-          const s0 = c0 && Array.isArray(c0.schemes) ? c0.schemes.find((x) => x.id === importId) : null;
-          if (!s0) return showToast('선택한 스킴을 찾을 수 없습니다.');
-          addDraft.scheme = { ...s0, missions: [] };
-          if (addFlow === 'schemeAdd') {
-            showToast('기존 스킴을 가져왔습니다.');
-            // 스킴 추가 플로우는 "가져오기"로 끝(실제 저장 변화 없음)
-            setSubnavMode('list');
-            renderList();
-            renderStatusSchemes();
-            activateStatusTab('sc');
-            return;
-          }
-          showToast('기존 스킴을 가져왔습니다. 다음 단계로 이동합니다.');
-          showMissionStep();
-          return;
-        }
         const name = String($('sc-name') ? $('sc-name').value : '').trim();
         const purpose = (document.querySelector('input[name=\"sc-purpose\"]:checked') || {}).value || '';
         const start = $('sc-start') ? $('sc-start').value : '';
@@ -2175,21 +2131,7 @@
         });
       });
 
-      const scImport = $('sc-import');
-      if (scImport) {
-        scImport.addEventListener('change', () => {
-          const id = String(scImport.value || '');
-          const cp = addDraft.campaign;
-          const c0 = (cp && cp.id) ? CAMPAIGNS.find((x) => x.id === cp.id) : null;
-          const s0 = (c0 && Array.isArray(c0.schemes) && id) ? c0.schemes.find((x) => x.id === id) : null;
-          if (!s0) return;
-          if ($('sc-name')) $('sc-name').value = s0.name || '';
-          document.querySelectorAll('input[name="sc-purpose"]').forEach((el) => { el.checked = el.value === s0.purpose; });
-          if ($('sc-start')) $('sc-start').value = s0.start || '';
-          if ($('sc-end')) $('sc-end').value = s0.end || '';
-          if ($('sc-publish')) $('sc-publish').value = s0.publish || (s0.start || '');
-        });
-      }
+      // (Phase2) 스킴 단계: '기존 스킴 가져오기' 제거
 
       // ===== 데이터(목록) =====
       // 캠페인(상위) → 스킴(하위) → 미션(하위) 목업 데이터
