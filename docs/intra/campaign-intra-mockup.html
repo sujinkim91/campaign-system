@@ -565,6 +565,191 @@
           </div>
         </section>
 
+        <!-- 화면 3: 캠페인 추가 -->
+        <section id="screen-campaign-add" class="screen">
+          <div class="form-shell panel panel--pad">
+            <div class="form-single-page">
+              <h2 class="panel-title">캠페인 추가</h2>
+              <div class="form-row" data-key="cp-name">
+                <label>캠페인명<span class="req">*</span></label>
+                <div class="field">
+                  <input id="cp-name" type="text" maxlength="50" placeholder="최대 50자" />
+                </div>
+              </div>
+              <div class="form-row" data-key="cp-purpose">
+                <label>목적<span class="req">*</span></label>
+                <div class="field">
+                  <div class="radio-group">
+                    <label class="pill"><input type="radio" name="cp-purpose" value="전환" /> 전환</label>
+                    <label class="pill"><input type="radio" name="cp-purpose" value="활성화" /> 활성화</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row" data-key="cp-period">
+                <label>기간<span class="req">*</span></label>
+                <div class="field">
+                  <div class="row-inline">
+                    <input id="cp-start" type="date" />
+                    <input id="cp-end" type="date" />
+                  </div>
+                  <div class="help">시작일 ≥ 오늘, 종료일 &gt; 시작일</div>
+                </div>
+              </div>
+              <div class="actions">
+                <div class="actions-left"></div>
+                <div class="actions-btns">
+                  <button type="button" class="btn ghost btn-lg" id="btn-cp-cancel">목록으로</button>
+                  <button type="button" class="btn primary btn-lg" id="btn-cp-save">저장</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 화면 4: 스킴 추가 -->
+        <section id="screen-scheme-add" class="screen">
+          <div class="form-shell panel panel--pad">
+            <div class="form-single-page">
+              <h2 class="panel-title">스킴 추가</h2>
+              <div class="warn" style="margin-bottom:14px;">캠페인: <strong id="sc-parent-name">-</strong></div>
+
+              <div class="form-row" data-key="sc-name">
+                <label>스킴명<span class="req">*</span></label>
+                <div class="field">
+                  <input id="sc-name" type="text" maxlength="50" placeholder="최대 50자" />
+                </div>
+              </div>
+
+              <div class="form-row" data-key="sc-purpose">
+                <label>목적<span class="req">*</span></label>
+                <div class="field">
+                  <div class="radio-group">
+                    <label class="pill"><input type="radio" name="sc-purpose" value="전환" /> 전환</label>
+                    <label class="pill"><input type="radio" name="sc-purpose" value="활성화" /> 활성화</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="sc-period">
+                <label>기간 설정<span class="req">*</span></label>
+                <div class="field">
+                  <div class="row-inline">
+                    <input id="sc-start" type="date" />
+                    <input id="sc-end" type="date" />
+                  </div>
+                  <div class="help">시작일 ≥ 오늘, 종료일 &gt; 시작일</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="sc-publish">
+                <label>미션 공개일<span class="req">*</span></label>
+                <div class="field">
+                  <input id="sc-publish" type="date" />
+                  <div class="help">시작일 이전이어야 함</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="sc-budget">
+                <label>총 예산<span class="req">*</span></label>
+                <div class="field">
+                  <input id="sc-budget" type="number" min="1" step="1" placeholder="총 예산(원) 입력" />
+                  <div class="help">0원 초과</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="sc-first-signup" id="row-sc-first-signup" style="display:none;">
+                <label>가입 후 유효 일수<span class="req">*</span></label>
+                <div class="field">
+                  <input id="sc-first-signup" type="number" min="1" step="1" placeholder="일" />
+                  <div class="help">전환 목적 시</div>
+                </div>
+              </div>
+
+              <div class="actions">
+                <div class="actions-left"></div>
+                <div class="actions-btns">
+                  <button type="button" class="btn ghost btn-lg" id="btn-sc-cancel">상세로</button>
+                  <button type="button" class="btn primary btn-lg" id="btn-sc-save">저장</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 화면 5: 미션 추가 -->
+        <section id="screen-mission-add" class="screen">
+          <div class="form-shell panel panel--pad">
+            <div class="form-single-page">
+              <h2 class="panel-title">미션 추가</h2>
+              <div class="warn" style="margin-bottom:14px;">캠페인: <strong id="ms-parent-name">-</strong></div>
+
+              <div class="form-row" data-key="ms-scheme">
+                <label>스킴<span class="req">*</span></label>
+                <div class="field">
+                  <select id="ms-scheme"></select>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="ms-name">
+                <label>미션명<span class="req">*</span></label>
+                <div class="field">
+                  <input id="ms-name" type="text" maxlength="50" placeholder="최대 50자" />
+                </div>
+              </div>
+
+              <div class="form-row" data-key="ms-desc">
+                <label>미션 설명</label>
+                <div class="field">
+                  <textarea id="ms-desc" maxlength="500" placeholder="선택"></textarea>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="ms-structure">
+                <label>지급 구조<span class="req">*</span></label>
+                <div class="field">
+                  <div class="radio-group">
+                    <label class="pill"><input type="radio" name="ms-structure" value="단일목표형" /> 단일목표형</label>
+                    <label class="pill"><input type="radio" name="ms-structure" value="단계형" /> 단계형</label>
+                  </div>
+                  <div class="help">전환 목적 스킴 하위는 단일목표형 고정</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="ms-shipper">
+                <label>화주사</label>
+                <div class="field">
+                  <select id="ms-shipper">
+                    <option value="전체">전체</option>
+                    <option value="로컬">로컬</option>
+                    <option value="프랜차이즈">프랜차이즈</option>
+                    <option value="플랫폼">플랫폼</option>
+                  </select>
+                  <input type="text" id="ms-shipper-detail" placeholder="프랜차이즈 ID/명 (선택)" style="margin-top:10px; display:none;" />
+                </div>
+              </div>
+
+              <div class="form-row" data-key="ms-period">
+                <label>기간<span class="req">*</span></label>
+                <div class="field">
+                  <div class="row-inline">
+                    <input id="ms-start" type="date" />
+                    <input id="ms-end" type="date" />
+                  </div>
+                  <div class="help">스킴 기간 내로 설정</div>
+                </div>
+              </div>
+
+              <div class="actions">
+                <div class="actions-left"></div>
+                <div class="actions-btns">
+                  <button type="button" class="btn ghost btn-lg" id="btn-ms-cancel">상세로</button>
+                  <button type="button" class="btn primary btn-lg" id="btn-ms-save">저장</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- 화면 3: 미션 캠페인 등록 (원페이지) -->
         <section id="screen-register" class="screen">
           <div class="form-shell panel panel--pad">
@@ -945,6 +1130,9 @@
       const screenList = $('screen-list');
       const screenDetail = $('screen-detail');
       const screenRegister = $('screen-register');
+      const screenCampaignAdd = $('screen-campaign-add');
+      const screenSchemeAdd = $('screen-scheme-add');
+      const screenMissionAdd = $('screen-mission-add');
       const pageTitle = $('page-title');
       const pageBreadcrumb = $('page-breadcrumb');
       const headerList = $('header-actions-list');
@@ -952,6 +1140,7 @@
       const headerDetail = $('header-actions-detail');
       let registerViewId = '';
       let registerMode = 'edit'; // edit | view
+      let activeCampaignId = '';
 
       function setRegisterMode(mode, campaignId) {
         registerMode = mode;
@@ -1004,6 +1193,9 @@
         navList.classList.add('active');
         screenList.classList.add('active');
         if (screenDetail) screenDetail.classList.remove('active');
+        if (screenCampaignAdd) screenCampaignAdd.classList.remove('active');
+        if (screenSchemeAdd) screenSchemeAdd.classList.remove('active');
+        if (screenMissionAdd) screenMissionAdd.classList.remove('active');
         screenRegister.classList.remove('active');
         pageTitle.textContent = '캠페인 목록';
         if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록';
@@ -1014,8 +1206,12 @@
       function showDetail(id) {
         const row = CAMPAIGNS.find((x) => x.id === id);
         if (!row || !screenDetail) return;
+        activeCampaignId = id;
         navList.classList.add('active');
         screenList.classList.remove('active');
+        if (screenCampaignAdd) screenCampaignAdd.classList.remove('active');
+        if (screenSchemeAdd) screenSchemeAdd.classList.remove('active');
+        if (screenMissionAdd) screenMissionAdd.classList.remove('active');
         screenRegister.classList.remove('active');
         screenDetail.classList.add('active');
         pageTitle.textContent = '캠페인 상세';
@@ -1026,6 +1222,92 @@
         renderDetail(row);
         const content = document.querySelector('.content');
         if (content) content.scrollTop = 0;
+      }
+
+      function showCampaignAdd() {
+        navList.classList.add('active');
+        screenList.classList.remove('active');
+        if (screenDetail) screenDetail.classList.remove('active');
+        if (screenSchemeAdd) screenSchemeAdd.classList.remove('active');
+        if (screenMissionAdd) screenMissionAdd.classList.remove('active');
+        screenRegister.classList.remove('active');
+        if (screenCampaignAdd) screenCampaignAdd.classList.add('active');
+        pageTitle.textContent = '캠페인 추가';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 추가';
+        if (headerList) headerList.style.display = 'none';
+        if (headerRegister) headerRegister.style.display = 'flex';
+        if (headerDetail) headerDetail.style.display = 'none';
+
+        if ($('cp-name')) $('cp-name').value = '';
+        document.querySelectorAll('input[name="cp-purpose"]').forEach((el) => { el.checked = false; });
+        if ($('cp-start')) $('cp-start').value = todayISO();
+        if ($('cp-end')) $('cp-end').value = todayISO();
+      }
+
+      function showSchemeAdd(campaignId) {
+        const c = CAMPAIGNS.find((x) => x.id === campaignId);
+        if (!c || !screenSchemeAdd) return;
+        activeCampaignId = campaignId;
+        navList.classList.add('active');
+        screenList.classList.remove('active');
+        if (screenDetail) screenDetail.classList.remove('active');
+        if (screenCampaignAdd) screenCampaignAdd.classList.remove('active');
+        if (screenMissionAdd) screenMissionAdd.classList.remove('active');
+        screenRegister.classList.remove('active');
+        screenSchemeAdd.classList.add('active');
+        pageTitle.textContent = '스킴 추가';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 상세 > 스킴 추가';
+        if (headerList) headerList.style.display = 'none';
+        if (headerRegister) headerRegister.style.display = 'flex';
+        if (headerDetail) headerDetail.style.display = 'none';
+
+        if ($('sc-parent-name')) $('sc-parent-name').textContent = c.name;
+        if ($('sc-name')) $('sc-name').value = '';
+        document.querySelectorAll('input[name="sc-purpose"]').forEach((el) => { el.checked = el.value === c.purpose; });
+        if ($('sc-start')) $('sc-start').value = c.start;
+        if ($('sc-end')) $('sc-end').value = c.end;
+        if ($('sc-publish')) $('sc-publish').value = c.start;
+        if ($('sc-budget')) $('sc-budget').value = '';
+        if ($('sc-first-signup')) $('sc-first-signup').value = '';
+        const row = $('row-sc-first-signup');
+        if (row) row.style.display = (c.purpose === '전환') ? 'flex' : 'none';
+      }
+
+      function showMissionAdd(campaignId) {
+        const c = CAMPAIGNS.find((x) => x.id === campaignId);
+        if (!c || !screenMissionAdd) return;
+        activeCampaignId = campaignId;
+        navList.classList.add('active');
+        screenList.classList.remove('active');
+        if (screenDetail) screenDetail.classList.remove('active');
+        if (screenCampaignAdd) screenCampaignAdd.classList.remove('active');
+        if (screenSchemeAdd) screenSchemeAdd.classList.remove('active');
+        screenRegister.classList.remove('active');
+        screenMissionAdd.classList.add('active');
+        pageTitle.textContent = '미션 추가';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 상세 > 미션 추가';
+        if (headerList) headerList.style.display = 'none';
+        if (headerRegister) headerRegister.style.display = 'flex';
+        if (headerDetail) headerDetail.style.display = 'none';
+
+        if ($('ms-parent-name')) $('ms-parent-name').textContent = c.name;
+        const sel = $('ms-scheme');
+        if (sel) {
+          sel.innerHTML = '';
+          (c.schemes || []).forEach((s) => {
+            const opt = document.createElement('option');
+            opt.value = s.id;
+            opt.textContent = s.name;
+            sel.appendChild(opt);
+          });
+        }
+        if ($('ms-name')) $('ms-name').value = '';
+        if ($('ms-desc')) $('ms-desc').value = '';
+        document.querySelectorAll('input[name="ms-structure"]').forEach((el) => { el.checked = false; });
+        if ($('ms-shipper')) $('ms-shipper').value = '전체';
+        if ($('ms-shipper-detail')) { $('ms-shipper-detail').value=''; $('ms-shipper-detail').style.display='none'; }
+        if ($('ms-start')) $('ms-start').value = c.start;
+        if ($('ms-end')) $('ms-end').value = c.end;
       }
 
       function showRegisterView(id) {
@@ -1129,7 +1411,7 @@
         if (content) content.scrollTop = 0;
       }
       navList.addEventListener('click', (e) => { e.preventDefault(); showList(); });
-      $('btn-open-register').addEventListener('click', () => showToast('목업: 캠페인 추가 화면은 다음 단계에서 추가합니다.'));
+      $('btn-open-register').addEventListener('click', showCampaignAdd);
       const btnBackToList = $('btn-back-to-list');
       if (btnBackToList) btnBackToList.addEventListener('click', showList);
       $('btn-reset-filters').addEventListener('click', () => {
@@ -1151,8 +1433,98 @@
 
       const btnAddScheme = $('btn-add-scheme');
       const btnAddMission = $('btn-add-mission');
-      if (btnAddScheme) btnAddScheme.addEventListener('click', () => showToast('목업: 스킴 추가 화면은 다음 단계에서 추가합니다.'));
-      if (btnAddMission) btnAddMission.addEventListener('click', () => showToast('목업: 미션 추가 화면은 다음 단계에서 추가합니다.'));
+      if (btnAddScheme) btnAddScheme.addEventListener('click', () => showSchemeAdd(activeCampaignId));
+      if (btnAddMission) btnAddMission.addEventListener('click', () => showMissionAdd(activeCampaignId));
+
+      // ===== 추가 폼 이벤트 =====
+      const btnCpCancel = $('btn-cp-cancel');
+      const btnCpSave = $('btn-cp-save');
+      if (btnCpCancel) btnCpCancel.addEventListener('click', showList);
+      if (btnCpSave) btnCpSave.addEventListener('click', () => {
+        const name = String($('cp-name') ? $('cp-name').value : '').trim();
+        const purpose = (document.querySelector('input[name=\"cp-purpose\"]:checked') || {}).value || '';
+        const start = $('cp-start') ? $('cp-start').value : '';
+        const end = $('cp-end') ? $('cp-end').value : '';
+        if (!name) return showToast('캠페인명은 필수입니다.');
+        if (!purpose) return showToast('목적은 필수입니다.');
+        if (!start || !end) return showToast('기간은 필수입니다.');
+        if (end <= start) return showToast('종료일은 시작일보다 이후여야 합니다.');
+        const id = 'CP-2026-' + String(100 + CAMPAIGNS.length + 1).padStart(3,'0');
+        CAMPAIGNS.unshift({ id, name, purpose, start, end, off:false, schemes: [] });
+        renderList();
+        showToast('캠페인을 저장했습니다.');
+        showDetail(id);
+      });
+
+      const btnScCancel = $('btn-sc-cancel');
+      const btnScSave = $('btn-sc-save');
+      if (btnScCancel) btnScCancel.addEventListener('click', () => showDetail(activeCampaignId));
+      if (btnScSave) btnScSave.addEventListener('click', () => {
+        const c = CAMPAIGNS.find((x) => x.id === activeCampaignId);
+        if (!c) return;
+        const name = String($('sc-name') ? $('sc-name').value : '').trim();
+        const purpose = (document.querySelector('input[name=\"sc-purpose\"]:checked') || {}).value || '';
+        const start = $('sc-start') ? $('sc-start').value : '';
+        const end = $('sc-end') ? $('sc-end').value : '';
+        const publish = $('sc-publish') ? $('sc-publish').value : '';
+        const budget = Number($('sc-budget') ? $('sc-budget').value : '');
+        const firstSignup = Number($('sc-first-signup') ? $('sc-first-signup').value : '');
+        if (!name) return showToast('스킴명은 필수입니다.');
+        if (!purpose) return showToast('목적은 필수입니다.');
+        if (!start || !end) return showToast('기간은 필수입니다.');
+        if (end <= start) return showToast('종료일은 시작일보다 이후여야 합니다.');
+        if (!publish) return showToast('미션 공개일은 필수입니다.');
+        if (publish > start) return showToast('미션 공개일은 시작일 이전이어야 합니다.');
+        if (!Number.isFinite(budget) || budget <= 0) return showToast('총 예산은 0원 초과여야 합니다.');
+        if (purpose === '전환' && (!Number.isFinite(firstSignup) || firstSignup <= 0)) return showToast('가입 후 유효 일수는 0 초과 정수로 입력해 주세요.');
+        const sid = 'SC-' + String(100 + (c.schemes || []).length + 1).padStart(3,'0');
+        c.schemes = Array.isArray(c.schemes) ? c.schemes : [];
+        c.schemes.push({ id: sid, name, purpose, start, end, publish, budgetTotal: budget, budgetSpent: 0, off:false, targets: [], regions: [], activityRegions: [], zones: [], missions: [] });
+        renderList();
+        showToast('스킴을 저장했습니다.');
+        showDetail(c.id);
+        activateDetailTab('schemes');
+      });
+
+      const btnMsCancel = $('btn-ms-cancel');
+      const btnMsSave = $('btn-ms-save');
+      if (btnMsCancel) btnMsCancel.addEventListener('click', () => showDetail(activeCampaignId));
+      if (btnMsSave) btnMsSave.addEventListener('click', () => {
+        const c = CAMPAIGNS.find((x) => x.id === activeCampaignId);
+        if (!c) return;
+        const schemeId = $('ms-scheme') ? $('ms-scheme').value : '';
+        const s = (c.schemes || []).find((x) => x.id === schemeId);
+        if (!s) return showToast('스킴을 선택해 주세요.');
+        const name = String($('ms-name') ? $('ms-name').value : '').trim();
+        const desc = String($('ms-desc') ? $('ms-desc').value : '').trim();
+        let structure = (document.querySelector('input[name=\"ms-structure\"]:checked') || {}).value || '';
+        if (!name) return showToast('미션명은 필수입니다.');
+        if (s.purpose === '전환') structure = '단일목표형';
+        if (!structure) return showToast('지급 구조는 필수입니다.');
+        const shipper = $('ms-shipper') ? $('ms-shipper').value : '전체';
+        const shipperDetail = String($('ms-shipper-detail') ? $('ms-shipper-detail').value : '').trim();
+        const start = $('ms-start') ? $('ms-start').value : '';
+        const end = $('ms-end') ? $('ms-end').value : '';
+        if (!start || !end) return showToast('기간은 필수입니다.');
+        if (end <= start) return showToast('종료일은 시작일보다 이후여야 합니다.');
+        const mid = 'MS-' + String(100 + (s.missions || []).length + 1).padStart(3,'0');
+        s.missions = Array.isArray(s.missions) ? s.missions : [];
+        s.missions.push({ id: mid, name, description: desc, structure, shipper, shipperDetail, times: [], goalCount: 0, rewardAmount: 0, start, end, off:false });
+        renderList();
+        showToast('미션을 저장했습니다.');
+        showDetail(c.id);
+        activateDetailTab('missions');
+      });
+
+      const msShipper = $('ms-shipper');
+      if (msShipper) {
+        msShipper.addEventListener('change', () => {
+          const v = msShipper.value;
+          const d = $('ms-shipper-detail');
+          if (!d) return;
+          d.style.display = (v === '프랜차이즈' || v === '플랫폼') ? 'block' : 'none';
+        });
+      }
 
       // ===== 데이터(목록) =====
       // 캠페인(상위) → 스킴(하위) → 미션(하위) 목업 데이터
