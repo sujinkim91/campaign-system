@@ -429,16 +429,24 @@
           <span>캠페인 현황</span>
           <span class="chev">›</span>
         </a>
-        <a href="#" class="subnav-item" id="subnav-step-campaign" style="display:none;">
-          <span>ㄴ 캠페인</span>
-          <span class="chev">›</span>
-        </a>
-        <a href="#" class="subnav-item" id="subnav-step-scheme" style="display:none;">
+        <a href="#" class="subnav-item" id="subnav-status-scheme" style="display:none;">
           <span>ㄴ 스킴</span>
           <span class="chev">›</span>
         </a>
-        <a href="#" class="subnav-item" id="subnav-step-mission" style="display:none;">
+        <a href="#" class="subnav-item" id="subnav-status-mission" style="display:none;">
           <span>ㄴ 미션</span>
+          <span class="chev">›</span>
+        </a>
+        <a href="#" class="subnav-item" id="subnav-step-campaign" style="display:none;">
+          <span>캠페인 추가 (step 1)</span>
+          <span class="chev">›</span>
+        </a>
+        <a href="#" class="subnav-item" id="subnav-step-scheme" style="display:none;">
+          <span>ㄴ 스킴 추가 (step 2)</span>
+          <span class="chev">›</span>
+        </a>
+        <a href="#" class="subnav-item" id="subnav-step-mission" style="display:none;">
+          <span>ㄴ 미션 추가 (step 3)</span>
           <span class="chev">›</span>
         </a>
       </div>
@@ -1424,7 +1432,7 @@
       }
 
       function setSubnavActive(id) {
-        ['subnav-campaign-list','subnav-step-campaign','subnav-step-scheme','subnav-step-mission'].forEach((x) => {
+        ['subnav-campaign-list','subnav-status-scheme','subnav-status-mission','subnav-step-campaign','subnav-step-scheme','subnav-step-mission'].forEach((x) => {
           const el = $(x);
           if (!el) return;
           el.classList.toggle('active', x === id);
@@ -1432,15 +1440,30 @@
       }
       function setSubnavMode(mode) {
         const list = $('subnav-campaign-list');
+        const stS = $('subnav-status-scheme');
+        const stM = $('subnav-status-mission');
         const c = $('subnav-step-campaign');
         const s = $('subnav-step-scheme');
         const m = $('subnav-step-mission');
         const isAdd = mode === 'add';
         if (list) list.style.display = isAdd ? 'none' : 'flex';
+        if (stS) stS.style.display = 'none';
+        if (stM) stM.style.display = 'none';
         if (c) c.style.display = (isAdd && addFlow === 'campaignCreate') ? 'flex' : 'none';
         if (s) s.style.display = (isAdd && (addFlow === 'campaignCreate' || addFlow === 'schemeAdd')) ? 'flex' : 'none';
         if (m) m.style.display = (isAdd && (addFlow === 'campaignCreate' || addFlow === 'missionAdd')) ? 'flex' : 'none';
         if (!isAdd) setSubnavActive('subnav-campaign-list');
+      }
+
+      function setSubnavStatusChild(key) {
+        // list 모드에서만 사용
+        const stS = $('subnav-status-scheme');
+        const stM = $('subnav-status-mission');
+        if (stS) stS.style.display = key === 'sc' ? 'flex' : 'none';
+        if (stM) stM.style.display = key === 'ms' ? 'flex' : 'none';
+        if (key === 'sc') setSubnavActive('subnav-status-scheme');
+        else if (key === 'ms') setSubnavActive('subnav-status-mission');
+        else setSubnavActive('subnav-campaign-list');
       }
 
       function setRegisterMode(mode, campaignId) {
@@ -1544,6 +1567,8 @@
         if (pSc) pSc.style.display = key === 'sc' ? 'block' : 'none';
         if (pMs) pMs.style.display = key === 'ms' ? 'block' : 'none';
       }
+
+      // (deprecated) use setSubnavStatusChild for status tabs
 
       function showCampaignAdd() {
         addFlow = 'campaignCreate';
@@ -1793,6 +1818,10 @@
       navList.addEventListener('click', (e) => { e.preventDefault(); showList(); });
       const subnavCampaignList = $('subnav-campaign-list');
       if (subnavCampaignList) subnavCampaignList.addEventListener('click', (e) => { e.preventDefault(); showList(); });
+      const subnavStatusScheme = $('subnav-status-scheme');
+      const subnavStatusMission = $('subnav-status-mission');
+      if (subnavStatusScheme) subnavStatusScheme.addEventListener('click', (e) => { e.preventDefault(); activateStatusTab('sc'); setSubnavMode('list'); setSubnavStatusChild('sc'); hydratePickCampaign(); hydratePickScheme(); renderStatusSchemes(); });
+      if (subnavStatusMission) subnavStatusMission.addEventListener('click', (e) => { e.preventDefault(); activateStatusTab('ms'); setSubnavMode('list'); setSubnavStatusChild('ms'); hydratePickCampaign(); hydratePickScheme(); renderStatusMissions(); });
       const subnavStepCampaign = $('subnav-step-campaign');
       const subnavStepScheme = $('subnav-step-scheme');
       const subnavStepMission = $('subnav-step-mission');
@@ -1830,12 +1859,16 @@
       if (tabCp) tabCp.addEventListener('click', () => activateStatusTab('cp'));
       if (tabSc) tabSc.addEventListener('click', () => {
         activateStatusTab('sc');
+        setSubnavMode('list');
+        setSubnavStatusChild('sc');
         hydratePickCampaign();
         hydratePickScheme();
         renderStatusSchemes();
       });
       if (tabMs) tabMs.addEventListener('click', () => {
         activateStatusTab('ms');
+        setSubnavMode('list');
+        setSubnavStatusChild('ms');
         hydratePickCampaign();
         hydratePickScheme();
         renderStatusMissions();
