@@ -4,7 +4,7 @@
   <!-- 제품 기준: docs/intra/부릉-인트라-PRD.md (v2-draft) -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>캠페인 관리 시스템 - Mockup</title>
+  <title>캠페인 관리 시스템 - Mockup (PRD v0.8)</title>
   <style>
     :root {
       --bg: #eef1f5;
@@ -319,6 +319,8 @@
     .pill:hover { border-color: #9eb0c4; background: #fafbfd; }
     .pill:has(input:checked) { border-color: var(--navy); background: #f0f4fa; box-shadow: 0 0 0 1px rgba(36,59,85,.08); }
     .pill input { width: 16px; height: 16px; }
+    .pill--tab { user-select: none; border-radius: 999px; }
+    .pill--tab.active { border-color: var(--navy); background: #f0f4fa; box-shadow: 0 0 0 1px rgba(36,59,85,.08); }
 
     .invalid input:not([type="radio"]):not([type="checkbox"]),
     .invalid select,
@@ -387,7 +389,7 @@
         <div class="nav-group">
           <div class="nav-group-title">캠페인 관리</div>
           <div class="nav-group-items">
-            <a href="#" id="nav-list" class="active">미션 관리</a>
+            <a href="#" id="nav-list" class="active">캠페인 목록</a>
           </div>
         </div>
       </nav>
@@ -395,9 +397,9 @@
 
     <main class="main">
       <header class="header">
-        <div class="breadcrumb" id="page-breadcrumb">캠페인 관리 &gt; 미션 관리</div>
+        <div class="breadcrumb" id="page-breadcrumb">캠페인 관리 &gt; 캠페인 목록</div>
         <div class="header-title-row">
-          <h1 id="page-title" class="page-heading">미션 관리</h1>
+          <h1 id="page-title" class="page-heading">캠페인 목록</h1>
           <div class="header-actions" id="header-actions-list">
             <button type="button" class="btn-reset" id="btn-reset-filters">초기화</button>
           </div>
@@ -430,14 +432,8 @@
                 <option value="전환">전환</option>
                 <option value="활성화">활성화</option>
               </select>
-              <label for="flt-target-type">적용대상 유형</label>
-              <select id="flt-target-type">
-                <option value="">전체</option>
-                <option value="일반기사(프렌즈)">일반기사(프렌즈)</option>
-                <option value="NVP지점기사">NVP지점기사</option>
-              </select>
-              <label for="flt-name">미션명</label>
-              <input id="flt-name" type="text" placeholder="미션명 입력" />
+              <label for="flt-name">캠페인명</label>
+              <input id="flt-name" type="text" placeholder="캠페인명 입력" />
               <button type="button" class="btn-search-icon" id="btn-search" title="검색" aria-label="검색">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"/><path d="M15 15l4.5 4.5"/></svg>
               </button>
@@ -447,18 +443,17 @@
           <div class="table-wrap">
             <table class="data-table">
               <colgroup>
-                <col style="width:17%"><col style="width:8%"><col style="width:9%"><col style="width:10%"><col style="width:16%"><col style="width:10%"><col style="width:10%"><col style="width:10%"><col style="width:6%"><col style="width:8%">
+                <col style="width:20%"><col style="width:8%"><col style="width:12%"><col style="width:7%"><col style="width:7%"><col style="width:10%"><col style="width:10%"><col style="width:8%"><col style="width:8%">
               </colgroup>
               <thead>
                 <tr>
-                  <th>미션명</th>
+                  <th>캠페인명</th>
                   <th>목적</th>
                   <th>기간</th>
-                  <th>적용대상 유형</th>
-                  <th title="미션 대상 지역/라이더 활동 지역/ZONE 요약">지역·ZONE</th>
+                  <th>스킴 수</th>
+                  <th>미션 수</th>
+                  <th title="스킴에 설정된 총 예산">예산 한도</th>
                   <th title="현재까지 지급된 총 금액(목업 데이터)">소진액</th>
-                  <th title="이 미션에 배정된 지급 상한(캠페인 단위)">예산 한도</th>
-                  <th title="예산 한도 − 누적 집행액. 막대는 잔여 비율(남은 한도 ÷ 예산 한도)">남은 한도</th>
                   <th>상태</th>
                   <th>관리</th>
                 </tr>
@@ -474,22 +469,18 @@
           </div>
         </section>
 
-        <!-- 화면 2: 미션 조회(상세) -->
+        <!-- 화면 2: 캠페인 상세(탭) -->
         <section id="screen-detail" class="screen">
           <div class="form-shell panel panel--pad">
             <div class="form-single-page">
-              <h2 class="panel-title">미션 정보</h2>
+              <h2 class="panel-title">캠페인 현황</h2>
               <div class="form-row">
-                <label>미션 ID</label>
+                <label>캠페인 ID</label>
                 <div class="field"><div id="d-id">-</div></div>
               </div>
               <div class="form-row">
-                <label>미션명</label>
+                <label>캠페인명</label>
                 <div class="field"><div id="d-name">-</div></div>
-              </div>
-              <div class="form-row">
-                <label>미션 설명</label>
-                <div class="field"><div id="d-desc">-</div></div>
               </div>
               <div class="form-row">
                 <label>목적</label>
@@ -500,32 +491,75 @@
                 <div class="field"><div id="d-period">-</div></div>
               </div>
               <div class="form-row">
-                <label>미션 오픈일</label>
-                <div class="field"><div id="d-mission-open">-</div></div>
-              </div>
-              <div class="form-row">
-                <label>미션 공개일</label>
-                <div class="field"><div id="d-publish">-</div></div>
-              </div>
-              <div class="form-row">
-                <label>적용대상 유형</label>
-                <div class="field"><div id="d-targets">-</div></div>
-              </div>
-              <div class="form-row">
-                <label>지역·ZONE</label>
-                <div class="field"><div id="d-geo">-</div></div>
-              </div>
-              <div class="form-row">
                 <label>소진액 / 예산 한도</label>
                 <div class="field"><div id="d-budget">-</div></div>
               </div>
               <div class="form-row">
-                <label>남은 한도</label>
-                <div class="field"><div id="d-remain">-</div></div>
-              </div>
-              <div class="form-row">
                 <label>상태</label>
                 <div class="field"><div id="d-status">-</div></div>
+              </div>
+
+              <div style="margin-top:18px;">
+                <div class="radio-group" role="tablist" aria-label="캠페인 상세 탭">
+                  <button type="button" class="pill pill--tab active" id="tab-overview">캠페인 현황</button>
+                  <button type="button" class="pill pill--tab" id="tab-schemes">스킴</button>
+                  <button type="button" class="pill pill--tab" id="tab-missions">미션</button>
+                </div>
+              </div>
+
+              <div id="panel-overview" style="margin-top:16px;"></div>
+
+              <div id="panel-schemes" style="margin-top:16px; display:none;">
+                <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;">
+                  <div style="font-weight:900;color:var(--navy);">스킴 목록</div>
+                  <button type="button" class="btn primary" id="btn-add-scheme">+ 스킴 추가</button>
+                </div>
+                <div class="table-wrap" style="margin-top:10px;">
+                  <table class="data-table">
+                    <colgroup>
+                      <col style="width:22%"><col style="width:14%"><col style="width:22%"><col style="width:14%"><col style="width:10%"><col style="width:10%"><col style="width:8%">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>스킴명</th>
+                        <th>타겟</th>
+                        <th>지역</th>
+                        <th>기간</th>
+                        <th>예산</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-schemes"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div id="panel-missions" style="margin-top:16px; display:none;">
+                <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;">
+                  <div style="font-weight:900;color:var(--navy);">미션 목록</div>
+                  <button type="button" class="btn primary" id="btn-add-mission">+ 미션 추가</button>
+                </div>
+                <div class="table-wrap" style="margin-top:10px;">
+                  <table class="data-table">
+                    <colgroup>
+                      <col style="width:18%"><col style="width:16%"><col style="width:10%"><col style="width:14%"><col style="width:12%"><col style="width:18%"><col style="width:6%"><col style="width:6%">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>미션명</th>
+                        <th>스킴명</th>
+                        <th>지급 구조</th>
+                        <th>시간대</th>
+                        <th>화주사</th>
+                        <th>달성 조건</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-missions"></tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -971,8 +1005,8 @@
         screenList.classList.add('active');
         if (screenDetail) screenDetail.classList.remove('active');
         screenRegister.classList.remove('active');
-        pageTitle.textContent = '미션 관리';
-        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 미션 관리';
+        pageTitle.textContent = '캠페인 목록';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록';
         if (headerList) headerList.style.display = 'flex';
         if (headerRegister) headerRegister.style.display = 'none';
         if (headerDetail) headerDetail.style.display = 'none';
@@ -984,8 +1018,8 @@
         screenList.classList.remove('active');
         screenRegister.classList.remove('active');
         screenDetail.classList.add('active');
-        pageTitle.textContent = '미션 조회';
-        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 미션 관리 > 조회';
+        pageTitle.textContent = '캠페인 상세';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 상세';
         if (headerList) headerList.style.display = 'none';
         if (headerRegister) headerRegister.style.display = 'none';
         if (headerDetail) headerDetail.style.display = 'flex';
@@ -1095,38 +1129,113 @@
         if (content) content.scrollTop = 0;
       }
       navList.addEventListener('click', (e) => { e.preventDefault(); showList(); });
-      $('btn-open-register').addEventListener('click', showRegister);
+      $('btn-open-register').addEventListener('click', () => showToast('목업: 캠페인 추가 화면은 다음 단계에서 추가합니다.'));
       const btnBackToList = $('btn-back-to-list');
       if (btnBackToList) btnBackToList.addEventListener('click', showList);
       $('btn-reset-filters').addEventListener('click', () => {
         $('flt-status').value = '';
         $('flt-purpose').value = '';
-        $('flt-target-type').value = '';
         $('flt-name').value = '';
         renderList();
         showToast('검색 조건을 초기화했습니다.');
       });
       $('btn-logout-mock').addEventListener('click', () => showToast('목업: 로그아웃 동작 없음'));
 
+      // ===== 상세 탭 이벤트 =====
+      const tabOverview = $('tab-overview');
+      const tabSchemes = $('tab-schemes');
+      const tabMissions = $('tab-missions');
+      if (tabOverview) tabOverview.addEventListener('click', () => activateDetailTab('overview'));
+      if (tabSchemes) tabSchemes.addEventListener('click', () => activateDetailTab('schemes'));
+      if (tabMissions) tabMissions.addEventListener('click', () => activateDetailTab('missions'));
+
+      const btnAddScheme = $('btn-add-scheme');
+      const btnAddMission = $('btn-add-mission');
+      if (btnAddScheme) btnAddScheme.addEventListener('click', () => showToast('목업: 스킴 추가 화면은 다음 단계에서 추가합니다.'));
+      if (btnAddMission) btnAddMission.addEventListener('click', () => showToast('목업: 미션 추가 화면은 다음 단계에서 추가합니다.'));
+
       // ===== 데이터(목록) =====
-      // 오늘 기준 기간·OFF 조합으로 예정/진행/완료/중단(시작 전·기간 내) 목업 5건
+      // 캠페인(상위) → 스킴(하위) → 미션(하위) 목업 데이터
       let CAMPAIGNS = (function initCampaigns() {
         const t = todayISO();
         const add = (n) => addDaysISO(t, n);
-        const demo = [
-          { id: 'MS-DEMO-01', name: '도심 점심 피크 사전 집중 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(14), publish: add(14), start: add(14), end: add(28), targets: ['일반기사(프렌즈)'], segmentActivity: [], regions: ['서울특별시 강남구 역삼동'], activityRegions: ['서울특별시 서초구'], zones: [], zoneAll: false, budgetTotal: 12000000, budgetSpent: 0, createdAt: t, off: false },
-          { id: 'MS-DEMO-02', name: '서초구 주간 피크 달성형 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(-5), publish: add(-5), start: add(-2), end: add(10), targets: ['일반기사(프렌즈)'], segmentActivity: [], regions: ['전체지역'], activityRegions: ['서울특별시 서초구'], zones: [], zoneAll: false, budgetTotal: 8000000, budgetSpent: 3250000, createdAt: t, off: false },
-          { id: 'MS-DEMO-03', name: '연수 NVP 야간 구간 인센티브', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(-45), publish: add(-45), start: add(-40), end: add(-5), targets: ['NVP지점기사'], segmentActivity: [], regions: [], activityRegions: [], zones: ['인천 연수ZONE'], zoneAll: false, budgetTotal: 5500000, budgetSpent: 5500000, createdAt: t, off: false },
-          { id: 'MS-DEMO-04', name: '해운대 프렌즈 주말 스탬프 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(8), publish: add(8), start: add(8), end: add(22), targets: ['일반기사(프렌즈)'], segmentActivity: [], regions: ['부산광역시 해운대구 우동', '부산광역시 해운대구 중동'], activityRegions: ['전체지역'], zones: [], zoneAll: false, budgetTotal: 3000000, budgetSpent: 0, createdAt: t, off: true },
-          { id: 'MS-DEMO-05', name: '서울 강남ZONE NVP 동선 최적화 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: add(-5), publish: add(-5), start: add(-3), end: add(9), targets: ['NVP지점기사'], segmentActivity: [], regions: [], activityRegions: [], zones: ['서울 강남ZONE'], zoneAll: false, budgetTotal: 15000000, budgetSpent: 7800000, createdAt: t, off: true },
+        return [
+          {
+            id: 'CP-2026-001',
+            name: '4월 점심 피크 캠페인',
+            purpose: '활성화',
+            start: add(-2),
+            end: add(10),
+            off: false,
+            schemes: [
+              {
+                id: 'SC-001',
+                name: '프렌즈 점심 피크',
+                purpose: '활성화',
+                start: add(-2),
+                end: add(10),
+                publish: add(-3),
+                budgetTotal: 12000000,
+                budgetSpent: 3250000,
+                off: false,
+                targets: ['일반기사(프렌즈)'],
+                regions: ['전체지역'],
+                activityRegions: ['서울특별시 서초구'],
+                zones: [],
+                missions: [
+                  { id: 'MS-001', name: '서초 점심 단일', structure: '단일목표형', shipper: '전체', times: [{ start: '11:00', end: '14:00' }], goalCount: 10, rewardAmount: 5000, start: add(-2), end: add(10), off: false },
+                  { id: 'MS-002', name: '서초 점심 단계', structure: '단계형', shipper: '로컬', times: [], goalCount: 30, rewardAmount: 12000, start: add(-2), end: add(10), off: false }
+                ]
+              },
+              {
+                id: 'SC-002',
+                name: 'NVP 강남 ZONE',
+                purpose: '활성화',
+                start: add(2),
+                end: add(12),
+                publish: add(1),
+                budgetTotal: 15000000,
+                budgetSpent: 0,
+                off: true,
+                targets: ['NVP지점기사'],
+                zones: ['서울 강남ZONE'],
+                regions: [],
+                activityRegions: [],
+                missions: [
+                  { id: 'MS-003', name: '강남 야간 단일', structure: '단일목표형', shipper: '프랜차이즈', times: [{ start: '20:00', end: '23:00' }], goalCount: 8, rewardAmount: 7000, start: add(2), end: add(12), off: true }
+                ]
+              }
+            ]
+          },
+          {
+            id: 'CP-2026-002',
+            name: '신규 라이더 전환 캠페인',
+            purpose: '전환',
+            start: add(5),
+            end: add(40),
+            off: false,
+            schemes: [
+              {
+                id: 'SC-101',
+                name: '전환 스킴(가입 후 유효 14일)',
+                purpose: '전환',
+                start: add(5),
+                end: add(40),
+                publish: add(5),
+                budgetTotal: 50000000,
+                budgetSpent: 12400000,
+                off: false,
+                targets: ['일반기사(프렌즈)'],
+                regions: ['서울특별시 강남구 청담동'],
+                activityRegions: ['서울특별시 서초구', '인천광역시 연수구'],
+                zones: [],
+                missions: [
+                  { id: 'MS-201', name: '첫 수행 7건 달성', structure: '단일목표형', shipper: '전체', times: [], goalCount: 7, rewardAmount: 10000, start: add(5), end: add(40), off: false }
+                ]
+              }
+            ]
+          }
         ];
-        const samples = [
-          { id: 'MS-2026-001', name: '점심 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', missionOpen: '2026-04-01', publish: '2026-04-01', start: '2026-04-01', end: '2026-04-07', targets: ['일반기사(프렌즈)'], segmentActivity: ['고물량·고품질', '고물량·저품질'], regions: ['서울특별시 강남구 역삼동', '서울특별시 강남구 삼성동'], activityRegions: ['서울특별시 강남구'], zones: [], zoneAll: false, budgetTotal: 20000000, budgetSpent: 9100000, createdAt: '2026-03-31', off: false },
-          { id: 'MS-2026-002', name: '주말 단일 지급 미션', purpose: '활성화', structure: '단일', mode: '정적', missionOpen: '2026-04-06', publish: '2026-04-06', start: '2026-04-06', end: '2026-04-06', targets: ['일반기사(프렌즈)'], segmentActivity: ['저물량·고품질'], regions: ['부산광역시 해운대구 우동'], activityRegions: ['부산광역시 해운대구'], zones: [], zoneAll: false, budgetTotal: 4000000, budgetSpent: 1200000, createdAt: '2026-03-31', off: true },
-          { id: 'MS-2026-003', name: '야간 피크 단계형 미션', purpose: '활성화', structure: '단계', mode: '정적', missionOpen: '2026-03-12', publish: '2026-03-12', start: '2026-03-15', end: '2026-03-31', targets: ['NVP지점기사'], segmentActivity: [], regions: [], activityRegions: [], zones: [], zoneAll: true, budgetTotal: 30000000, budgetSpent: 30000000, createdAt: '2026-03-10', off: false },
-          { id: 'MS-2026-004', name: '신규 라이더 전환 미션', purpose: '전환', structure: '단일', mode: '정적', missionOpen: '2026-04-01', publish: '2026-04-01', start: '2026-04-01', end: '2026-06-30', targets: ['일반기사(프렌즈)'], segmentActivity: [], regions: ['서울특별시 강남구 청담동'], activityRegions: ['서울특별시 서초구', '인천광역시 연수구'], zones: [], zoneAll: false, budgetTotal: 50000000, budgetSpent: 12400000, createdAt: '2026-03-28', off: false },
-        ];
-        return demo.concat(samples);
       })();
 
       function statusOf(c) {
@@ -1200,8 +1309,9 @@
 
       /** 예산 한도·소진(데이터)·남은 한도 계산. 목록은 예산 한도·남은 한도만 표시 */
       function budgetDerived(c) {
-        const total = Number(c.budgetTotal);
-        const spentRaw = Number(c.budgetSpent);
+        const schemes = Array.isArray(c.schemes) ? c.schemes : [];
+        const total = schemes.reduce((acc, s) => acc + (Number(s.budgetTotal) || 0), 0);
+        const spentRaw = schemes.reduce((acc, s) => acc + (Number(s.budgetSpent) || 0), 0);
         if (!Number.isFinite(total) || total < 0) return null;
         const spent = (Number.isFinite(spentRaw) && spentRaw >= 0) ? spentRaw : 0;
         const remain = Math.max(0, Math.round(total - spent));
@@ -1223,58 +1333,160 @@
         );
       }
 
-      function missionMatchesTargetType(c, flt) {
-        if (!flt) return true;
-        return c.targets.includes(flt);
-      }
-
-      function fmtGeoCell(c) {
-        const bits = [];
-        const regions = (c.regions && c.regions.length) ? c.regions : ((c.sgg && c.sgg.length) ? c.sgg : []);
-        const act = (c.activityRegions && c.activityRegions.length) ? c.activityRegions : [];
-        const zones = (c.zones && c.zones.length) ? c.zones : [];
-        const nvp = c.targets && c.targets.includes('NVP지점기사');
-        if (regions.length) bits.push(...regions);
-        if (act.length) bits.push(...act);
-        if (nvp && c.zoneAll) bits.push('전체 ZONE');
-        if (zones.length) bits.push(...zones);
-        return bits.length ? bits.join(', ') : '-';
-      }
-
       function safeText(v) { return (v === null || v === undefined || v === '') ? '-' : String(v); }
       function renderDetail(c) {
         const st = statusOf(c);
         const b = budgetDerived(c);
-        const geo = fmtGeoCell(c);
-        const mo = c.missionOpen || c.start;
-        const pub = c.publish || c.start;
         if ($('d-id')) $('d-id').textContent = safeText(c.id);
         if ($('d-name')) $('d-name').textContent = safeText(c.name);
-        if ($('d-desc')) $('d-desc').textContent = c.description ? String(c.description) : '-';
         if ($('d-purpose')) $('d-purpose').textContent = safeText(c.purpose);
         if ($('d-period')) $('d-period').textContent = safeText(fmtPeriod(c));
-        if ($('d-mission-open')) $('d-mission-open').textContent = safeText(mo);
-        if ($('d-publish')) $('d-publish').textContent = safeText(pub);
-        if ($('d-targets')) $('d-targets').textContent = (c.targets && c.targets.length) ? c.targets.join(', ') : '-';
-        if ($('d-geo')) $('d-geo').textContent = geo;
         if ($('d-budget')) $('d-budget').textContent = b ? (fmtWon(b.spent) + ' / ' + fmtWon(b.total)) : '-';
-        if ($('d-remain')) {
-          $('d-remain').textContent = b ? (fmtWon(b.remain) + ' (' + b.remainPct + '% 남음)') : '-';
-        }
         if ($('d-status')) $('d-status').textContent = st.key;
+
+        // tabs + lists
+        renderSchemes(c);
+        renderMissions(c);
+        activateDetailTab('overview');
+      }
+
+      function activateDetailTab(key) {
+        const tO = $('tab-overview');
+        const tS = $('tab-schemes');
+        const tM = $('tab-missions');
+        const pO = $('panel-overview');
+        const pS = $('panel-schemes');
+        const pM = $('panel-missions');
+        const setAct = (el, on) => { if (!el) return; el.classList.toggle('active', !!on); };
+        setAct(tO, key === 'overview');
+        setAct(tS, key === 'schemes');
+        setAct(tM, key === 'missions');
+        if (pO) pO.style.display = key === 'overview' ? 'block' : 'none';
+        if (pS) pS.style.display = key === 'schemes' ? 'block' : 'none';
+        if (pM) pM.style.display = key === 'missions' ? 'block' : 'none';
+      }
+
+      function schemeTargetSummary(s) {
+        const t = Array.isArray(s.targets) ? s.targets : [];
+        return t.length ? t.join(', ') : '-';
+      }
+      function schemeRegionSummary(s) {
+        const bits = [];
+        if (Array.isArray(s.zones) && s.zones.length) bits.push(...s.zones);
+        if (Array.isArray(s.regions) && s.regions.length) bits.push(...s.regions);
+        if (Array.isArray(s.activityRegions) && s.activityRegions.length) bits.push(...s.activityRegions);
+        return bits.length ? bits.join(', ') : '-';
+      }
+      function schemeBudgetTotal(s) { return Number.isFinite(Number(s.budgetTotal)) ? Number(s.budgetTotal) : 0; }
+
+      function renderSchemes(c) {
+        const tb = $('tbody-schemes');
+        if (!tb) return;
+        tb.innerHTML = '';
+        const schemes = Array.isArray(c.schemes) ? c.schemes : [];
+        schemes.forEach((s) => {
+          const st = statusOf(s);
+          const ended = st.key === '완료';
+          const manageTd = ended
+            ? '<span class="manage-na" title="종료일이 지난 스킴은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
+            : '<a href="#" class="link btn-toggle-scheme" data-cid="' + c.id + '" data-sid="' + s.id + '">' + (s.off ? 'ON' : 'OFF') + '</a>';
+          const tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td><a href="#" class="link btn-open-scheme" data-cid="' + c.id + '" data-sid="' + s.id + '">' + safeText(s.name) + '</a></td>' +
+            '<td>' + schemeTargetSummary(s) + '</td>' +
+            '<td>' + schemeRegionSummary(s) + '</td>' +
+            '<td>' + safeText(fmtPeriod(s)) + '</td>' +
+            '<td class="td-num">' + fmtWon(schemeBudgetTotal(s)) + '</td>' +
+            '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>' +
+            '<td>' + manageTd + '</td>';
+          tb.appendChild(tr);
+        });
+        tb.querySelectorAll('.btn-open-scheme').forEach((a) => {
+          a.addEventListener('click', (e) => { e.preventDefault(); showToast('목업: 스킴 상세 화면은 다음 단계에서 추가합니다.'); });
+        });
+        tb.querySelectorAll('.btn-toggle-scheme').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sid = a.getAttribute('data-sid');
+            if (!sid) return;
+            const schemes = Array.isArray(c.schemes) ? c.schemes : [];
+            const s = schemes.find((x) => x.id === sid);
+            if (s && statusOf(s).key === '완료') { showToast('종료일이 지난 스킴은 관리(ON/OFF)를 변경할 수 없습니다.'); return; }
+            if (s && !s.off) { showToast('목업: OFF 확인 모달은 캠페인 단위로만 유지합니다.'); }
+            s.off = !s.off;
+            renderSchemes(c);
+            renderList();
+          });
+        });
+      }
+
+      function missionAchieveSummary(m) {
+        const bits = [];
+        if (m.goalCount) bits.push('목표 ' + m.goalCount + '건');
+        if (m.rewardAmount) bits.push('지급 ' + fmtWon(m.rewardAmount));
+        return bits.length ? bits.join(' · ') : '-';
+      }
+      function missionTimeSummary(m) {
+        const ts = Array.isArray(m.times) ? m.times : [];
+        if (!ts.length) return '전일';
+        return ts.map((t) => (t.start || '') + '~' + (t.end || '')).join(', ');
+      }
+
+      function renderMissions(c) {
+        const tb = $('tbody-missions');
+        if (!tb) return;
+        tb.innerHTML = '';
+        const schemes = Array.isArray(c.schemes) ? c.schemes : [];
+        const missions = schemes.flatMap((s) => (Array.isArray(s.missions) ? s.missions.map((m) => ({ ...m, schemeName: s.name, schemeId: s.id })) : []));
+        missions.forEach((m) => {
+          const st = statusOf(m);
+          const ended = st.key === '완료';
+          const manageTd = ended
+            ? '<span class="manage-na" title="종료일이 지난 미션은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
+            : '<a href="#" class="link btn-toggle-mission" data-cid="' + c.id + '" data-sid="' + m.schemeId + '" data-mid="' + m.id + '">' + (m.off ? 'ON' : 'OFF') + '</a>';
+          const tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td><a href="#" class="link btn-open-mission" data-cid="' + c.id + '" data-sid="' + m.schemeId + '" data-mid="' + m.id + '">' + safeText(m.name) + '</a></td>' +
+            '<td>' + safeText(m.schemeName) + '</td>' +
+            '<td>' + safeText(m.structure || '-') + '</td>' +
+            '<td>' + missionTimeSummary(m) + '</td>' +
+            '<td>' + safeText(m.shipper || '전체') + '</td>' +
+            '<td>' + missionAchieveSummary(m) + '</td>' +
+            '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>' +
+            '<td>' + manageTd + '</td>';
+          tb.appendChild(tr);
+        });
+        tb.querySelectorAll('.btn-open-mission').forEach((a) => {
+          a.addEventListener('click', (e) => { e.preventDefault(); showToast('목업: 미션 상세 화면은 다음 단계에서 추가합니다.'); });
+        });
+        tb.querySelectorAll('.btn-toggle-mission').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sid = a.getAttribute('data-sid');
+            const mid = a.getAttribute('data-mid');
+            if (!sid || !mid) return;
+            const schemes = Array.isArray(c.schemes) ? c.schemes : [];
+            const s = schemes.find((x) => x.id === sid);
+            const m = s && Array.isArray(s.missions) ? s.missions.find((x) => x.id === mid) : null;
+            if (!m) return;
+            if (statusOf(m).key === '완료') { showToast('종료일이 지난 미션은 관리(ON/OFF)를 변경할 수 없습니다.'); return; }
+            if (!m.off) { showToast('목업: OFF 확인 모달은 캠페인 단위로만 유지합니다.'); }
+            m.off = !m.off;
+            renderMissions(c);
+            renderList();
+          });
+        });
       }
 
       function renderList() {
         const fltStatus = $('flt-status').value;
         const fltPurpose = $('flt-purpose').value;
-        const fltTargetType = $('flt-target-type').value;
         const fltName = $('flt-name').value.trim();
         let rows = CAMPAIGNS.slice();
         rows = rows.filter((c) => {
           const st = statusOf(c).key;
           if (fltStatus && st !== fltStatus) return false;
           if (fltPurpose && c.purpose !== fltPurpose) return false;
-          if (!missionMatchesTargetType(c, fltTargetType)) return false;
           if (fltName && !c.name.includes(fltName)) return false;
           return true;
         });
@@ -1287,19 +1499,20 @@
           const st = statusOf(c);
           const ended = st.key === '완료';
           const manageTd = ended
-            ? '<span class="manage-na" title="종료일이 지난 미션은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
+            ? '<span class="manage-na" title="종료일이 지난 캠페인은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
             : '<a href="#" class="link btn-toggle" data-id="' + c.id + '">' + (c.off ? 'ON' : 'OFF') + '</a>';
           const b = budgetDerived(c);
+          const schemesCnt = Array.isArray(c.schemes) ? c.schemes.length : 0;
+          const missionsCnt = Array.isArray(c.schemes) ? c.schemes.reduce((acc, s) => acc + (Array.isArray(s.missions) ? s.missions.length : 0), 0) : 0;
           const tr = document.createElement('tr');
           tr.innerHTML =
             '<td title="' + c.id + '"><a href="#" class="link btn-open-detail" data-id="' + c.id + '">' + c.name + '</a></td>' +
             '<td>' + c.purpose + '</td>' +
             '<td>' + fmtPeriod(c) + '</td>' +
-            '<td>' + c.targets.join(', ') + '</td>' +
-            '<td>' + fmtGeoCell(c) + '</td>' +
-            '<td class="td-num">' + (b ? fmtWon(b.spent) : '—') + '</td>' +
+            '<td class="td-num">' + schemesCnt + '</td>' +
+            '<td class="td-num">' + missionsCnt + '</td>' +
             '<td class="td-num">' + (b ? fmtWon(b.total) : '—') + '</td>' +
-            '<td class="td-remain">' + fmtRemainInner(b) + '</td>' +
+            '<td class="td-num">' + (b ? fmtWon(b.spent) : '—') + '</td>' +
             '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>' +
             '<td>' + manageTd + '</td>';
           tb.appendChild(tr);
@@ -1308,7 +1521,7 @@
           a.addEventListener('click', (e) => {
             e.preventDefault();
             const id = a.getAttribute('data-id');
-            if (id) showRegisterView(id);
+            if (id) showDetail(id);
           });
         });
         tb.querySelectorAll('.btn-toggle').forEach((a) => {
@@ -1317,7 +1530,7 @@
             const id = a.getAttribute('data-id');
             const row = CAMPAIGNS.find((x) => x.id === id);
             if (row && statusOf(row).key === '완료') {
-              showToast('종료일이 지난 미션은 관리(ON/OFF)를 변경할 수 없습니다.');
+              showToast('종료일이 지난 캠페인은 관리(ON/OFF)를 변경할 수 없습니다.');
               return;
             }
             if (row && !row.off) {
@@ -1333,7 +1546,6 @@
       $('btn-search').addEventListener('click', renderList);
       $('flt-status').addEventListener('change', renderList);
       $('flt-purpose').addEventListener('change', renderList);
-      $('flt-target-type').addEventListener('change', renderList);
       renderList();
 
       // ===== Form state =====
