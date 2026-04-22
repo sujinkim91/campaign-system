@@ -689,6 +689,15 @@
           <div class="form-shell panel panel--pad">
             <div class="form-single-page">
               <h2 class="panel-title">캠페인 조건</h2>
+              <div class="form-row" data-key="cp-import">
+                <label>기존 캠페인 가져오기</label>
+                <div class="field">
+                  <select id="cp-import">
+                    <option value="">신규 캠페인 생성</option>
+                  </select>
+                  <div class="help">기존 캠페인을 선택하면 아래 값이 자동으로 채워집니다.</div>
+                </div>
+              </div>
               <div class="form-row" data-key="cp-name">
                 <label>캠페인명<span class="req">*</span></label>
                 <div class="field">
@@ -731,6 +740,16 @@
             <div class="form-single-page">
               <h2 class="panel-title">스킴</h2>
               <div class="warn" style="margin-bottom:14px;">캠페인: <strong id="sc-parent-name">-</strong></div>
+
+              <div class="form-row" data-key="sc-import">
+                <label>기존 스킴 가져오기</label>
+                <div class="field">
+                  <select id="sc-import">
+                    <option value="">신규 스킴 생성</option>
+                  </select>
+                  <div class="help">캠페인을 선택한 뒤, 해당 캠페인의 기존 스킴을 가져올 수 있습니다.</div>
+                </div>
+              </div>
 
               <div class="form-row" data-key="sc-name">
                 <label>스킴명<span class="req">*</span></label>
@@ -1402,6 +1421,20 @@
         if (headerRegister) headerRegister.style.display = 'flex';
         if (headerDetail) headerDetail.style.display = 'none';
 
+        // hydrate import select
+        const sel = $('cp-import');
+        if (sel) {
+          const prev = String(sel.value || '');
+          sel.innerHTML = '<option value=\"\">신규 캠페인 생성</option>';
+          CAMPAIGNS.forEach((c) => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = c.name + ' (' + c.purpose + ')';
+            sel.appendChild(opt);
+          });
+          if (prev && Array.from(sel.options).some((o) => o.value === prev)) sel.value = prev;
+        }
+
         if ($('cp-name')) $('cp-name').value = '';
         document.querySelectorAll('input[name="cp-purpose"]').forEach((el) => { el.checked = false; });
         if ($('cp-start')) $('cp-start').value = todayISO();
@@ -1427,6 +1460,22 @@
 
         const c = addDraft.campaign;
         if ($('sc-parent-name')) $('sc-parent-name').textContent = c ? c.name : '-';
+
+        // hydrate scheme import (for chosen campaign)
+        const sel = $('sc-import');
+        if (sel) {
+          sel.innerHTML = '<option value=\"\">신규 스킴 생성</option>';
+          const src = c && c.id ? CAMPAIGNS.find((x) => x.id === c.id) : null;
+          const schemes = src && Array.isArray(src.schemes) ? src.schemes : [];
+          schemes.forEach((s) => {
+            const opt = document.createElement('option');
+            opt.value = s.id;
+            opt.textContent = s.name;
+            sel.appendChild(opt);
+          });
+          sel.value = '';
+        }
+
         if ($('sc-name')) $('sc-name').value = '';
         document.querySelectorAll('input[name="sc-purpose"]').forEach((el) => { el.checked = c ? (el.value === c.purpose) : false; });
         if ($('sc-start')) $('sc-start').value = c ? c.start : todayISO();
@@ -1686,6 +1735,15 @@
       const btnCpSave = $('btn-cp-save');
       if (btnCpCancel) btnCpCancel.addEventListener('click', showList);
       if (btnCpSave) btnCpSave.addEventListener('click', () => {
+        const importId = $('cp-import') ? String($('cp-import').value || '') : '';
+        if (importId) {
+          const c0 = CAMPAIGNS.find((x) => x.id === importId);
+          if (!c0) return showToast('선택한 캠페인을 찾을 수 없습니다.');
+          addDraft.campaign = { id: c0.id, name: c0.name, purpose: c0.purpose, start: c0.start, end: c0.end };
+          showToast('기존 캠페인을 가져왔습니다. 다음 단계로 이동합니다.');
+          showSchemeStep();
+          return;
+        }
         const name = String($('cp-name') ? $('cp-name').value : '').trim();
         const purpose = (document.querySelector('input[name=\"cp-purpose\"]:checked') || {}).value || '';
         const start = $('cp-start') ? $('cp-start').value : '';
@@ -1704,6 +1762,17 @@
       const btnScSave = $('btn-sc-save');
       if (btnScCancel) btnScCancel.addEventListener('click', showCampaignAdd);
       if (btnScSave) btnScSave.addEventListener('click', () => {
+        const importId = $('sc-import') ? String($('sc-import').value || '') : '';
+        const cp = addDraft.campaign;
+        if (importId && cp && cp.id) {
+          const c0 = CAMPAIGNS.find((x) => x.id === cp.id);
+          const s0 = c0 && Array.isArray(c0.schemes) ? c0.schemes.find((x) => x.id === importId) : null;
+          if (!s0) return showToast('선택한 스킴을 찾을 수 없습니다.');
+          addDraft.scheme = { ...s0, missions: [] };
+          showToast('기존 스킴을 가져왔습니다. 다음 단계로 이동합니다.');
+          showMissionStep();
+          return;
+        }
         const name = String($('sc-name') ? $('sc-name').value : '').trim();
         const purpose = (document.querySelector('input[name=\"sc-purpose\"]:checked') || {}).value || '';
         const start = $('sc-start') ? $('sc-start').value : '';
@@ -1747,18 +1816,32 @@
         const mid = 'MS-' + String(101).padStart(3,'0');
         addDraft.mission = { id: mid, name, description: desc, structure, shipper, shipperDetail, times: [], goalCount: 0, rewardAmount: 0, start, end, off:false };
 
-        // 최종 저장(캠페인 + 1 스킴 + 1 미션)
+        // 최종 저장
         const cp = addDraft.campaign;
         if (!cp) return;
-        const campaign = { id: cp.id, name: cp.name, purpose: cp.purpose, start: cp.start, end: cp.end, off:false, schemes: [] };
-        const scheme = { ...addDraft.scheme, missions: [ addDraft.mission ] };
-        campaign.schemes.push(scheme);
-        CAMPAIGNS.unshift(campaign);
+        const existingCampaign = CAMPAIGNS.find((x) => x.id === cp.id);
+        if (existingCampaign) {
+          // 기존 캠페인에 추가: (1) 기존 스킴이면 미션만 추가, (2) 신규 스킴이면 스킴+미션 추가
+          const existingScheme = Array.isArray(existingCampaign.schemes) ? existingCampaign.schemes.find((x) => x.id === s.id) : null;
+          if (existingScheme) {
+            existingScheme.missions = Array.isArray(existingScheme.missions) ? existingScheme.missions : [];
+            existingScheme.missions.unshift(addDraft.mission);
+          } else {
+            existingCampaign.schemes = Array.isArray(existingCampaign.schemes) ? existingCampaign.schemes : [];
+            existingCampaign.schemes.unshift({ ...addDraft.scheme, missions: [ addDraft.mission ] });
+          }
+        } else {
+          // 신규 캠페인 생성
+          const campaign = { id: cp.id, name: cp.name, purpose: cp.purpose, start: cp.start, end: cp.end, off:false, schemes: [] };
+          const scheme = { ...addDraft.scheme, missions: [ addDraft.mission ] };
+          campaign.schemes.push(scheme);
+          CAMPAIGNS.unshift(campaign);
+        }
         addDraft = { campaign: null, scheme: null, mission: null };
         setSubnavMode('list');
         renderList();
-        showToast('캠페인(스킴/미션 포함)을 저장했습니다.');
-        showDetail(campaign.id);
+        showToast('저장했습니다.');
+        showDetail(cp.id);
         activateDetailTab('missions');
       });
 
@@ -1769,6 +1852,36 @@
           const d = $('ms-shipper-detail');
           if (!d) return;
           d.style.display = (v === '프랜차이즈' || v === '플랫폼') ? 'block' : 'none';
+        });
+      }
+
+      const cpImport = $('cp-import');
+      if (cpImport) {
+        cpImport.addEventListener('change', () => {
+          const id = String(cpImport.value || '');
+          const c = id ? CAMPAIGNS.find((x) => x.id === id) : null;
+          if (!c) return;
+          if ($('cp-name')) $('cp-name').value = c.name || '';
+          document.querySelectorAll('input[name="cp-purpose"]').forEach((el) => { el.checked = el.value === c.purpose; });
+          if ($('cp-start')) $('cp-start').value = c.start || '';
+          if ($('cp-end')) $('cp-end').value = c.end || '';
+        });
+      }
+
+      const scImport = $('sc-import');
+      if (scImport) {
+        scImport.addEventListener('change', () => {
+          const id = String(scImport.value || '');
+          const cp = addDraft.campaign;
+          const c0 = (cp && cp.id) ? CAMPAIGNS.find((x) => x.id === cp.id) : null;
+          const s0 = (c0 && Array.isArray(c0.schemes) && id) ? c0.schemes.find((x) => x.id === id) : null;
+          if (!s0) return;
+          if ($('sc-name')) $('sc-name').value = s0.name || '';
+          document.querySelectorAll('input[name="sc-purpose"]').forEach((el) => { el.checked = el.value === s0.purpose; });
+          if ($('sc-start')) $('sc-start').value = s0.start || '';
+          if ($('sc-end')) $('sc-end').value = s0.end || '';
+          if ($('sc-publish')) $('sc-publish').value = s0.publish || (s0.start || '');
+          if ($('sc-budget')) $('sc-budget').value = String(s0.budgetTotal ?? '');
         });
       }
 
