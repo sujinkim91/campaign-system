@@ -38,6 +38,25 @@
     body { margin: 0; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); line-height: 1.5; }
     .app-wrap { display: flex; min-height: 100vh; overflow: hidden; }
 
+    /* —— 2단 LNB 레이아웃(레퍼런스 화면 톤) —— */
+    .layout { display:flex; width: 100%; min-height: 100vh; }
+    .sidebar { width: 220px; flex: 0 0 220px; }
+    .subnav { width: 240px; flex: 0 0 240px; background: #f6f8fb; border-right: 1px solid var(--border); }
+    .subnav-hd { padding: 14px 14px 10px; font-weight: 900; color: var(--navy); }
+    .subnav-group { padding: 0 8px 12px; }
+    .subnav-item { display:flex; align-items:center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-radius: 10px; color: var(--text); text-decoration:none; font-weight: 700; }
+    .subnav-item:hover { background: #eef3fb; }
+    .subnav-item.active { background: #243b55; color: #fff; }
+    .subnav-item .chev { opacity: .85; }
+
+    .sidebar-section-title { padding: 10px 14px; font-size: 12px; font-weight: 900; color: #8fa0b4; }
+    .fav-row { display:flex; align-items:center; justify-content: space-between; gap: 10px; padding: 10px 12px; margin: 0 8px 8px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); color: #e8eef8; }
+    .fav-row .fav-name { font-weight: 800; }
+    .fav-star { width: 18px; height: 18px; display:inline-flex; align-items:center; justify-content:center; border-radius: 6px; background: rgba(255,255,255,0.10); }
+    .fav-star svg { width: 14px; height: 14px; fill: #ffd54f; }
+
+    .main { flex: 1 1 auto; }
+
     /* —— Sidebar (VROONG Intra Lite 톤) —— */
     .sidebar { width: 260px; min-width: 260px; background: var(--sidebar-bg); color: #e8ecf0; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid var(--sidebar-border); }
     .sidebar-brand { padding: 20px 16px 16px; border-bottom: 1px solid var(--sidebar-border); }
@@ -373,7 +392,7 @@
   </style>
 </head>
 <body>
-  <div class="app-wrap">
+  <div class="app-wrap layout">
     <aside class="sidebar">
       <div class="sidebar-brand">
         <div class="sidebar-app-name">VROONG Intra Lite</div>
@@ -383,16 +402,34 @@
         </div>
       </div>
       <div class="sidebar-menu-search">
-        <input type="search" placeholder="메뉴 검색 (Shift+F)" disabled aria-disabled="true" />
+        <input type="search" placeholder="메뉴 검색" disabled aria-disabled="true" />
       </div>
       <nav class="sidebar-nav">
+        <div class="sidebar-section-title">즐겨찾기 (1)</div>
+        <div class="fav-row" role="button" aria-disabled="true">
+          <span class="fav-name">캠페인 관리</span>
+          <span class="fav-star" title="즐겨찾기">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.3l-6.18 3.25 1.18-6.88L1 8.95l6.91-1L12 1.7l3.09 6.25 6.91 1-5 4.72 1.18 6.88z"/></svg>
+          </span>
+        </div>
         <div class="nav-group">
           <div class="nav-group-title">캠페인 관리</div>
           <div class="nav-group-items">
-            <a href="#" id="nav-list" class="active">캠페인 목록</a>
+            <a href="#" id="nav-campaign" class="active">캠페인 목록</a>
           </div>
         </div>
       </nav>
+    </aside>
+
+    <!-- 2뎁스 서브메뉴 -->
+    <aside class="subnav" aria-label="서브 메뉴">
+      <div class="subnav-hd">캠페인 관리</div>
+      <div class="subnav-group">
+        <a href="#" class="subnav-item active" id="subnav-campaign-list">
+          <span>캠페인 목록</span>
+          <span class="chev">›</span>
+        </a>
+      </div>
     </aside>
 
     <main class="main">
@@ -1126,7 +1163,7 @@
       }
 
       // ===== 화면 전환 =====
-      const navList = $('nav-list');
+      const navList = $('nav-campaign');
       const screenList = $('screen-list');
       const screenDetail = $('screen-detail');
       const screenRegister = $('screen-register');
@@ -1411,6 +1448,8 @@
         if (content) content.scrollTop = 0;
       }
       navList.addEventListener('click', (e) => { e.preventDefault(); showList(); });
+      const subnavCampaignList = $('subnav-campaign-list');
+      if (subnavCampaignList) subnavCampaignList.addEventListener('click', (e) => { e.preventDefault(); showList(); });
       $('btn-open-register').addEventListener('click', showCampaignAdd);
       const btnBackToList = $('btn-back-to-list');
       if (btnBackToList) btnBackToList.addEventListener('click', showList);
