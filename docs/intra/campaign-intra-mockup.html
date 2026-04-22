@@ -523,7 +523,10 @@
 
           <div id="panel-sc" style="display:none;">
             <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
-              <div style="color:var(--text-muted);font-weight:800;">선택된 캠페인: <span id="sel-campaign" style="color:var(--text);">없음</span></div>
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <div style="color:var(--text-muted);font-weight:800;">캠페인 선택</div>
+                <select id="pick-campaign" style="min-width: 260px;"></select>
+              </div>
               <button type="button" class="btn primary" id="btn-add-scheme-from-status">+ 스킴 추가</button>
             </div>
             <div class="table-wrap">
@@ -550,7 +553,10 @@
 
           <div id="panel-ms" style="display:none;">
             <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
-              <div style="color:var(--text-muted);font-weight:800;">선택된 스킴: <span id="sel-scheme" style="color:var(--text);">없음</span></div>
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <div style="color:var(--text-muted);font-weight:800;">스킴 선택</div>
+                <select id="pick-scheme" style="min-width: 260px;"></select>
+              </div>
               <button type="button" class="btn primary" id="btn-add-mission-from-status">+ 미션 추가</button>
             </div>
             <div class="table-wrap">
@@ -1616,8 +1622,43 @@
       const tabSc = $('tab-sc');
       const tabMs = $('tab-ms');
       if (tabCp) tabCp.addEventListener('click', () => activateStatusTab('cp'));
-      if (tabSc) tabSc.addEventListener('click', () => { activateStatusTab('sc'); renderStatusSchemes(); });
-      if (tabMs) tabMs.addEventListener('click', () => { activateStatusTab('ms'); renderStatusMissions(); });
+      if (tabSc) tabSc.addEventListener('click', () => {
+        activateStatusTab('sc');
+        hydratePickCampaign();
+        hydratePickScheme();
+        renderStatusSchemes();
+      });
+      if (tabMs) tabMs.addEventListener('click', () => {
+        activateStatusTab('ms');
+        hydratePickCampaign();
+        hydratePickScheme();
+        renderStatusMissions();
+      });
+
+      const pickCampaign = $('pick-campaign');
+      if (pickCampaign) {
+        pickCampaign.addEventListener('change', () => {
+          activeCampaignId = String(pickCampaign.value || '');
+          activeSchemeRef = { campaignId: '', schemeId: '' };
+          hydratePickScheme();
+          renderStatusSchemes();
+          renderStatusMissions();
+        });
+      }
+      const pickScheme = $('pick-scheme');
+      if (pickScheme) {
+        pickScheme.addEventListener('change', () => {
+          const v = String(pickScheme.value || '');
+          if (!v || !v.includes('::')) {
+            activeSchemeRef = { campaignId: '', schemeId: '' };
+          } else {
+            const [cid, sid] = v.split('::');
+            activeCampaignId = cid;
+            activeSchemeRef = { campaignId: cid, schemeId: sid };
+          }
+          renderStatusMissions();
+        });
+      }
 
       const btnAddSchemeFromStatus = $('btn-add-scheme-from-status');
       if (btnAddSchemeFromStatus) btnAddSchemeFromStatus.addEventListener('click', () => {
@@ -2124,7 +2165,10 @@
         const tb = $('tbody-status-schemes');
         if (!tb) return;
         tb.innerHTML = '';
-        const rows = CAMPAIGNS.flatMap((c) => (Array.isArray(c.schemes) ? c.schemes.map((s) => ({ campaign: c, scheme: s })) : []));
+        const pickedCampaignId = $('pick-campaign') ? String($('pick-campaign').value || '') : '';
+        const rows = CAMPAIGNS
+          .filter((c) => !pickedCampaignId || c.id === pickedCampaignId)
+          .flatMap((c) => (Array.isArray(c.schemes) ? c.schemes.map((s) => ({ campaign: c, scheme: s })) : []));
         rows.forEach(({ campaign, scheme }) => {
           const st = statusOf(scheme);
           const ended = st.key === '완료';
@@ -2152,8 +2196,9 @@
             activeSchemeRef = { campaignId: cid, schemeId: sid };
             const c = CAMPAIGNS.find((x) => x.id === cid);
             const s = c && Array.isArray(c.schemes) ? c.schemes.find((x) => x.id === sid) : null;
-            if ($('sel-campaign')) $('sel-campaign').textContent = c ? c.name : '없음';
-            if ($('sel-scheme')) $('sel-scheme').textContent = s ? (s.name + ' (캠페인: ' + (c ? c.name : '-') + ')') : '없음';
+            if ($('pick-campaign') && c) $('pick-campaign').value = c.id;
+            hydratePickScheme();
+            if ($('pick-scheme') && s) $('pick-scheme').value = (c.id + '::' + s.id);
             showToast('스킴을 선택했습니다.');
           });
         });
@@ -2177,12 +2222,17 @@
         const tb = $('tbody-status-missions');
         if (!tb) return;
         tb.innerHTML = '';
+        const picked = $('pick-scheme') ? String($('pick-scheme').value || '') : '';
+        const pickedCid = picked.includes('::') ? picked.split('::')[0] : '';
+        const pickedSid = picked.includes('::') ? picked.split('::')[1] : '';
         const rows = CAMPAIGNS.flatMap((c) =>
           (Array.isArray(c.schemes) ? c.schemes.flatMap((s) =>
             (Array.isArray(s.missions) ? s.missions.map((m) => ({ campaign: c, scheme: s, mission: m })) : [])
           ) : [])
         );
-        rows.forEach(({ campaign, scheme, mission }) => {
+        rows
+          .filter(({ campaign, scheme }) => (!pickedCid || campaign.id === pickedCid) && (!pickedSid || scheme.id === pickedSid))
+          .forEach(({ campaign, scheme, mission }) => {
           const st = statusOf(mission);
           const ended = st.key === '완료';
           const manageTd = ended
@@ -2209,8 +2259,9 @@
             activeSchemeRef = { campaignId: cid, schemeId: sid };
             const c = CAMPAIGNS.find((x) => x.id === cid);
             const s = c && Array.isArray(c.schemes) ? c.schemes.find((x) => x.id === sid) : null;
-            if ($('sel-campaign')) $('sel-campaign').textContent = c ? c.name : '없음';
-            if ($('sel-scheme')) $('sel-scheme').textContent = s ? (s.name + ' (캠페인: ' + (c ? c.name : '-') + ')') : '없음';
+            if ($('pick-campaign') && c) $('pick-campaign').value = c.id;
+            hydratePickScheme();
+            if ($('pick-scheme') && s) $('pick-scheme').value = (c.id + '::' + s.id);
             showToast('스킴을 선택했습니다.');
           });
         });
@@ -2230,6 +2281,44 @@
             renderList();
           });
         });
+      }
+
+      function hydratePickCampaign() {
+        const sel = $('pick-campaign');
+        if (!sel) return;
+        const curr = String(sel.value || '');
+        sel.innerHTML = '';
+        const opt0 = document.createElement('option');
+        opt0.value = '';
+        opt0.textContent = '캠페인을 선택해 주세요';
+        sel.appendChild(opt0);
+        CAMPAIGNS.forEach((c) => {
+          const opt = document.createElement('option');
+          opt.value = c.id;
+          opt.textContent = c.name + ' (' + c.purpose + ')';
+          sel.appendChild(opt);
+        });
+        if (curr && Array.from(sel.options).some((o) => o.value === curr)) sel.value = curr;
+      }
+
+      function hydratePickScheme() {
+        const sel = $('pick-scheme');
+        if (!sel) return;
+        const cid = $('pick-campaign') ? String($('pick-campaign').value || '') : '';
+        const curr = String(sel.value || '');
+        sel.innerHTML = '';
+        const opt0 = document.createElement('option');
+        opt0.value = '';
+        opt0.textContent = cid ? '스킴을 선택해 주세요' : '먼저 캠페인을 선택해 주세요';
+        sel.appendChild(opt0);
+        const c = CAMPAIGNS.find((x) => x.id === cid);
+        (c && Array.isArray(c.schemes) ? c.schemes : []).forEach((s) => {
+          const opt = document.createElement('option');
+          opt.value = (cid + '::' + s.id);
+          opt.textContent = s.name;
+          sel.appendChild(opt);
+        });
+        if (curr && Array.from(sel.options).some((o) => o.value === curr)) sel.value = curr;
       }
 
       $('btn-search').addEventListener('click', renderList);
