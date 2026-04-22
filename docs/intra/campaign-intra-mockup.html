@@ -702,18 +702,6 @@
                     <label class="pill"><input type="radio" name="cp-purpose" value="전환" /> 전환</label>
                     <label class="pill"><input type="radio" name="cp-purpose" value="활성화" /> 활성화</label>
                   </div>
-                  <div class="help">전환: 지급 구조 단일 고정 · 활성화: 단일/단계 선택</div>
-                </div>
-              </div>
-
-              <div class="form-row" data-key="cp-structure">
-                <label>지급 구조<span class="req">*</span></label>
-                <div class="field">
-                  <div class="radio-group">
-                    <label class="pill"><input type="radio" name="cp-structure" value="단일" /> 단일</label>
-                    <label class="pill"><input type="radio" name="cp-structure" value="단계" /> 단계</label>
-                  </div>
-                  <div class="help">전환 목적이면 단일로 자동 고정됩니다.</div>
                 </div>
               </div>
 
@@ -1597,7 +1585,6 @@
 
         if ($('cp-name')) $('cp-name').value = '';
         document.querySelectorAll('input[name="cp-purpose"]').forEach((el) => { el.checked = false; });
-        document.querySelectorAll('input[name="cp-structure"]').forEach((el) => { el.checked = false; });
         if ($('cp-start')) $('cp-start').value = todayISO();
         if ($('cp-end')) $('cp-end').value = todayISO();
         if ($('cp-budget')) $('cp-budget').value = '';
@@ -1942,19 +1929,16 @@
         }
         const name = String($('cp-name') ? $('cp-name').value : '').trim();
         const purpose = (document.querySelector('input[name=\"cp-purpose\"]:checked') || {}).value || '';
-        let structure = (document.querySelector('input[name=\"cp-structure\"]:checked') || {}).value || '';
         const start = $('cp-start') ? $('cp-start').value : '';
         const end = $('cp-end') ? $('cp-end').value : '';
         const budget = Number($('cp-budget') ? $('cp-budget').value : '');
         if (!name) return showToast('캠페인명은 필수입니다.');
         if (!purpose) return showToast('목적은 필수입니다.');
-        if (purpose === '전환') structure = '단일';
-        if (!structure) return showToast('지급 구조는 필수입니다.');
         if (!Number.isFinite(budget) || budget <= 0) return showToast('전체 예산은 0원 초과여야 합니다.');
         if (!start || !end) return showToast('기간은 필수입니다.');
         if (end <= start) return showToast('종료일은 시작일보다 이후여야 합니다.');
         const id = 'CP-2026-' + String(100 + CAMPAIGNS.length + 1).padStart(3,'0');
-        addDraft.campaign = { id, name, purpose, structure, budgetTotal: budget, start, end };
+        addDraft.campaign = { id, name, purpose, budgetTotal: budget, start, end };
         showToast('캠페인 조건을 저장했습니다. 다음 단계로 이동합니다.');
         showSchemeStep();
       });
