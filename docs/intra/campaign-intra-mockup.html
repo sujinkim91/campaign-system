@@ -429,6 +429,18 @@
           <span>캠페인 목록</span>
           <span class="chev">›</span>
         </a>
+        <a href="#" class="subnav-item" id="subnav-step-campaign" style="display:none;">
+          <span>ㄴ 캠페인</span>
+          <span class="chev">›</span>
+        </a>
+        <a href="#" class="subnav-item" id="subnav-step-scheme" style="display:none;">
+          <span>ㄴ 스킴</span>
+          <span class="chev">›</span>
+        </a>
+        <a href="#" class="subnav-item" id="subnav-step-mission" style="display:none;">
+          <span>ㄴ 미션</span>
+          <span class="chev">›</span>
+        </a>
       </div>
     </aside>
 
@@ -606,7 +618,7 @@
         <section id="screen-campaign-add" class="screen">
           <div class="form-shell panel panel--pad">
             <div class="form-single-page">
-              <h2 class="panel-title">캠페인 추가</h2>
+              <h2 class="panel-title">캠페인 조건</h2>
               <div class="form-row" data-key="cp-name">
                 <label>캠페인명<span class="req">*</span></label>
                 <div class="field">
@@ -636,7 +648,7 @@
                 <div class="actions-left"></div>
                 <div class="actions-btns">
                   <button type="button" class="btn ghost btn-lg" id="btn-cp-cancel">목록으로</button>
-                  <button type="button" class="btn primary btn-lg" id="btn-cp-save">저장</button>
+                  <button type="button" class="btn primary btn-lg" id="btn-cp-save">다음</button>
                 </div>
               </div>
             </div>
@@ -647,7 +659,7 @@
         <section id="screen-scheme-add" class="screen">
           <div class="form-shell panel panel--pad">
             <div class="form-single-page">
-              <h2 class="panel-title">스킴 추가</h2>
+              <h2 class="panel-title">스킴</h2>
               <div class="warn" style="margin-bottom:14px;">캠페인: <strong id="sc-parent-name">-</strong></div>
 
               <div class="form-row" data-key="sc-name">
@@ -705,8 +717,8 @@
               <div class="actions">
                 <div class="actions-left"></div>
                 <div class="actions-btns">
-                  <button type="button" class="btn ghost btn-lg" id="btn-sc-cancel">상세로</button>
-                  <button type="button" class="btn primary btn-lg" id="btn-sc-save">저장</button>
+                  <button type="button" class="btn ghost btn-lg" id="btn-sc-cancel">이전</button>
+                  <button type="button" class="btn primary btn-lg" id="btn-sc-save">다음</button>
                 </div>
               </div>
             </div>
@@ -717,7 +729,7 @@
         <section id="screen-mission-add" class="screen">
           <div class="form-shell panel panel--pad">
             <div class="form-single-page">
-              <h2 class="panel-title">미션 추가</h2>
+              <h2 class="panel-title">미션</h2>
               <div class="warn" style="margin-bottom:14px;">캠페인: <strong id="ms-parent-name">-</strong></div>
 
               <div class="form-row" data-key="ms-scheme">
@@ -779,8 +791,8 @@
               <div class="actions">
                 <div class="actions-left"></div>
                 <div class="actions-btns">
-                  <button type="button" class="btn ghost btn-lg" id="btn-ms-cancel">상세로</button>
-                  <button type="button" class="btn primary btn-lg" id="btn-ms-save">저장</button>
+                  <button type="button" class="btn ghost btn-lg" id="btn-ms-cancel">이전</button>
+                  <button type="button" class="btn primary btn-lg" id="btn-ms-save">완료</button>
                 </div>
               </div>
             </div>
@@ -1178,6 +1190,27 @@
       let registerViewId = '';
       let registerMode = 'edit'; // edit | view
       let activeCampaignId = '';
+      let addDraft = { campaign: null, scheme: null, mission: null };
+
+      function setSubnavActive(id) {
+        ['subnav-campaign-list','subnav-step-campaign','subnav-step-scheme','subnav-step-mission'].forEach((x) => {
+          const el = $(x);
+          if (!el) return;
+          el.classList.toggle('active', x === id);
+        });
+      }
+      function setSubnavMode(mode) {
+        const list = $('subnav-campaign-list');
+        const c = $('subnav-step-campaign');
+        const s = $('subnav-step-scheme');
+        const m = $('subnav-step-mission');
+        const isAdd = mode === 'add';
+        if (list) list.style.display = isAdd ? 'none' : 'flex';
+        if (c) c.style.display = isAdd ? 'flex' : 'none';
+        if (s) s.style.display = isAdd ? 'flex' : 'none';
+        if (m) m.style.display = isAdd ? 'flex' : 'none';
+        if (!isAdd) setSubnavActive('subnav-campaign-list');
+      }
 
       function setRegisterMode(mode, campaignId) {
         registerMode = mode;
@@ -1234,6 +1267,7 @@
         if (screenSchemeAdd) screenSchemeAdd.classList.remove('active');
         if (screenMissionAdd) screenMissionAdd.classList.remove('active');
         screenRegister.classList.remove('active');
+        setSubnavMode('list');
         pageTitle.textContent = '캠페인 목록';
         if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록';
         if (headerList) headerList.style.display = 'flex';
@@ -1251,6 +1285,7 @@
         if (screenMissionAdd) screenMissionAdd.classList.remove('active');
         screenRegister.classList.remove('active');
         screenDetail.classList.add('active');
+        setSubnavMode('list');
         pageTitle.textContent = '캠페인 상세';
         if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 상세';
         if (headerList) headerList.style.display = 'none';
@@ -1262,6 +1297,7 @@
       }
 
       function showCampaignAdd() {
+        addDraft = { campaign: null, scheme: null, mission: null };
         navList.classList.add('active');
         screenList.classList.remove('active');
         if (screenDetail) screenDetail.classList.remove('active');
@@ -1269,8 +1305,10 @@
         if (screenMissionAdd) screenMissionAdd.classList.remove('active');
         screenRegister.classList.remove('active');
         if (screenCampaignAdd) screenCampaignAdd.classList.add('active');
+        setSubnavMode('add');
+        setSubnavActive('subnav-step-campaign');
         pageTitle.textContent = '캠페인 추가';
-        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 추가';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 추가(캠페인)';
         if (headerList) headerList.style.display = 'none';
         if (headerRegister) headerRegister.style.display = 'flex';
         if (headerDetail) headerDetail.style.display = 'none';
@@ -1281,10 +1319,8 @@
         if ($('cp-end')) $('cp-end').value = todayISO();
       }
 
-      function showSchemeAdd(campaignId) {
-        const c = CAMPAIGNS.find((x) => x.id === campaignId);
-        if (!c || !screenSchemeAdd) return;
-        activeCampaignId = campaignId;
+      function showSchemeStep() {
+        if (!screenSchemeAdd) return;
         navList.classList.add('active');
         screenList.classList.remove('active');
         if (screenDetail) screenDetail.classList.remove('active');
@@ -1292,28 +1328,29 @@
         if (screenMissionAdd) screenMissionAdd.classList.remove('active');
         screenRegister.classList.remove('active');
         screenSchemeAdd.classList.add('active');
+        setSubnavMode('add');
+        setSubnavActive('subnav-step-scheme');
         pageTitle.textContent = '스킴 추가';
-        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 상세 > 스킴 추가';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 추가(스킴)';
         if (headerList) headerList.style.display = 'none';
         if (headerRegister) headerRegister.style.display = 'flex';
         if (headerDetail) headerDetail.style.display = 'none';
 
-        if ($('sc-parent-name')) $('sc-parent-name').textContent = c.name;
+        const c = addDraft.campaign;
+        if ($('sc-parent-name')) $('sc-parent-name').textContent = c ? c.name : '-';
         if ($('sc-name')) $('sc-name').value = '';
-        document.querySelectorAll('input[name="sc-purpose"]').forEach((el) => { el.checked = el.value === c.purpose; });
-        if ($('sc-start')) $('sc-start').value = c.start;
-        if ($('sc-end')) $('sc-end').value = c.end;
-        if ($('sc-publish')) $('sc-publish').value = c.start;
+        document.querySelectorAll('input[name="sc-purpose"]').forEach((el) => { el.checked = c ? (el.value === c.purpose) : false; });
+        if ($('sc-start')) $('sc-start').value = c ? c.start : todayISO();
+        if ($('sc-end')) $('sc-end').value = c ? c.end : todayISO();
+        if ($('sc-publish')) $('sc-publish').value = c ? c.start : todayISO();
         if ($('sc-budget')) $('sc-budget').value = '';
         if ($('sc-first-signup')) $('sc-first-signup').value = '';
         const row = $('row-sc-first-signup');
-        if (row) row.style.display = (c.purpose === '전환') ? 'flex' : 'none';
+        if (row) row.style.display = (c && c.purpose === '전환') ? 'flex' : 'none';
       }
 
-      function showMissionAdd(campaignId) {
-        const c = CAMPAIGNS.find((x) => x.id === campaignId);
-        if (!c || !screenMissionAdd) return;
-        activeCampaignId = campaignId;
+      function showMissionStep() {
+        if (!screenMissionAdd) return;
         navList.classList.add('active');
         screenList.classList.remove('active');
         if (screenDetail) screenDetail.classList.remove('active');
@@ -1321,30 +1358,41 @@
         if (screenSchemeAdd) screenSchemeAdd.classList.remove('active');
         screenRegister.classList.remove('active');
         screenMissionAdd.classList.add('active');
+        setSubnavMode('add');
+        setSubnavActive('subnav-step-mission');
         pageTitle.textContent = '미션 추가';
-        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 상세 > 미션 추가';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 추가(미션)';
         if (headerList) headerList.style.display = 'none';
         if (headerRegister) headerRegister.style.display = 'flex';
         if (headerDetail) headerDetail.style.display = 'none';
 
-        if ($('ms-parent-name')) $('ms-parent-name').textContent = c.name;
+        const c = addDraft.campaign;
+        const s = addDraft.scheme;
+        if ($('ms-parent-name')) $('ms-parent-name').textContent = c ? c.name : '-';
         const sel = $('ms-scheme');
         if (sel) {
           sel.innerHTML = '';
-          (c.schemes || []).forEach((s) => {
+          // 위저드에서는 1개 스킴을 생성하는 흐름(자동 선택)
+          if (s) {
             const opt = document.createElement('option');
             opt.value = s.id;
             opt.textContent = s.name;
             sel.appendChild(opt);
-          });
+            sel.value = s.id;
+          }
         }
         if ($('ms-name')) $('ms-name').value = '';
         if ($('ms-desc')) $('ms-desc').value = '';
+        // 전환 스킴이면 단일목표형 고정
         document.querySelectorAll('input[name="ms-structure"]').forEach((el) => { el.checked = false; });
+        if (s && s.purpose === '전환') {
+          const fixed = document.querySelector('input[name="ms-structure"][value="단일목표형"]');
+          if (fixed) fixed.checked = true;
+        }
         if ($('ms-shipper')) $('ms-shipper').value = '전체';
         if ($('ms-shipper-detail')) { $('ms-shipper-detail').value=''; $('ms-shipper-detail').style.display='none'; }
-        if ($('ms-start')) $('ms-start').value = c.start;
-        if ($('ms-end')) $('ms-end').value = c.end;
+        if ($('ms-start')) $('ms-start').value = c ? c.start : todayISO();
+        if ($('ms-end')) $('ms-end').value = c ? c.end : todayISO();
       }
 
       function showRegisterView(id) {
@@ -1450,6 +1498,12 @@
       navList.addEventListener('click', (e) => { e.preventDefault(); showList(); });
       const subnavCampaignList = $('subnav-campaign-list');
       if (subnavCampaignList) subnavCampaignList.addEventListener('click', (e) => { e.preventDefault(); showList(); });
+      const subnavStepCampaign = $('subnav-step-campaign');
+      const subnavStepScheme = $('subnav-step-scheme');
+      const subnavStepMission = $('subnav-step-mission');
+      if (subnavStepCampaign) subnavStepCampaign.addEventListener('click', (e) => { e.preventDefault(); showCampaignAdd(); });
+      if (subnavStepScheme) subnavStepScheme.addEventListener('click', (e) => { e.preventDefault(); if (addDraft.campaign) showSchemeStep(); });
+      if (subnavStepMission) subnavStepMission.addEventListener('click', (e) => { e.preventDefault(); if (addDraft.scheme) showMissionStep(); });
       $('btn-open-register').addEventListener('click', showCampaignAdd);
       const btnBackToList = $('btn-back-to-list');
       if (btnBackToList) btnBackToList.addEventListener('click', showList);
@@ -1472,8 +1526,8 @@
 
       const btnAddScheme = $('btn-add-scheme');
       const btnAddMission = $('btn-add-mission');
-      if (btnAddScheme) btnAddScheme.addEventListener('click', () => showSchemeAdd(activeCampaignId));
-      if (btnAddMission) btnAddMission.addEventListener('click', () => showMissionAdd(activeCampaignId));
+      if (btnAddScheme) btnAddScheme.addEventListener('click', () => showToast('목업: 상세에서 스킴 추가는 다음 단계에서 확장합니다. (현재는 캠페인 추가 위저드로 생성)'));
+      if (btnAddMission) btnAddMission.addEventListener('click', () => showToast('목업: 상세에서 미션 추가는 다음 단계에서 확장합니다. (현재는 캠페인 추가 위저드로 생성)'));
 
       // ===== 추가 폼 이벤트 =====
       const btnCpCancel = $('btn-cp-cancel');
@@ -1489,18 +1543,15 @@
         if (!start || !end) return showToast('기간은 필수입니다.');
         if (end <= start) return showToast('종료일은 시작일보다 이후여야 합니다.');
         const id = 'CP-2026-' + String(100 + CAMPAIGNS.length + 1).padStart(3,'0');
-        CAMPAIGNS.unshift({ id, name, purpose, start, end, off:false, schemes: [] });
-        renderList();
-        showToast('캠페인을 저장했습니다.');
-        showDetail(id);
+        addDraft.campaign = { id, name, purpose, start, end };
+        showToast('캠페인 조건을 저장했습니다. 다음 단계로 이동합니다.');
+        showSchemeStep();
       });
 
       const btnScCancel = $('btn-sc-cancel');
       const btnScSave = $('btn-sc-save');
-      if (btnScCancel) btnScCancel.addEventListener('click', () => showDetail(activeCampaignId));
+      if (btnScCancel) btnScCancel.addEventListener('click', showCampaignAdd);
       if (btnScSave) btnScSave.addEventListener('click', () => {
-        const c = CAMPAIGNS.find((x) => x.id === activeCampaignId);
-        if (!c) return;
         const name = String($('sc-name') ? $('sc-name').value : '').trim();
         const purpose = (document.querySelector('input[name=\"sc-purpose\"]:checked') || {}).value || '';
         const start = $('sc-start') ? $('sc-start').value : '';
@@ -1516,23 +1567,18 @@
         if (publish > start) return showToast('미션 공개일은 시작일 이전이어야 합니다.');
         if (!Number.isFinite(budget) || budget <= 0) return showToast('총 예산은 0원 초과여야 합니다.');
         if (purpose === '전환' && (!Number.isFinite(firstSignup) || firstSignup <= 0)) return showToast('가입 후 유효 일수는 0 초과 정수로 입력해 주세요.');
-        const sid = 'SC-' + String(100 + (c.schemes || []).length + 1).padStart(3,'0');
-        c.schemes = Array.isArray(c.schemes) ? c.schemes : [];
-        c.schemes.push({ id: sid, name, purpose, start, end, publish, budgetTotal: budget, budgetSpent: 0, off:false, targets: [], regions: [], activityRegions: [], zones: [], missions: [] });
-        renderList();
-        showToast('스킴을 저장했습니다.');
-        showDetail(c.id);
-        activateDetailTab('schemes');
+        const sid = 'SC-' + String(101).padStart(3,'0');
+        addDraft.scheme = { id: sid, name, purpose, start, end, publish, budgetTotal: budget, budgetSpent: 0, off:false, targets: [], regions: [], activityRegions: [], zones: [], missions: [] };
+        showToast('스킴 조건을 저장했습니다. 다음 단계로 이동합니다.');
+        showMissionStep();
       });
 
       const btnMsCancel = $('btn-ms-cancel');
       const btnMsSave = $('btn-ms-save');
-      if (btnMsCancel) btnMsCancel.addEventListener('click', () => showDetail(activeCampaignId));
+      if (btnMsCancel) btnMsCancel.addEventListener('click', showSchemeStep);
       if (btnMsSave) btnMsSave.addEventListener('click', () => {
-        const c = CAMPAIGNS.find((x) => x.id === activeCampaignId);
-        if (!c) return;
         const schemeId = $('ms-scheme') ? $('ms-scheme').value : '';
-        const s = (c.schemes || []).find((x) => x.id === schemeId);
+        const s = addDraft.scheme && addDraft.scheme.id === schemeId ? addDraft.scheme : null;
         if (!s) return showToast('스킴을 선택해 주세요.');
         const name = String($('ms-name') ? $('ms-name').value : '').trim();
         const desc = String($('ms-desc') ? $('ms-desc').value : '').trim();
@@ -1546,12 +1592,21 @@
         const end = $('ms-end') ? $('ms-end').value : '';
         if (!start || !end) return showToast('기간은 필수입니다.');
         if (end <= start) return showToast('종료일은 시작일보다 이후여야 합니다.');
-        const mid = 'MS-' + String(100 + (s.missions || []).length + 1).padStart(3,'0');
-        s.missions = Array.isArray(s.missions) ? s.missions : [];
-        s.missions.push({ id: mid, name, description: desc, structure, shipper, shipperDetail, times: [], goalCount: 0, rewardAmount: 0, start, end, off:false });
+        const mid = 'MS-' + String(101).padStart(3,'0');
+        addDraft.mission = { id: mid, name, description: desc, structure, shipper, shipperDetail, times: [], goalCount: 0, rewardAmount: 0, start, end, off:false };
+
+        // 최종 저장(캠페인 + 1 스킴 + 1 미션)
+        const cp = addDraft.campaign;
+        if (!cp) return;
+        const campaign = { id: cp.id, name: cp.name, purpose: cp.purpose, start: cp.start, end: cp.end, off:false, schemes: [] };
+        const scheme = { ...addDraft.scheme, missions: [ addDraft.mission ] };
+        campaign.schemes.push(scheme);
+        CAMPAIGNS.unshift(campaign);
+        addDraft = { campaign: null, scheme: null, mission: null };
+        setSubnavMode('list');
         renderList();
-        showToast('미션을 저장했습니다.');
-        showDetail(c.id);
+        showToast('캠페인(스킴/미션 포함)을 저장했습니다.');
+        showDetail(campaign.id);
         activateDetailTab('missions');
       });
 
