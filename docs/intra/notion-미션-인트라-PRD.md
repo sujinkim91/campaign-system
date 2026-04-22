@@ -5,7 +5,10 @@ notion_page: "https://www.notion.so/342cf5759dc0803ca625f6bea5bac041"
 notion_last_edited_at_utc: "2026-04-17T06:16:08.385Z"
 fetched_at_utc: "2026-04-17T06:16:09.090Z"
 note: "Notion 페이지 스냅샷(텍스트·표 위주). 이미지/임베드 링크는 만료될 수 있어 생략/요약함."
+canonical_prd: "./부릉-인트라-PRD.md"
 ---
+
+> **기준 문서:** 전면 개편 PRD는 [`부릉-인트라-PRD.md`](./부릉-인트라-PRD.md) (v2-draft)를 따른다. 본 파일은 Notion 원문 스냅샷 보관용이다.
 
 > 원문: [Notion 페이지](https://www.notion.so/342cf5759dc0803ca625f6bea5bac041)  
 > Jira: [ITSMCHG-31459](https://vroong-jira.atlassian.net/browse/ITSMCHG-31459)
