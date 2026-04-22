@@ -711,6 +711,26 @@
                     <label class="pill"><input type="radio" name="cp-purpose" value="전환" /> 전환</label>
                     <label class="pill"><input type="radio" name="cp-purpose" value="활성화" /> 활성화</label>
                   </div>
+                  <div class="help">전환: 지급 구조 단일 고정 · 활성화: 단일/단계 선택</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="cp-structure">
+                <label>지급 구조<span class="req">*</span></label>
+                <div class="field">
+                  <div class="radio-group">
+                    <label class="pill"><input type="radio" name="cp-structure" value="단일" /> 단일</label>
+                    <label class="pill"><input type="radio" name="cp-structure" value="단계" /> 단계</label>
+                  </div>
+                  <div class="help">전환 목적이면 단일로 자동 고정됩니다.</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="cp-budget">
+                <label>전체 예산<span class="req">*</span></label>
+                <div class="field">
+                  <input id="cp-budget" type="number" min="1" step="1" placeholder="총 예산(원)" />
+                  <div class="help">0원 초과</div>
                 </div>
               </div>
               <div class="form-row" data-key="cp-period">
@@ -758,6 +778,31 @@
                 </div>
               </div>
 
+              <div class="form-row" data-key="sc-targets" style="align-items:flex-start;">
+                <label>대상<span class="req">*</span></label>
+                <div class="field">
+                  <div class="check-group" id="sc-targets">
+                    <label class="pill"><input type="checkbox" value="일반기사(프렌즈)" /> 일반기사(프렌즈)</label>
+                    <label class="pill"><input type="checkbox" value="NVP지점기사" /> NVP지점기사</label>
+                    <label class="pill"><input type="checkbox" value="벤더기사" /> 벤더기사</label>
+                  </div>
+                  <div class="help">1개 이상 선택</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="sc-seg-activity" id="row-sc-seg-activity" style="align-items:flex-start; display:none;">
+                <label>세그먼트1 - 활동 수준<span class="req">*</span></label>
+                <div class="field">
+                  <div class="check-group" id="sc-seg-activity">
+                    <label class="pill"><input type="checkbox" value="고물량·고품질" /> 고물량·고품질</label>
+                    <label class="pill"><input type="checkbox" value="고물량·저품질" /> 고물량·저품질</label>
+                    <label class="pill"><input type="checkbox" value="저물량·고품질" /> 저물량·고품질</label>
+                    <label class="pill"><input type="checkbox" value="저물량·저품질" /> 저물량·저품질</label>
+                  </div>
+                  <div class="help">프렌즈 선택 시 노출 · 1개 이상</div>
+                </div>
+              </div>
+
               <div class="form-row" data-key="sc-purpose">
                 <label>목적<span class="req">*</span></label>
                 <div class="field">
@@ -792,6 +837,27 @@
                 <div class="field">
                   <input id="sc-budget" type="number" min="1" step="1" placeholder="총 예산(원) 입력" />
                   <div class="help">0원 초과</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="sc-geo">
+                <label>지역/ZONE</label>
+                <div class="field">
+                  <input id="sc-geo" type="text" placeholder="예: 전체지역 / 서울 강남ZONE / …" />
+                  <div class="help">목업: 텍스트로만 입력(추후 태그/선택 UI로 확장)</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="sc-shipper">
+                <label>화주사</label>
+                <div class="field">
+                  <select id="sc-shipper">
+                    <option value="전체">전체</option>
+                    <option value="로컬">로컬</option>
+                    <option value="프랜차이즈">프랜차이즈</option>
+                    <option value="플랫폼">플랫폼</option>
+                  </select>
+                  <input type="text" id="sc-shipper-detail" placeholder="프랜차이즈/플랫폼 상세 (선택)" style="margin-top:10px; display:none;" />
                 </div>
               </div>
 
@@ -866,6 +932,14 @@
                 </div>
               </div>
 
+              <div class="form-row" data-key="ms-publish">
+                <label>미션 공개일<span class="req">*</span></label>
+                <div class="field">
+                  <input id="ms-publish" type="date" />
+                  <div class="help">시작일 이전이어야 함</div>
+                </div>
+              </div>
+
               <div class="form-row" data-key="ms-period">
                 <label>기간<span class="req">*</span></label>
                 <div class="field">
@@ -874,6 +948,73 @@
                     <input id="ms-end" type="date" />
                   </div>
                   <div class="help">스킴 기간 내로 설정</div>
+                </div>
+              </div>
+
+              <div class="form-row" data-key="ms-times" style="align-items:flex-start;">
+                <label>시간대 설정</label>
+                <div class="field">
+                  <div class="time-slot-row">
+                    <input type="time" id="ms-time-start" step="60" />
+                    <span class="time-slot-sep">~</span>
+                    <input type="time" id="ms-time-end" step="60" />
+                    <button type="button" class="btn primary" id="btn-ms-add-time">추가</button>
+                  </div>
+                  <div id="ms-time-tags" class="time-tag-wrap" aria-live="polite"></div>
+                  <div class="help">다중 선택 · 중복 불가 · 미설정 시 전일</div>
+                </div>
+              </div>
+
+              <h3 class="form-subsection-title">달성 조건</h3>
+
+              <div id="ms-block-single">
+                <div class="form-row" data-key="ms-goal">
+                  <label>목표 건수<span class="req">*</span></label>
+                  <div class="field">
+                    <input id="ms-goal-count" type="number" min="1" step="1" placeholder="건" />
+                  </div>
+                </div>
+                <div class="form-row" data-key="ms-reward">
+                  <label>지급 금액<span class="req">*</span></label>
+                  <div class="field">
+                    <input id="ms-reward-amount" type="number" min="1" step="1" placeholder="원" />
+                  </div>
+                </div>
+              </div>
+
+              <div id="ms-block-stage" style="display:none;">
+                <div class="form-row" style="align-items:flex-start;" data-key="ms-stages">
+                  <label>달성 조건 설정<span class="req">*</span></label>
+                  <div class="field">
+                    <table class="stage-table">
+                      <thead>
+                        <tr><th style="width:16%;">단계</th><th style="width:32%;">목표 건수</th><th style="width:32%;">지급 금액</th><th style="width:20%;">삭제</th></tr>
+                      </thead>
+                      <tbody id="ms-stages-body"></tbody>
+                    </table>
+                    <div class="stage-actions">
+                      <button type="button" class="btn-mini primary" id="btn-ms-add-stage">단계 추가</button>
+                    </div>
+                    <div class="help">최소 1단계, 최대 10단계 · 목표 건수 오름차순</div>
+                  </div>
+                </div>
+              </div>
+
+              <h3 class="form-subsection-title">선택 달성 조건</h3>
+              <div id="ms-optional-wrap">
+                <div class="form-row" data-key="ms-offday">
+                  <label>휴무</label>
+                  <div class="field">
+                    <input id="ms-offday" type="number" min="0" step="1" placeholder="0 이상 정수 (회)" />
+                    <div class="help">하루 중 오더받기 ON이 한 번도 없는 날을 휴무로 산정</div>
+                  </div>
+                </div>
+                <div class="form-row" data-key="ms-cancel">
+                  <label>취소건수</label>
+                  <div class="field">
+                    <input id="ms-cancel-count" type="number" min="0" step="1" placeholder="0 이상 정수 (건)" />
+                    <div class="help">라이더가 직접 배차 취소한 건에 한정</div>
+                  </div>
                 </div>
               </div>
 
@@ -1282,6 +1423,47 @@
       let activeSchemeRef = { campaignId: '', schemeId: '' };
       let addFlow = 'campaignCreate'; // campaignCreate | schemeAdd | missionAdd
       let addDraft = { campaign: null, scheme: null, mission: null };
+      let msTimes = [];
+      let msStages = [{ count:'', amount:'' }];
+
+      function renderMsTimeTags() {
+        const wrap = $('ms-time-tags');
+        if (!wrap) return;
+        wrap.innerHTML = '';
+        msTimes.forEach((t, i) => {
+          const tag = document.createElement('span');
+          tag.className = 'time-tag';
+          tag.innerHTML = '<span>' + t.start + '~' + t.end + '</span><button type=\"button\" class=\"time-x\" aria-label=\"삭제\">×</button>';
+          tag.querySelector('button').addEventListener('click', () => {
+            msTimes.splice(i, 1);
+            renderMsTimeTags();
+          });
+          wrap.appendChild(tag);
+        });
+      }
+
+      function renderMsStages() {
+        const body = $('ms-stages-body');
+        if (!body) return;
+        body.innerHTML = '';
+        msStages.forEach((s, idx) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td>' + (idx + 1) + '</td>' +
+            '<td><input type=\"number\" min=\"1\" step=\"1\" value=\"' + (s.count || '') + '\" placeholder=\"건\" /></td>' +
+            '<td><input type=\"number\" min=\"1\" step=\"1\" value=\"' + (s.amount || '') + '\" placeholder=\"원\" /></td>' +
+            '<td><button type=\"button\" class=\"btn-mini ghost\">삭제</button></td>';
+          const inputs = tr.querySelectorAll('input');
+          inputs[0].addEventListener('input', (e) => { msStages[idx].count = String(e.target.value || ''); });
+          inputs[1].addEventListener('input', (e) => { msStages[idx].amount = String(e.target.value || ''); });
+          tr.querySelector('button').addEventListener('click', () => {
+            if (msStages.length <= 1) return;
+            msStages.splice(idx, 1);
+            renderMsStages();
+          });
+          body.appendChild(tr);
+        });
+      }
 
       function setSubnavActive(id) {
         ['subnav-campaign-list','subnav-step-campaign','subnav-step-scheme','subnav-step-mission'].forEach((x) => {
@@ -1439,8 +1621,10 @@
 
         if ($('cp-name')) $('cp-name').value = '';
         document.querySelectorAll('input[name="cp-purpose"]').forEach((el) => { el.checked = false; });
+        document.querySelectorAll('input[name="cp-structure"]').forEach((el) => { el.checked = false; });
         if ($('cp-start')) $('cp-start').value = todayISO();
         if ($('cp-end')) $('cp-end').value = todayISO();
+        if ($('cp-budget')) $('cp-budget').value = '';
       }
 
       function showSchemeStep() {
@@ -1485,11 +1669,19 @@
 
         if ($('sc-name')) $('sc-name').value = '';
         document.querySelectorAll('input[name="sc-purpose"]').forEach((el) => { el.checked = c ? (el.value === c.purpose) : false; });
+        // 대상/세그먼트 reset
+        document.querySelectorAll('#sc-targets input[type=\"checkbox\"]').forEach((el) => { el.checked = false; });
+        document.querySelectorAll('#sc-seg-activity input[type=\"checkbox\"]').forEach((el) => { el.checked = false; });
+        const segRow = $('row-sc-seg-activity');
+        if (segRow) segRow.style.display = 'none';
         if ($('sc-start')) $('sc-start').value = c ? c.start : todayISO();
         if ($('sc-end')) $('sc-end').value = c ? c.end : todayISO();
         if ($('sc-publish')) $('sc-publish').value = c ? c.start : todayISO();
         if ($('sc-budget')) $('sc-budget').value = '';
         if ($('sc-first-signup')) $('sc-first-signup').value = '';
+        if ($('sc-geo')) $('sc-geo').value = '';
+        if ($('sc-shipper')) $('sc-shipper').value = '전체';
+        if ($('sc-shipper-detail')) { $('sc-shipper-detail').value=''; $('sc-shipper-detail').style.display='none'; }
         const row = $('row-sc-first-signup');
         if (row) row.style.display = (c && c.purpose === '전환') ? 'flex' : 'none';
       }
@@ -1541,8 +1733,27 @@
         }
         if ($('ms-shipper')) $('ms-shipper').value = '전체';
         if ($('ms-shipper-detail')) { $('ms-shipper-detail').value=''; $('ms-shipper-detail').style.display='none'; }
+        if ($('ms-publish')) $('ms-publish').value = c ? c.start : todayISO();
         if ($('ms-start')) $('ms-start').value = c ? c.start : todayISO();
         if ($('ms-end')) $('ms-end').value = c ? c.end : todayISO();
+
+        // times/stages reset
+        msTimes = [];
+        renderMsTimeTags();
+        msStages = [{ count:'', amount:'' }];
+        renderMsStages();
+        if ($('ms-goal-count')) $('ms-goal-count').value = '';
+        if ($('ms-reward-amount')) $('ms-reward-amount').value = '';
+        if ($('ms-offday')) $('ms-offday').value = '';
+        if ($('ms-cancel-count')) $('ms-cancel-count').value = '';
+
+        // structure UI sync
+        const blockSingle = $('ms-block-single');
+        const blockStage = $('ms-block-stage');
+        const struct = (document.querySelector('input[name=\"ms-structure\"]:checked') || {}).value || '';
+        const isStage = struct === '단계형';
+        if (blockSingle) blockSingle.style.display = isStage ? 'none' : 'block';
+        if (blockStage) blockStage.style.display = isStage ? 'block' : 'none';
       }
 
       function showRegisterView(id) {
@@ -1764,14 +1975,19 @@
         }
         const name = String($('cp-name') ? $('cp-name').value : '').trim();
         const purpose = (document.querySelector('input[name=\"cp-purpose\"]:checked') || {}).value || '';
+        let structure = (document.querySelector('input[name=\"cp-structure\"]:checked') || {}).value || '';
         const start = $('cp-start') ? $('cp-start').value : '';
         const end = $('cp-end') ? $('cp-end').value : '';
+        const budget = Number($('cp-budget') ? $('cp-budget').value : '');
         if (!name) return showToast('캠페인명은 필수입니다.');
         if (!purpose) return showToast('목적은 필수입니다.');
+        if (purpose === '전환') structure = '단일';
+        if (!structure) return showToast('지급 구조는 필수입니다.');
+        if (!Number.isFinite(budget) || budget <= 0) return showToast('전체 예산은 0원 초과여야 합니다.');
         if (!start || !end) return showToast('기간은 필수입니다.');
         if (end <= start) return showToast('종료일은 시작일보다 이후여야 합니다.');
         const id = 'CP-2026-' + String(100 + CAMPAIGNS.length + 1).padStart(3,'0');
-        addDraft.campaign = { id, name, purpose, start, end };
+        addDraft.campaign = { id, name, purpose, structure, budgetTotal: budget, start, end };
         showToast('캠페인 조건을 저장했습니다. 다음 단계로 이동합니다.');
         showSchemeStep();
       });
@@ -1810,8 +2026,15 @@
         const publish = $('sc-publish') ? $('sc-publish').value : '';
         const budget = Number($('sc-budget') ? $('sc-budget').value : '');
         const firstSignup = Number($('sc-first-signup') ? $('sc-first-signup').value : '');
+        const targets = Array.from(document.querySelectorAll('#sc-targets input[type=\"checkbox\"]:checked')).map((x) => x.value);
+        const seg1 = Array.from(document.querySelectorAll('#sc-seg-activity input[type=\"checkbox\"]:checked')).map((x) => x.value);
+        const geo = String($('sc-geo') ? $('sc-geo').value : '').trim();
+        const shipper = $('sc-shipper') ? String($('sc-shipper').value || '전체') : '전체';
+        const shipperDetail = String($('sc-shipper-detail') ? $('sc-shipper-detail').value : '').trim();
         if (!name) return showToast('스킴명은 필수입니다.');
         if (!purpose) return showToast('목적은 필수입니다.');
+        if (!targets.length) return showToast('대상은 1개 이상 선택해 주세요.');
+        if (targets.includes('일반기사(프렌즈)') && seg1.length === 0) return showToast('세그먼트1(활동 수준)은 1개 이상 선택해 주세요.');
         if (!start || !end) return showToast('기간은 필수입니다.');
         if (end <= start) return showToast('종료일은 시작일보다 이후여야 합니다.');
         if (!publish) return showToast('미션 공개일은 필수입니다.');
@@ -1819,7 +2042,7 @@
         if (!Number.isFinite(budget) || budget <= 0) return showToast('총 예산은 0원 초과여야 합니다.');
         if (purpose === '전환' && (!Number.isFinite(firstSignup) || firstSignup <= 0)) return showToast('가입 후 유효 일수는 0 초과 정수로 입력해 주세요.');
         const sid = 'SC-' + String(100 + Math.floor(Math.random() * 900) + 1).padStart(3,'0');
-        addDraft.scheme = { id: sid, name, purpose, start, end, publish, budgetTotal: budget, budgetSpent: 0, off:false, targets: [], regions: [], activityRegions: [], zones: [], missions: [] };
+        addDraft.scheme = { id: sid, name, purpose, start, end, publish, budgetTotal: budget, budgetSpent: 0, off:false, targets, segmentActivity: seg1, geo, shipper, shipperDetail, missions: [] };
         if (addFlow === 'schemeAdd') {
           // 기존 캠페인에 스킴만 추가
           const c0 = cp && cp.id ? CAMPAIGNS.find((x) => x.id === cp.id) : null;
@@ -1858,12 +2081,32 @@
         if (!structure) return showToast('지급 구조는 필수입니다.');
         const shipper = $('ms-shipper') ? $('ms-shipper').value : '전체';
         const shipperDetail = String($('ms-shipper-detail') ? $('ms-shipper-detail').value : '').trim();
+        const publish = $('ms-publish') ? String($('ms-publish').value || '') : '';
         const start = $('ms-start') ? $('ms-start').value : '';
         const end = $('ms-end') ? $('ms-end').value : '';
+        const offday = $('ms-offday') ? String($('ms-offday').value || '').trim() : '';
+        const cancelCount = $('ms-cancel-count') ? String($('ms-cancel-count').value || '').trim() : '';
         if (!start || !end) return showToast('기간은 필수입니다.');
         if (end <= start) return showToast('종료일은 시작일보다 이후여야 합니다.');
+        if (!publish) return showToast('미션 공개일은 필수입니다.');
+        if (publish > start) return showToast('미션 공개일은 시작일 이전이어야 합니다.');
+        const times = msTimes.slice();
+
+        // 달성 조건
+        let goalCount = 0;
+        let rewardAmount = 0;
+        let stages = [];
+        if (structure === '단계형') {
+          stages = msStages.map((x) => ({ count: Number(x.count), amount: Number(x.amount) })).filter((x) => Number.isFinite(x.count) && x.count > 0 && Number.isFinite(x.amount) && x.amount > 0);
+          if (stages.length === 0) return showToast('단계형: 달성 조건(단계)을 1개 이상 입력해 주세요.');
+        } else {
+          goalCount = Number($('ms-goal-count') ? $('ms-goal-count').value : '');
+          rewardAmount = Number($('ms-reward-amount') ? $('ms-reward-amount').value : '');
+          if (!Number.isFinite(goalCount) || goalCount <= 0) return showToast('목표 건수는 0 초과 정수로 입력해 주세요.');
+          if (!Number.isFinite(rewardAmount) || rewardAmount <= 0) return showToast('지급 금액은 0원 초과로 입력해 주세요.');
+        }
         const mid = 'MS-' + String(101).padStart(3,'0');
-        addDraft.mission = { id: mid, name, description: desc, structure, shipper, shipperDetail, times: [], goalCount: 0, rewardAmount: 0, start, end, off:false };
+        addDraft.mission = { id: mid, name, description: desc, structure, shipper, shipperDetail, publish, times, goalCount, rewardAmount, stages, offday, cancelCount, start, end, off:false };
 
         if (addFlow === 'missionAdd') {
           // 기존 스킴에 미션만 추가
@@ -1921,6 +2164,67 @@
           d.style.display = (v === '프랜차이즈' || v === '플랫폼') ? 'block' : 'none';
         });
       }
+
+      const scShipper = $('sc-shipper');
+      if (scShipper) {
+        scShipper.addEventListener('change', () => {
+          const v = scShipper.value;
+          const d = $('sc-shipper-detail');
+          if (!d) return;
+          d.style.display = (v === '프랜차이즈' || v === '플랫폼') ? 'block' : 'none';
+        });
+      }
+
+      // 스킴: 프렌즈 선택 시 세그먼트1 노출
+      const scTargets = $('sc-targets');
+      if (scTargets) {
+        scTargets.querySelectorAll('input[type=\"checkbox\"]').forEach((cb) => {
+          cb.addEventListener('change', () => {
+            const friends = Array.from(scTargets.querySelectorAll('input[type=\"checkbox\"]:checked')).some((x) => x.value === '일반기사(프렌즈)');
+            const row = $('row-sc-seg-activity');
+            if (row) row.style.display = friends ? 'flex' : 'none';
+            if (!friends) {
+              document.querySelectorAll('#sc-seg-activity input[type=\"checkbox\"]').forEach((x) => { x.checked = false; });
+            }
+          });
+        });
+      }
+
+      // 미션: 시간대 태그
+      const btnMsAddTime = $('btn-ms-add-time');
+      if (btnMsAddTime) {
+        btnMsAddTime.addEventListener('click', () => {
+          const s = $('ms-time-start') ? String($('ms-time-start').value || '') : '';
+          const e = $('ms-time-end') ? String($('ms-time-end').value || '') : '';
+          if (!s || !e) return;
+          const norm = (s + '~' + e).replace(/\s+/g,'');
+          if (msTimes.some((t) => ((t.start + '~' + t.end).replace(/\s+/g,'') === norm))) return;
+          msTimes.push({ start: s, end: e });
+          renderMsTimeTags();
+        });
+      }
+
+      // 미션: 단계 추가
+      const btnMsAddStage = $('btn-ms-add-stage');
+      if (btnMsAddStage) {
+        btnMsAddStage.addEventListener('click', () => {
+          if (msStages.length >= 10) return;
+          msStages.push({ count:'', amount:'' });
+          renderMsStages();
+        });
+      }
+
+      // 미션: 지급 구조 선택 시 단일/단계 블록 토글
+      document.querySelectorAll('input[name=\"ms-structure\"]').forEach((el) => {
+        el.addEventListener('change', () => {
+          const v = el.value;
+          const blockSingle = $('ms-block-single');
+          const blockStage = $('ms-block-stage');
+          const isStage = v === '단계형';
+          if (blockSingle) blockSingle.style.display = isStage ? 'none' : 'block';
+          if (blockStage) blockStage.style.display = isStage ? 'block' : 'none';
+        });
+      });
 
       const cpImport = $('cp-import');
       if (cpImport) {
