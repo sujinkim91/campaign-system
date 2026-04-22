@@ -415,7 +415,7 @@
         <div class="nav-group">
           <div class="nav-group-title">캠페인 관리</div>
           <div class="nav-group-items">
-            <a href="#" id="nav-campaign" class="active">캠페인 목록</a>
+            <a href="#" id="nav-campaign" class="active">캠페인 현황</a>
           </div>
         </div>
       </nav>
@@ -426,7 +426,7 @@
       <div class="subnav-hd">캠페인 관리</div>
       <div class="subnav-group">
         <a href="#" class="subnav-item active" id="subnav-campaign-list">
-          <span>캠페인 목록</span>
+          <span>캠페인 현황</span>
           <span class="chev">›</span>
         </a>
         <a href="#" class="subnav-item" id="subnav-step-campaign" style="display:none;">
@@ -446,9 +446,9 @@
 
     <main class="main">
       <header class="header">
-        <div class="breadcrumb" id="page-breadcrumb">캠페인 관리 &gt; 캠페인 목록</div>
+        <div class="breadcrumb" id="page-breadcrumb">캠페인 관리 &gt; 캠페인 현황</div>
         <div class="header-title-row">
-          <h1 id="page-title" class="page-heading">캠페인 목록</h1>
+          <h1 id="page-title" class="page-heading">캠페인 현황</h1>
           <div class="header-actions" id="header-actions-list">
             <button type="button" class="btn-reset" id="btn-reset-filters">초기화</button>
           </div>
@@ -462,7 +462,7 @@
       </header>
 
       <div class="content">
-        <!-- 화면 1: 캠페인 목록 -->
+        <!-- 화면 1: 캠페인 현황 -->
         <section id="screen-list" class="screen active">
           <div class="filter-section">
             <div class="filter-search-title">검색 조건</div>
@@ -489,26 +489,90 @@
             </div>
           </div>
 
-          <div class="table-wrap">
-            <table class="data-table">
-              <colgroup>
-                <col style="width:20%"><col style="width:8%"><col style="width:12%"><col style="width:7%"><col style="width:7%"><col style="width:10%"><col style="width:10%"><col style="width:8%"><col style="width:8%">
-              </colgroup>
-              <thead>
-                <tr>
-                  <th>캠페인명</th>
-                  <th>목적</th>
-                  <th>기간</th>
-                  <th>스킴 수</th>
-                  <th>미션 수</th>
-                  <th title="스킴에 설정된 총 예산">예산 한도</th>
-                  <th title="현재까지 지급된 총 금액(목업 데이터)">소진액</th>
-                  <th>상태</th>
-                  <th>관리</th>
-                </tr>
-              </thead>
-              <tbody id="tbody-list"></tbody>
-            </table>
+          <div style="margin: 12px 0 10px;">
+            <div class="radio-group" role="tablist" aria-label="캠페인 현황 탭">
+              <button type="button" class="pill pill--tab active" id="tab-cp">캠페인</button>
+              <button type="button" class="pill pill--tab" id="tab-sc">스킴</button>
+              <button type="button" class="pill pill--tab" id="tab-ms">미션</button>
+            </div>
+          </div>
+
+          <div id="panel-cp">
+            <div class="table-wrap">
+              <table class="data-table">
+                <colgroup>
+                  <col style="width:20%"><col style="width:8%"><col style="width:12%"><col style="width:7%"><col style="width:7%"><col style="width:10%"><col style="width:10%"><col style="width:8%"><col style="width:8%">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>캠페인명</th>
+                    <th>목적</th>
+                    <th>기간</th>
+                    <th>스킴 수</th>
+                    <th>미션 수</th>
+                    <th title="스킴에 설정된 총 예산">예산 한도</th>
+                    <th title="현재까지 지급된 총 금액(목업 데이터)">소진액</th>
+                    <th>상태</th>
+                    <th>관리</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-list"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="panel-sc" style="display:none;">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
+              <div style="color:var(--text-muted);font-weight:800;">선택된 캠페인: <span id="sel-campaign" style="color:var(--text);">없음</span></div>
+              <button type="button" class="btn primary" id="btn-add-scheme-from-status">+ 스킴 추가</button>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <colgroup>
+                  <col style="width:20%"><col style="width:18%"><col style="width:10%"><col style="width:14%"><col style="width:10%"><col style="width:10%"><col style="width:8%"><col style="width:10%">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>스킴명</th>
+                    <th>캠페인명</th>
+                    <th>타겟</th>
+                    <th>기간</th>
+                    <th>예산</th>
+                    <th>소진액</th>
+                    <th>상태</th>
+                    <th>관리</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-status-schemes"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="panel-ms" style="display:none;">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
+              <div style="color:var(--text-muted);font-weight:800;">선택된 스킴: <span id="sel-scheme" style="color:var(--text);">없음</span></div>
+              <button type="button" class="btn primary" id="btn-add-mission-from-status">+ 미션 추가</button>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <colgroup>
+                  <col style="width:18%"><col style="width:18%"><col style="width:18%"><col style="width:10%"><col style="width:12%"><col style="width:16%"><col style="width:6%"><col style="width:6%">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>미션명</th>
+                    <th>캠페인명</th>
+                    <th>스킴명</th>
+                    <th>지급 구조</th>
+                    <th>화주사</th>
+                    <th>기간</th>
+                    <th>상태</th>
+                    <th>관리</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-status-missions"></tbody>
+              </table>
+            </div>
           </div>
 
           <div class="list-footer">
@@ -1190,6 +1254,7 @@
       let registerViewId = '';
       let registerMode = 'edit'; // edit | view
       let activeCampaignId = '';
+      let activeSchemeRef = { campaignId: '', schemeId: '' };
       let addDraft = { campaign: null, scheme: null, mission: null };
 
       function setSubnavActive(id) {
@@ -1268,8 +1333,8 @@
         if (screenMissionAdd) screenMissionAdd.classList.remove('active');
         screenRegister.classList.remove('active');
         setSubnavMode('list');
-        pageTitle.textContent = '캠페인 목록';
-        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록';
+        pageTitle.textContent = '캠페인 현황';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 현황';
         if (headerList) headerList.style.display = 'flex';
         if (headerRegister) headerRegister.style.display = 'none';
         if (headerDetail) headerDetail.style.display = 'none';
@@ -1278,6 +1343,7 @@
         const row = CAMPAIGNS.find((x) => x.id === id);
         if (!row || !screenDetail) return;
         activeCampaignId = id;
+        activeSchemeRef = { campaignId: '', schemeId: '' };
         navList.classList.add('active');
         screenList.classList.remove('active');
         if (screenCampaignAdd) screenCampaignAdd.classList.remove('active');
@@ -1287,13 +1353,30 @@
         screenDetail.classList.add('active');
         setSubnavMode('list');
         pageTitle.textContent = '캠페인 상세';
-        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 상세';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 현황 > 상세';
         if (headerList) headerList.style.display = 'none';
         if (headerRegister) headerRegister.style.display = 'none';
         if (headerDetail) headerDetail.style.display = 'flex';
         renderDetail(row);
         const content = document.querySelector('.content');
         if (content) content.scrollTop = 0;
+      }
+
+      // ===== 현황(단일 페이지) 탭 전환 =====
+      function activateStatusTab(key) {
+        const tCp = $('tab-cp');
+        const tSc = $('tab-sc');
+        const tMs = $('tab-ms');
+        const pCp = $('panel-cp');
+        const pSc = $('panel-sc');
+        const pMs = $('panel-ms');
+        const setAct = (el, on) => { if (!el) return; el.classList.toggle('active', !!on); };
+        setAct(tCp, key === 'cp');
+        setAct(tSc, key === 'sc');
+        setAct(tMs, key === 'ms');
+        if (pCp) pCp.style.display = key === 'cp' ? 'block' : 'none';
+        if (pSc) pSc.style.display = key === 'sc' ? 'block' : 'none';
+        if (pMs) pMs.style.display = key === 'ms' ? 'block' : 'none';
       }
 
       function showCampaignAdd() {
@@ -1308,7 +1391,7 @@
         setSubnavMode('add');
         setSubnavActive('subnav-step-campaign');
         pageTitle.textContent = '캠페인 추가';
-        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 추가(캠페인)';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 현황 > 추가(캠페인)';
         if (headerList) headerList.style.display = 'none';
         if (headerRegister) headerRegister.style.display = 'flex';
         if (headerDetail) headerDetail.style.display = 'none';
@@ -1331,7 +1414,7 @@
         setSubnavMode('add');
         setSubnavActive('subnav-step-scheme');
         pageTitle.textContent = '스킴 추가';
-        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 추가(스킴)';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 현황 > 추가(스킴)';
         if (headerList) headerList.style.display = 'none';
         if (headerRegister) headerRegister.style.display = 'flex';
         if (headerDetail) headerDetail.style.display = 'none';
@@ -1361,7 +1444,7 @@
         setSubnavMode('add');
         setSubnavActive('subnav-step-mission');
         pageTitle.textContent = '미션 추가';
-        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 목록 > 추가(미션)';
+        if (pageBreadcrumb) pageBreadcrumb.textContent = '캠페인 관리 > 캠페인 현황 > 추가(미션)';
         if (headerList) headerList.style.display = 'none';
         if (headerRegister) headerRegister.style.display = 'flex';
         if (headerDetail) headerDetail.style.display = 'none';
@@ -1528,6 +1611,34 @@
       const btnAddMission = $('btn-add-mission');
       if (btnAddScheme) btnAddScheme.addEventListener('click', () => showToast('목업: 상세에서 스킴 추가는 다음 단계에서 확장합니다. (현재는 캠페인 추가 위저드로 생성)'));
       if (btnAddMission) btnAddMission.addEventListener('click', () => showToast('목업: 상세에서 미션 추가는 다음 단계에서 확장합니다. (현재는 캠페인 추가 위저드로 생성)'));
+
+      const tabCp = $('tab-cp');
+      const tabSc = $('tab-sc');
+      const tabMs = $('tab-ms');
+      if (tabCp) tabCp.addEventListener('click', () => activateStatusTab('cp'));
+      if (tabSc) tabSc.addEventListener('click', () => { activateStatusTab('sc'); renderStatusSchemes(); });
+      if (tabMs) tabMs.addEventListener('click', () => { activateStatusTab('ms'); renderStatusMissions(); });
+
+      const btnAddSchemeFromStatus = $('btn-add-scheme-from-status');
+      if (btnAddSchemeFromStatus) btnAddSchemeFromStatus.addEventListener('click', () => {
+        const c = CAMPAIGNS.find((x) => x.id === activeCampaignId);
+        if (!c) return showToast('스킴 추가: 캠페인 설정(선택)이 필요합니다.');
+        addDraft = { campaign: { id: c.id, name: c.name, purpose: c.purpose, start: c.start, end: c.end }, scheme: null, mission: null };
+        showSchemeStep();
+      });
+
+      const btnAddMissionFromStatus = $('btn-add-mission-from-status');
+      if (btnAddMissionFromStatus) btnAddMissionFromStatus.addEventListener('click', () => {
+        const c = CAMPAIGNS.find((x) => x.id === activeSchemeRef.campaignId);
+        const s = c && Array.isArray(c.schemes) ? c.schemes.find((x) => x.id === activeSchemeRef.schemeId) : null;
+        if (!c || !s) return showToast('미션 추가: 스킴 설정(선택)이 필요합니다.');
+        addDraft = {
+          campaign: { id: c.id, name: c.name, purpose: c.purpose, start: c.start, end: c.end },
+          scheme: { ...s, missions: [] },
+          mission: null
+        };
+        showMissionStep();
+      });
 
       // ===== 추가 폼 이벤트 =====
       const btnCpCancel = $('btn-cp-cancel');
@@ -2004,6 +2115,118 @@
               return;
             }
             CAMPAIGNS = CAMPAIGNS.map((c) => c.id === id ? ({ ...c, off: !c.off }) : c);
+            renderList();
+          });
+        });
+      }
+
+      function renderStatusSchemes() {
+        const tb = $('tbody-status-schemes');
+        if (!tb) return;
+        tb.innerHTML = '';
+        const rows = CAMPAIGNS.flatMap((c) => (Array.isArray(c.schemes) ? c.schemes.map((s) => ({ campaign: c, scheme: s })) : []));
+        rows.forEach(({ campaign, scheme }) => {
+          const st = statusOf(scheme);
+          const ended = st.key === '완료';
+          const manageTd = ended
+            ? '<span class="manage-na" title="종료일이 지난 스킴은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
+            : '<a href=\"#\" class=\"link btn-toggle-status-scheme\" data-cid=\"' + campaign.id + '\" data-sid=\"' + scheme.id + '\">' + (scheme.off ? 'ON' : 'OFF') + '</a>';
+          const tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td><a href=\"#\" class=\"link btn-pick-scheme\" data-cid=\"' + campaign.id + '\" data-sid=\"' + scheme.id + '\">' + safeText(scheme.name) + '</a></td>' +
+            '<td title=\"' + campaign.id + '\">' + safeText(campaign.name) + '</td>' +
+            '<td>' + schemeTargetSummary(scheme) + '</td>' +
+            '<td>' + safeText(fmtPeriod(scheme)) + '</td>' +
+            '<td class=\"td-num\">' + fmtWon(Number(scheme.budgetTotal) || 0) + '</td>' +
+            '<td class=\"td-num\">' + fmtWon(Number(scheme.budgetSpent) || 0) + '</td>' +
+            '<td><span class=\"badge ' + st.cls + '\">' + st.key + '</span></td>' +
+            '<td>' + manageTd + '</td>';
+          tb.appendChild(tr);
+        });
+        tb.querySelectorAll('.btn-pick-scheme').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const cid = a.getAttribute('data-cid') || '';
+            const sid = a.getAttribute('data-sid') || '';
+            activeCampaignId = cid;
+            activeSchemeRef = { campaignId: cid, schemeId: sid };
+            const c = CAMPAIGNS.find((x) => x.id === cid);
+            const s = c && Array.isArray(c.schemes) ? c.schemes.find((x) => x.id === sid) : null;
+            if ($('sel-campaign')) $('sel-campaign').textContent = c ? c.name : '없음';
+            if ($('sel-scheme')) $('sel-scheme').textContent = s ? (s.name + ' (캠페인: ' + (c ? c.name : '-') + ')') : '없음';
+            showToast('스킴을 선택했습니다.');
+          });
+        });
+        tb.querySelectorAll('.btn-toggle-status-scheme').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const cid = a.getAttribute('data-cid') || '';
+            const sid = a.getAttribute('data-sid') || '';
+            const c = CAMPAIGNS.find((x) => x.id === cid);
+            const s = c && Array.isArray(c.schemes) ? c.schemes.find((x) => x.id === sid) : null;
+            if (!s) return;
+            if (statusOf(s).key === '완료') return showToast('종료일이 지난 스킴은 관리(ON/OFF)를 변경할 수 없습니다.');
+            s.off = !s.off;
+            renderStatusSchemes();
+            renderList();
+          });
+        });
+      }
+
+      function renderStatusMissions() {
+        const tb = $('tbody-status-missions');
+        if (!tb) return;
+        tb.innerHTML = '';
+        const rows = CAMPAIGNS.flatMap((c) =>
+          (Array.isArray(c.schemes) ? c.schemes.flatMap((s) =>
+            (Array.isArray(s.missions) ? s.missions.map((m) => ({ campaign: c, scheme: s, mission: m })) : [])
+          ) : [])
+        );
+        rows.forEach(({ campaign, scheme, mission }) => {
+          const st = statusOf(mission);
+          const ended = st.key === '완료';
+          const manageTd = ended
+            ? '<span class="manage-na" title="종료일이 지난 미션은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
+            : '<a href=\"#\" class=\"link btn-toggle-status-mission\" data-cid=\"' + campaign.id + '\" data-sid=\"' + scheme.id + '\" data-mid=\"' + mission.id + '\">' + (mission.off ? 'ON' : 'OFF') + '</a>';
+          const tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td><a href=\"#\" class=\"link btn-pick-mission\" data-cid=\"' + campaign.id + '\" data-sid=\"' + scheme.id + '\">' + safeText(mission.name) + '</a></td>' +
+            '<td>' + safeText(campaign.name) + '</td>' +
+            '<td>' + safeText(scheme.name) + '</td>' +
+            '<td>' + safeText(mission.structure || '-') + '</td>' +
+            '<td>' + safeText(mission.shipper || '전체') + '</td>' +
+            '<td>' + safeText(fmtPeriod(mission)) + '</td>' +
+            '<td><span class=\"badge ' + st.cls + '\">' + st.key + '</span></td>' +
+            '<td>' + manageTd + '</td>';
+          tb.appendChild(tr);
+        });
+        tb.querySelectorAll('.btn-pick-mission').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const cid = a.getAttribute('data-cid') || '';
+            const sid = a.getAttribute('data-sid') || '';
+            activeCampaignId = cid;
+            activeSchemeRef = { campaignId: cid, schemeId: sid };
+            const c = CAMPAIGNS.find((x) => x.id === cid);
+            const s = c && Array.isArray(c.schemes) ? c.schemes.find((x) => x.id === sid) : null;
+            if ($('sel-campaign')) $('sel-campaign').textContent = c ? c.name : '없음';
+            if ($('sel-scheme')) $('sel-scheme').textContent = s ? (s.name + ' (캠페인: ' + (c ? c.name : '-') + ')') : '없음';
+            showToast('스킴을 선택했습니다.');
+          });
+        });
+        tb.querySelectorAll('.btn-toggle-status-mission').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const cid = a.getAttribute('data-cid') || '';
+            const sid = a.getAttribute('data-sid') || '';
+            const mid = a.getAttribute('data-mid') || '';
+            const c = CAMPAIGNS.find((x) => x.id === cid);
+            const s = c && Array.isArray(c.schemes) ? c.schemes.find((x) => x.id === sid) : null;
+            const m = s && Array.isArray(s.missions) ? s.missions.find((x) => x.id === mid) : null;
+            if (!m) return;
+            if (statusOf(m).key === '완료') return showToast('종료일이 지난 미션은 관리(ON/OFF)를 변경할 수 없습니다.');
+            m.off = !m.off;
+            renderStatusMissions();
             renderList();
           });
         });
