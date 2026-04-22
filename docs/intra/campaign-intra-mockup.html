@@ -712,16 +712,6 @@
                   <div class="help">0원 초과</div>
                 </div>
               </div>
-              <div class="form-row" data-key="cp-period">
-                <label>기간<span class="req">*</span></label>
-                <div class="field">
-                  <div class="row-inline">
-                    <input id="cp-start" type="date" />
-                    <input id="cp-end" type="date" />
-                  </div>
-                  <div class="help">시작일 ≥ 오늘, 종료일 &gt; 시작일</div>
-                </div>
-              </div>
               <div class="actions">
                 <div class="actions-left"></div>
                 <div class="actions-btns">
@@ -1575,8 +1565,6 @@
 
         if ($('cp-name')) $('cp-name').value = '';
         document.querySelectorAll('input[name="cp-purpose"]').forEach((el) => { el.checked = false; });
-        if ($('cp-start')) $('cp-start').value = todayISO();
-        if ($('cp-end')) $('cp-end').value = todayISO();
         if ($('cp-budget')) $('cp-budget').value = '';
       }
 
@@ -1612,9 +1600,9 @@
         document.querySelectorAll('#sc-seg-activity input[type=\"checkbox\"]').forEach((el) => { el.checked = false; });
         const segRow = $('row-sc-seg-activity');
         if (segRow) segRow.style.display = 'none';
-        if ($('sc-start')) $('sc-start').value = c ? c.start : todayISO();
-        if ($('sc-end')) $('sc-end').value = c ? c.end : todayISO();
-        if ($('sc-publish')) $('sc-publish').value = c ? c.start : todayISO();
+        if ($('sc-start')) $('sc-start').value = (c && c.start) ? c.start : todayISO();
+        if ($('sc-end')) $('sc-end').value = (c && c.end) ? c.end : todayISO();
+        if ($('sc-publish')) $('sc-publish').value = (c && c.start) ? c.start : todayISO();
         // Phase2: 스킴 단계 예산 조건 제외
         if ($('sc-first-signup')) $('sc-first-signup').value = '';
         if ($('sc-geo')) $('sc-geo').value = '';
@@ -1663,17 +1651,25 @@
         }
         if ($('ms-name')) $('ms-name').value = '';
         if ($('ms-desc')) $('ms-desc').value = '';
-        // 전환 스킴이면 단일목표형 고정
-        document.querySelectorAll('input[name="ms-structure"]').forEach((el) => { el.checked = false; });
+        // 지급 구조: 활성화만 선택 가능. 전환이면 단일목표형 고정 + 단계형 비활성화
+        const radioSingle = document.querySelector('input[name="ms-structure"][value="단일목표형"]');
+        const radioStage = document.querySelector('input[name="ms-structure"][value="단계형"]');
+        const stageLabel = radioStage ? radioStage.closest('label.pill') : null;
+        if (radioSingle) radioSingle.checked = false;
+        if (radioStage) radioStage.checked = false;
         if (s && s.purpose === '전환') {
-          const fixed = document.querySelector('input[name="ms-structure"][value="단일목표형"]');
-          if (fixed) fixed.checked = true;
+          if (radioSingle) radioSingle.checked = true;
+          if (radioStage) radioStage.setAttribute('disabled', '');
+          if (stageLabel) stageLabel.style.opacity = '0.45';
+        } else {
+          if (radioStage) radioStage.removeAttribute('disabled');
+          if (stageLabel) stageLabel.style.opacity = '';
         }
         if ($('ms-shipper')) $('ms-shipper').value = '전체';
         if ($('ms-shipper-detail')) { $('ms-shipper-detail').value=''; $('ms-shipper-detail').style.display='none'; }
-        if ($('ms-publish')) $('ms-publish').value = c ? c.start : todayISO();
-        if ($('ms-start')) $('ms-start').value = c ? c.start : todayISO();
-        if ($('ms-end')) $('ms-end').value = c ? c.end : todayISO();
+        if ($('ms-publish')) $('ms-publish').value = (c && c.start) ? c.start : todayISO();
+        if ($('ms-start')) $('ms-start').value = (c && c.start) ? c.start : todayISO();
+        if ($('ms-end')) $('ms-end').value = (c && c.end) ? c.end : todayISO();
 
         // times/stages reset
         msTimes = [];
@@ -1904,16 +1900,12 @@
         }
         const name = String($('cp-name') ? $('cp-name').value : '').trim();
         const purpose = (document.querySelector('input[name=\"cp-purpose\"]:checked') || {}).value || '';
-        const start = $('cp-start') ? $('cp-start').value : '';
-        const end = $('cp-end') ? $('cp-end').value : '';
         const budget = Number($('cp-budget') ? $('cp-budget').value : '');
         if (!name) return showToast('캠페인명은 필수입니다.');
         if (!purpose) return showToast('목적은 필수입니다.');
         if (!Number.isFinite(budget) || budget <= 0) return showToast('전체 예산은 0원 초과여야 합니다.');
-        if (!start || !end) return showToast('기간은 필수입니다.');
-        if (end <= start) return showToast('종료일은 시작일보다 이후여야 합니다.');
         const id = 'CP-2026-' + String(100 + CAMPAIGNS.length + 1).padStart(3,'0');
-        addDraft.campaign = { id, name, purpose, budgetTotal: budget, start, end };
+        addDraft.campaign = { id, name, purpose, budgetTotal: budget };
         showToast('캠페인 조건을 저장했습니다. 다음 단계로 이동합니다.');
         showSchemeStep();
       });
