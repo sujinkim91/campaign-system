@@ -3,12 +3,12 @@ title: "[캠페인시스템_미션] 부릉 인트라 PRD"
 source: "Notion"
 notion_page: "https://www.notion.so/342cf5759dc0803ca625f6bea5bac041"
 notion_last_edited_at_utc: "2026-04-17T06:16:08.385Z"
-fetched_at_utc: "2026-04-17T06:16:09.090Z"
-note: "Notion 페이지 스냅샷(텍스트·표 위주). 이미지/임베드 링크는 만료될 수 있어 생략/요약함."
+fetched_at_utc: "2026-04-23T00:00:00.000Z"
+note: "Notion 갱신 후 저장소 동기화(2026-04-23). 화면·IA·목업은 canonical PRD를 우선한다. 아래 표는 Notion 스냅샷 보관용."
 canonical_prd: "./부릉-인트라-PRD.md"
 ---
 
-> **기준 문서:** [`부릉-인트라-PRD.md`](./부릉-인트라-PRD.md) (v0.8)를 따른다. 본 파일은 Notion 원문 스냅샷 보관용이다.
+> **기준 문서:** [`부릉-인트라-PRD.md`](./부릉-인트라-PRD.md) (v0.8)를 따른다. **캠페인·스킴·미션 3-depth**, 메뉴·목업은 canonical과 [`campaign-intra-mockup.html`](./campaign-intra-mockup.html)이 최신이다. 본 파일의 §3 LNB(미션 관리 단일) 서술은 Notion 구버전/병행 참고용일 수 있다.
 
 > 원문: [Notion 페이지](https://www.notion.so/342cf5759dc0803ca625f6bea5bac041)  
 > Jira: [ITSMCHG-31459](https://vroong-jira.atlassian.net/browse/ITSMCHG-31459)

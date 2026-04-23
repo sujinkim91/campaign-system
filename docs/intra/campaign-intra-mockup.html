@@ -397,7 +397,7 @@
       <div class="sidebar-brand">
         <div class="sidebar-app-name">VROONG Intra Lite</div>
         <div class="sidebar-user-line">
-          <span class="sidebar-user-meta">캠페인 시스템<br />UI 목업</span>
+          <span class="sidebar-user-meta">캠페인 시스템<br />UI 목업<br /><span style="font-size:11px;line-height:1.35;opacity:.88">대상: 3PL사업팀·사업관리팀·BTF 등 운영 관리자</span></span>
           <button type="button" class="btn-logout" id="btn-logout-mock">로그아웃</button>
         </div>
       </div>
@@ -885,7 +885,7 @@
               <div class="form-row" data-key="ms-desc">
                 <label>미션 설명</label>
                 <div class="field">
-                  <textarea id="ms-desc" maxlength="200" placeholder="라이더 앱 노출(선택, 최대 200자)"></textarea>
+                  <textarea id="ms-desc" maxlength="500" placeholder="라이더 앱 노출(선택, 최대 500자)"></textarea>
                 </div>
               </div>
 
@@ -941,7 +941,7 @@
                   <label>휴무 조건</label>
                   <div class="field">
                     <input id="ms-offday" type="number" min="0" step="1" placeholder="0 이상 정수 (회)" />
-                    <div class="help">미션 기간 내 최대 휴무 횟수 · 오더받기 ON이 한 번도 없는 날 = 휴무</div>
+                    <div class="help">미션 기간 내 최대 휴무 횟수 · 하루 중 부릉플러스 앱 → 오더받기 ON이 한 번도 없는 날 = 휴무</div>
                   </div>
                 </div>
                 <div class="form-row" data-key="ms-cancel">
@@ -1418,8 +1418,14 @@
             '<td><input type=\"number\" min=\"1\" step=\"1\" value=\"' + (s.amount || '') + '\" placeholder=\"원\" /></td>' +
             '<td><button type=\"button\" class=\"btn-mini ghost\">삭제</button></td>';
           const inputs = tr.querySelectorAll('input');
-          inputs[0].addEventListener('input', (e) => { msStages[idx].count = String(e.target.value || ''); });
-          inputs[1].addEventListener('input', (e) => { msStages[idx].amount = String(e.target.value || ''); });
+          inputs[0].addEventListener('input', (e) => {
+            msStages[idx].count = String(e.target.value || '');
+            updateMsMaxParticipantsHint();
+          });
+          inputs[1].addEventListener('input', (e) => {
+            msStages[idx].amount = String(e.target.value || '');
+            updateMsMaxParticipantsHint();
+          });
           tr.querySelector('button').addEventListener('click', () => {
             if (msStages.length <= 1) return;
             msStages.splice(idx, 1);
@@ -1427,6 +1433,7 @@
           });
           body.appendChild(tr);
         });
+        updateMsMaxParticipantsHint();
       }
 
       function setSubnavActive(id) {
@@ -1689,6 +1696,39 @@
         return c && Array.isArray(c.schemes) ? c.schemes.find((x) => x.id === sid) : null;
       }
 
+      /** PRD: 최대 참여 인원 ≒ 스킴 총 예산 ÷ (단일: 1회 지급액 | 단계형: 최고 단계 지급액) */
+      function updateMsMaxParticipantsHint() {
+        const el = $('ms-max-participants-hint');
+        if (!el) return;
+        const s = resolveMsScheme();
+        const budget = s && Number.isFinite(Number(s.budgetTotal)) ? Number(s.budgetTotal) : 0;
+        const structure = (document.querySelector('input[name="ms-structure"]:checked') || {}).value || '';
+        let per = null;
+        if (structure === '단계형') {
+          const amts = (msStages || []).map((x) => {
+            const n = Number(String(x.amount || '').trim());
+            return Number.isFinite(n) && n > 0 ? n : null;
+          }).filter((x) => x !== null);
+          per = amts.length ? Math.max.apply(null, amts) : null;
+        } else {
+          const n = Number(String($('ms-reward-amount') ? $('ms-reward-amount').value : '').trim());
+          per = Number.isFinite(n) && n > 0 ? n : null;
+        }
+        if (budget <= 0 || !per || per <= 0) {
+          el.style.display = 'none';
+          el.textContent = '';
+          return;
+        }
+        const maxN = Math.floor(budget / per);
+        el.style.display = 'block';
+        const basis = structure === '단계형' ? '최고 단계 지급 ' : '1회 지급 ';
+        if (maxN <= 0) {
+          el.textContent = basis + fmtWon(per) + '이(가) 스킴 총 예산 ' + fmtWon(budget) + '을 초과해 상한 인원을 산정할 수 없습니다.';
+          return;
+        }
+        el.textContent = '최대 참여 인원 약 ' + maxN.toLocaleString('ko-KR') + '명 · ' + basis + fmtWon(per) + ' 기준 (스킴 총 예산 ' + fmtWon(budget) + ' ÷ ' + fmtWon(per) + ')';
+      }
+
       function syncMissionFormForSelectedScheme() {
         const s = resolveMsScheme();
         const ro = $('ms-scheme-ro');
@@ -1724,6 +1764,7 @@
         const isStage = struct === '단계형';
         if (blockSingle) blockSingle.style.display = isStage ? 'none' : 'block';
         if (blockStage) blockStage.style.display = isStage ? 'block' : 'none';
+        updateMsMaxParticipantsHint();
       }
 
       function showMissionStep() {
@@ -2355,6 +2396,9 @@
         });
       }
 
+      const msRewardAmount = $('ms-reward-amount');
+      if (msRewardAmount) msRewardAmount.addEventListener('input', updateMsMaxParticipantsHint);
+
       // 미션: 지급 구조 선택 시 단일/단계 블록 토글
       document.querySelectorAll('input[name=\"ms-structure\"]').forEach((el) => {
         el.addEventListener('change', () => {
@@ -2364,6 +2408,7 @@
           const isStage = v === '단계형';
           if (blockSingle) blockSingle.style.display = isStage ? 'none' : 'block';
           if (blockStage) blockStage.style.display = isStage ? 'block' : 'none';
+          updateMsMaxParticipantsHint();
         });
       });
 
