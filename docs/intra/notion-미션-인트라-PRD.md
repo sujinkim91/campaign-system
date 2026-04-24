@@ -2,13 +2,21 @@
 title: "[캠페인시스템_미션] 부릉 인트라 PRD"
 source: "Notion"
 notion_page: "https://www.notion.so/342cf5759dc0803ca625f6bea5bac041"
-notion_last_edited_at_utc: "2026-04-17T06:16:08.385Z"
-fetched_at_utc: "2026-04-23T00:00:00.000Z"
-note: "Notion 갱신 후 저장소 동기화(2026-04-23). 화면·IA·목업은 canonical PRD를 우선한다. 아래 표는 Notion 스냅샷 보관용."
+notion_last_edited_at_utc: "2026-04-24T01:00:17.259Z"
+fetched_at_utc: "2026-04-24T02:00:00.000Z"
+note: "Cursor MCP `user-Notion` → `notion-fetch`로 본문 수집 가능. 공개 URL WebFetch는 로그인 벽으로 부적합. 아래 레거시 표는 참고용; 최신 정의는 canonical v0.9."
 canonical_prd: "./부릉-인트라-PRD.md"
 ---
 
-> **기준 문서:** [`부릉-인트라-PRD.md`](./부릉-인트라-PRD.md) (v0.8)를 따른다. **캠페인·스킴·미션 3-depth**, 메뉴·목업은 canonical과 [`campaign-intra-mockup.html`](./campaign-intra-mockup.html)이 최신이다. 본 파일의 §3 LNB(미션 관리 단일) 서술은 Notion 구버전/병행 참고용일 수 있다.
+## MCP 동기화 요약 (2026-04-24)
+
+- **캠페인 상태:** 단일 저장 필드가 아니라 **하위 미션 상태 집계**로 예정·진행·완료 산출.
+- **캠페인 현황 검색:** 상태 필터 **예정·진행·완료만**(캠페인 단위 중단 검색 없음).
+- **목록:** 총 예산·소진·**남은 예산**·**캠페인 기간**(미션 min/max)·캠페인 상태.
+- **위저드·폼:** 미션 설명 **최대 1,000자** 등(세부는 canonical §5, §7).
+- **스킴:** 적용 오더 범위, **여러 캠페인과 N:M** 가능 등 구조 확장 서술.
+
+> **기준 문서:** [`부릉-인트라-PRD.md`](./부릉-인트라-PRD.md) (v0.9)를 따른다. **캠페인·스킴·미션 3-depth**, 메뉴·목업은 canonical과 [`campaign-intra-mockup.html`](./campaign-intra-mockup.html)이 최신이다. 본 파일 하단 §3 LNB(미션 관리 단일) 서술은 Notion 구버전/병행 참고용일 수 있다.
 
 > 원문: [Notion 페이지](https://www.notion.so/342cf5759dc0803ca625f6bea5bac041)  
 > Jira: [ITSMCHG-31459](https://vroong-jira.atlassian.net/browse/ITSMCHG-31459)

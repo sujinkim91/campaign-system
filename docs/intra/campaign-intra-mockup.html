@@ -175,6 +175,8 @@
     .td-remain-wrap .remain-meta { margin-top: 3px; font-size: 11px; font-weight: 600; color: var(--text-muted); font-variant-numeric: tabular-nums; }
     .td-remain-wrap .remain-bar { height: 4px; background: #e8ecf1; border-radius: 2px; margin-top: 6px; overflow: hidden; }
     .td-remain-wrap .remain-bar-fill { display: block; height: 100%; max-width: 100%; background: var(--ok); border-radius: 2px; opacity: 0.55; }
+    .data-table .td-remain-cell { vertical-align: top; max-width: 9.5rem; }
+    .data-table .td-remain-cell .td-remain-wrap { max-width: 7.5rem; margin-left: 0; }
 
     .target-panel { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 18px 10px; margin-bottom: 18px; background: #f6f8fb; }
     .target-panel-hd { font-size: 13px; font-weight: 800; color: var(--navy); margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid #dde4ec; letter-spacing: -0.02em; }
@@ -481,7 +483,6 @@
                 <option value="예정">예정</option>
                 <option value="진행">진행</option>
                 <option value="완료">완료</option>
-                <option value="중단">중단</option>
               </select>
               <label for="flt-purpose">목적</label>
               <select id="flt-purpose">
@@ -509,18 +510,19 @@
             <div class="table-wrap">
               <table class="data-table">
                 <colgroup>
-                  <col style="width:22%"><col style="width:9%"><col style="width:14%"><col style="width:8%"><col style="width:8%"><col style="width:12%"><col style="width:12%"><col style="width:15%">
+                  <col style="width:18%"><col style="width:8%"><col style="width:7%"><col style="width:7%"><col style="width:10%"><col style="width:10%"><col style="width:10%"><col style="width:12%"><col style="width:10%"><col style="width:8%">
                 </colgroup>
                 <thead>
                   <tr>
                     <th>캠페인명</th>
                     <th>목적</th>
-                    <th>기간</th>
                     <th>스킴 수</th>
                     <th>미션 수</th>
-                    <th title="스킴에 설정된 총 예산">예산 한도</th>
-                    <th title="현재까지 지급된 총 금액(목업 데이터)">소진액</th>
-                    <th>상태</th>
+                    <th>총 예산</th>
+                    <th>소진액</th>
+                    <th>남은 예산</th>
+                    <th title="소속 미션 기준 가장 빠른 시작~가장 늦은 종료">캠페인 기간</th>
+                    <th title="하위 미션 상태 집계(Notion §2)">캠페인 상태</th>
                   </tr>
                 </thead>
                 <tbody id="tbody-list"></tbody>
@@ -885,7 +887,7 @@
               <div class="form-row" data-key="ms-desc">
                 <label>미션 설명</label>
                 <div class="field">
-                  <textarea id="ms-desc" maxlength="500" placeholder="라이더 앱 노출(선택, 최대 500자)"></textarea>
+                  <textarea id="ms-desc" maxlength="1000" placeholder="라이더 앱 노출(선택, 최대 1,000자 · Notion)"></textarea>
                 </div>
               </div>
 
@@ -1047,7 +1049,7 @@
               <div class="form-row" data-key="desc">
                 <label>미션 설명</label>
                 <div class="field">
-                  <textarea id="f-desc" maxlength="500" placeholder="미션 소개·운영 안내 등 (선택, 최대 500자)"></textarea>
+                  <textarea id="f-desc" maxlength="1000" placeholder="미션 소개·운영 안내 등 (선택, 최대 1,000자 · Notion)"></textarea>
                 </div>
               </div>
 
@@ -2508,6 +2510,43 @@
         return { key: base, cls: base === '진행' ? 'ok' : 'muted' };
       }
 
+      function flatMissions(c) {
+        return (Array.isArray(c.schemes) ? c.schemes : []).flatMap((s) => (Array.isArray(s.missions) ? s.missions : []));
+      }
+
+      /** 캠페인 목록·검색용: 하위 미션 상태 집계(Notion §2). 미션 단일 저장 필드가 아님. */
+      function campaignAggregatedStatus(c) {
+        const missions = flatMissions(c);
+        if (!missions.length) return { key: '예정', cls: 'muted' };
+        const keys = missions.map((m) => statusOf(m).key);
+        const allTerminal = keys.every((k) => k === '완료' || k === '중단');
+        const anyRun = keys.some((k) => k === '진행');
+        const allSched = keys.every((k) => k === '예정');
+        if (allTerminal) return { key: '완료', cls: 'muted' };
+        if (anyRun) return { key: '진행', cls: 'ok' };
+        if (allSched) return { key: '예정', cls: 'muted' };
+        return { key: '진행', cls: 'ok' };
+      }
+
+      /** 미션 행 뱃지 문구(Notion): 내부 로직은 statusOf와 동일, 표시만 접두어 */
+      function missionBadge(m) {
+        const st = statusOf(m);
+        const map = { 예정: '미션 예정', 진행: '미션 진행', 완료: '미션 완료', 중단: '미션 중단' };
+        return { key: map[st.key] || st.key, cls: st.cls };
+      }
+
+      /** 캠페인 기간: 소속 미션 min(start)~max(end), 없으면 캠페인 자체 기간 */
+      function campaignPeriodFromMissions(c) {
+        const missions = flatMissions(c);
+        if (!missions.length) return fmtPeriod(c);
+        const starts = missions.map((m) => m.start).filter((x) => x && /^\d{4}-\d{2}-\d{2}$/.test(x));
+        const ends = missions.map((m) => m.end).filter((x) => x && /^\d{4}-\d{2}-\d{2}$/.test(x));
+        if (!starts.length || !ends.length) return fmtPeriod(c);
+        const minS = starts.reduce((a, b) => (a < b ? a : b));
+        const maxE = ends.reduce((a, b) => (a > b ? a : b));
+        return minS.slice(5).replace('-', '/') + '~' + maxE.slice(5).replace('-', '/');
+      }
+
       /** PRD: 미션 오픈일이 “도래하지 않음” = 달력 기준 오픈일이 아직 내일 이후 */
       function missionOpenNotArrived(c) {
         const mo = String((c && (c.missionOpen || c.start)) || '');
@@ -2516,7 +2555,7 @@
       }
 
       function editableCampaignByPRD(c) {
-        return statusOf(c).key === '예정' && missionOpenNotArrived(c);
+        return campaignAggregatedStatus(c).key === '예정' && missionOpenNotArrived(c);
       }
 
       function fmtPeriod(c) { return c.start.slice(5).replace('-', '/') + '~' + c.end.slice(5).replace('-', '/'); }
@@ -2598,7 +2637,7 @@
       function renderOverviewPanel(c) {
         const el = $('panel-overview');
         if (!el) return;
-        const st = statusOf(c);
+        const st = campaignAggregatedStatus(c);
         const b = budgetDerived(c);
         const schemesCnt = Array.isArray(c.schemes) ? c.schemes.length : 0;
         const missionsCnt = Array.isArray(c.schemes) ? c.schemes.reduce((acc, s) => acc + (Array.isArray(s.missions) ? s.missions.length : 0), 0) : 0;
@@ -2614,16 +2653,18 @@
               '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(c.purpose || '—') + '</div>' +
             '</div>' +
             '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
-              '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">기간</div>' +
-              '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(fmtPeriod(c)) + '</div>' +
+              '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">캠페인 기간</div>' +
+              '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(campaignPeriodFromMissions(c)) + '</div>' +
+              '<div class="help" style="margin-top:6px;">미션 기간 min~max</div>' +
             '</div>' +
             '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
               '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">스킴 수 / 미션 수</div>' +
               '<div style="font-weight:800;margin-top:4px;">' + schemesCnt + ' / ' + missionsCnt + '</div>' +
             '</div>' +
             '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
-              '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">상태</div>' +
+              '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">캠페인 상태</div>' +
               '<div style="margin-top:8px;"><span class="badge ' + st.cls + '">' + escapeHtml(st.key) + '</span></div>' +
+              '<div class="help" style="margin-top:6px;">하위 미션 집계</div>' +
             '</div>' +
           '</div>' +
           '<div class="panel" style="margin-top:14px;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
@@ -2644,7 +2685,6 @@
       }
 
       function renderDetail(c) {
-        const st = statusOf(c);
         if ($('d-id')) $('d-id').textContent = safeText(c.id);
         renderOverviewPanel(c);
         renderSchemes(c);
@@ -2760,6 +2800,7 @@
         const missions = schemes.flatMap((s) => (Array.isArray(s.missions) ? s.missions.map((m) => ({ ...m, schemeName: s.name, schemeId: s.id })) : []));
         missions.forEach((m) => {
           const st = statusOf(m);
+          const mb = missionBadge(m);
           const ended = st.key === '완료';
           const manageTd = ended
             ? '<span class="manage-na" title="종료일이 지난 미션은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
@@ -2772,7 +2813,7 @@
             '<td>' + missionTimeSummary(m) + '</td>' +
             '<td>' + safeText(m.shipper || '전체') + '</td>' +
             '<td>' + missionAchieveSummary(m) + '</td>' +
-            '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>' +
+            '<td><span class="badge ' + mb.cls + '">' + mb.key + '</span></td>' +
             '<td>' + manageTd + '</td>';
           tb.appendChild(tr);
         });
@@ -2804,7 +2845,7 @@
         const fltName = $('flt-name').value.trim();
         let rows = CAMPAIGNS.slice();
         rows = rows.filter((c) => {
-          const st = statusOf(c).key;
+          const st = campaignAggregatedStatus(c).key;
           if (fltStatus && st !== fltStatus) return false;
           if (fltPurpose && c.purpose !== fltPurpose) return false;
           if (fltName && !c.name.includes(fltName)) return false;
@@ -2816,19 +2857,21 @@
         const tb = $('tbody-list');
         tb.innerHTML = '';
         rows.forEach((c) => {
-          const st = statusOf(c);
+          const st = campaignAggregatedStatus(c);
           const b = budgetDerived(c);
           const schemesCnt = Array.isArray(c.schemes) ? c.schemes.length : 0;
           const missionsCnt = Array.isArray(c.schemes) ? c.schemes.reduce((acc, s) => acc + (Array.isArray(s.missions) ? s.missions.length : 0), 0) : 0;
+          const remainCell = b ? fmtRemainInner(b) : '<span class="td-num">—</span>';
           const tr = document.createElement('tr');
           tr.innerHTML =
             '<td title="' + c.id + '"><a href="#" class="link btn-open-detail" data-id="' + c.id + '">' + c.name + '</a></td>' +
             '<td>' + c.purpose + '</td>' +
-            '<td>' + fmtPeriod(c) + '</td>' +
             '<td class="td-num">' + schemesCnt + '</td>' +
             '<td class="td-num">' + missionsCnt + '</td>' +
             '<td class="td-num">' + (b ? fmtWon(b.total) : '—') + '</td>' +
             '<td class="td-num">' + (b ? fmtWon(b.spent) : '—') + '</td>' +
+            '<td class="td-remain-cell">' + remainCell + '</td>' +
+            '<td>' + campaignPeriodFromMissions(c) + '</td>' +
             '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>';
           tb.appendChild(tr);
         });
@@ -2915,6 +2958,7 @@
           .filter(({ campaign, scheme }) => (!pickedCid || campaign.id === pickedCid) && (!pickedSid || scheme.id === pickedSid))
           .forEach(({ campaign, scheme, mission }) => {
           const st = statusOf(mission);
+          const mb = missionBadge(mission);
           const ended = st.key === '완료';
           const manageTd = ended
             ? '<span class="manage-na" title="종료일이 지난 미션은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
@@ -2927,7 +2971,7 @@
             '<td>' + safeText(mission.structure || '-') + '</td>' +
             '<td>' + safeText(mission.shipper || '전체') + '</td>' +
             '<td>' + safeText(fmtPeriod(mission)) + '</td>' +
-            '<td><span class=\"badge ' + st.cls + '\">' + st.key + '</span></td>' +
+            '<td><span class=\"badge ' + mb.cls + '\">' + mb.key + '</span></td>' +
             '<td>' + manageTd + '</td>';
           tb.appendChild(tr);
         });
@@ -3606,7 +3650,7 @@
       function validateStep1() {
         readStep1();
         if (!state.name) return { ok:false, key:'name', msg:'미션명은 필수입니다.' };
-        if (state.description.length > 500) return { ok:false, key:'desc', msg:'미션 설명은 500자 이하로 입력해 주세요.' };
+        if (state.description.length > 1000) return { ok:false, key:'desc', msg:'미션 설명은 1,000자 이하로 입력해 주세요.' };
         if (!state.purpose) return { ok:false, key:'purpose', msg:'목적을 선택해 주세요.' };
         if (state.purpose === '활성화' && !state.structure) return { ok:false, key:'structure', msg:'지급 구조(단계형/단일)를 선택해 주세요.' };
         return { ok:true };
