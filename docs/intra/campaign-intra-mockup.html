@@ -522,7 +522,7 @@
                     <th>소진액</th>
                     <th>남은 예산</th>
                     <th title="소속 미션 기준 가장 빠른 시작~가장 늦은 종료">캠페인 기간</th>
-                    <th title="하위 미션 상태 집계(Notion §2)">캠페인 상태</th>
+                    <th title="하위 미션 상태 집계">캠페인 상태</th>
                   </tr>
                 </thead>
                 <tbody id="tbody-list"></tbody>
@@ -531,17 +531,25 @@
           </div>
 
           <div id="panel-sc" style="display:none;">
-            <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
-              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-                <div style="color:var(--text-muted);font-weight:800;">캠페인 선택</div>
-                <select id="pick-campaign" style="min-width: 260px;"></select>
+            <div class="filter-section" style="margin-bottom:12px;">
+              <div class="filter-search-title">검색 조건 (스킴 탭 · Notion 5-3)</div>
+              <div class="filter-row">
+                <label for="pick-campaign">소속 캠페인</label>
+                <select id="pick-campaign" style="min-width:220px;"></select>
+                <label for="flt-scheme-name">스킴명</label>
+                <input id="flt-scheme-name" type="text" placeholder="키워드" style="min-width:160px;" />
+                <button type="button" class="btn-search-icon" id="btn-search-schemes" title="검색" aria-label="검색">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"/><path d="M15 15l4.5 4.5"/></svg>
+                </button>
               </div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
               <button type="button" class="btn primary" id="btn-add-scheme-from-status">+ 스킴 추가</button>
             </div>
             <div class="table-wrap">
               <table class="data-table">
                 <colgroup>
-                  <col style="width:16%"><col style="width:14%"><col style="width:8%"><col style="width:10%"><col style="width:12%"><col style="width:10%"><col style="width:10%"><col style="width:8%"><col style="width:8%">
+                  <col style="width:15%"><col style="width:13%"><col style="width:7%"><col style="width:9%"><col style="width:10%"><col style="width:9%"><col style="width:9%"><col style="width:9%"><col style="width:7%"><col style="width:7%">
                 </colgroup>
                 <thead>
                   <tr>
@@ -550,6 +558,7 @@
                     <th>목적</th>
                     <th>적용대상</th>
                     <th>지역</th>
+                    <th>적용 오더</th>
                     <th>기간</th>
                     <th>예산</th>
                     <th>상태</th>
@@ -562,27 +571,41 @@
           </div>
 
           <div id="panel-ms" style="display:none;">
-            <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
-              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-                <div style="color:var(--text-muted);font-weight:800;">스킴 선택</div>
-                <select id="pick-scheme" style="min-width: 260px;"></select>
+            <div class="filter-section" style="margin-bottom:12px;">
+              <div class="filter-search-title">검색 조건 (미션 탭 · Notion 5-4)</div>
+              <div class="filter-row">
+                <label for="pick-campaign-ms">소속 캠페인</label>
+                <select id="pick-campaign-ms" style="min-width:200px;"></select>
+                <label for="pick-scheme">소속 스킴</label>
+                <select id="pick-scheme" style="min-width:220px;"></select>
+                <label for="flt-mission-name">미션명</label>
+                <input id="flt-mission-name" type="text" placeholder="키워드" style="min-width:140px;" />
+                <label for="flt-ms-from">기간</label>
+                <input id="flt-ms-from" type="date" />
+                <span style="align-self:center;opacity:.65;">~</span>
+                <input id="flt-ms-to" type="date" />
+                <button type="button" class="btn-search-icon" id="btn-search-missions" title="검색" aria-label="검색">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"/><path d="M15 15l4.5 4.5"/></svg>
+                </button>
               </div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
               <button type="button" class="btn primary" id="btn-add-mission-from-status">+ 미션 추가</button>
             </div>
             <div class="table-wrap">
               <table class="data-table">
                 <colgroup>
-                  <col style="width:18%"><col style="width:18%"><col style="width:18%"><col style="width:10%"><col style="width:12%"><col style="width:16%"><col style="width:6%"><col style="width:6%">
+                  <col style="width:17%"><col style="width:15%"><col style="width:10%"><col style="width:12%"><col style="width:12%"><col style="width:14%"><col style="width:8%"><col style="width:6%">
                 </colgroup>
                 <thead>
                   <tr>
                     <th>미션명</th>
-                    <th>캠페인명</th>
                     <th>스킴명</th>
                     <th>지급 구조</th>
-                    <th>화주사</th>
+                    <th>시간대</th>
                     <th>기간</th>
-                    <th>상태</th>
+                    <th>미션 상태</th>
+                    <th>화주사</th>
                     <th>관리</th>
                   </tr>
                 </thead>
@@ -592,7 +615,7 @@
           </div>
 
           <div class="list-footer">
-            <button type="button" class="btn-add" id="btn-open-register">+ 추가</button>
+            <button type="button" class="btn-add" id="btn-open-register">+ 캠페인 추가</button>
             <div class="pagination-mock" aria-hidden="true"><span>1</span></div>
             <span class="list-count-footer" id="list-count-footer">총 0건</span>
           </div>
@@ -677,6 +700,7 @@
           <div class="form-shell panel panel--pad">
             <div class="form-single-page">
               <h2 class="panel-title">캠페인 조건</h2>
+              <div class="wizard-steps" id="wz-strip-cp" aria-label="위저드 진행 단계"></div>
               <div class="form-row" data-key="cp-name">
                 <label>캠페인명<span class="req">*</span></label>
                 <div class="field">
@@ -716,12 +740,17 @@
           <div class="form-shell panel panel--pad">
             <div class="form-single-page">
               <h2 class="panel-title">스킴 추가</h2>
-              <div class="wizard-steps" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;font-weight:800;color:var(--text-muted);font-size:13px;">
-                <span style="color:var(--navy);">① 스킴 설정</span>
-                <span>→</span>
-                <span>② 미션 설정</span>
-                <span>→</span>
-                <span>③ 완료</span>
+              <div class="wizard-steps" id="wz-strip-sc" aria-label="위저드 진행 단계"></div>
+              <div class="form-row" id="row-sc-import" style="align-items:flex-start;">
+                <label>스킴 불러오기</label>
+                <div class="field">
+                  <select id="sc-import-preset">
+                    <option value="">불러오기 안 함</option>
+                    <option value="SC-001">기존: 프렌즈 점심 피크 (목업)</option>
+                    <option value="SC-101">기존: 전환 스킴 (목업)</option>
+                  </select>
+                  <div class="help">노션: 선택 시 설정값 읽기 전용·캠페인에 연결만 (목업은 안내 토스트만)</div>
+                </div>
               </div>
 
               <div class="form-row" id="row-sc-campaign-pick" style="display:none;">
@@ -841,11 +870,26 @@
                 </div>
               </div>
 
+              <div class="form-row" data-key="sc-order-scope">
+                <label>적용 오더 범위<span class="req">*</span></label>
+                <div class="field">
+                  <select id="sc-order-scope">
+                    <option value="전체">전체</option>
+                    <option value="로컬">로컬</option>
+                    <option value="프랜차이즈">프랜차이즈</option>
+                    <option value="플랫폼">플랫폼</option>
+                  </select>
+                  <div class="help">Notion 스킴 STEP2</div>
+                </div>
+              </div>
+
               <div class="actions">
                 <div class="actions-left"></div>
-                <div class="actions-btns" style="flex-wrap:wrap;justify-content:flex-end;gap:8px;">
+                <div class="actions-btns" id="scheme-actions-btns" style="flex-wrap:wrap;justify-content:flex-end;gap:8px;">
+                  <button type="button" class="btn ghost btn-lg" id="btn-sc-prev" style="display:none;">이전</button>
+                  <button type="button" class="btn ghost btn-lg" id="btn-sc-skip" style="display:none;">넘어가기</button>
                   <button type="button" class="btn ghost btn-lg" id="btn-sc-cancel">취소</button>
-                  <button type="button" class="btn primary btn-lg" id="btn-sc-save-next">저장 후 미션 추가</button>
+                  <button type="button" class="btn primary btn-lg" id="btn-sc-save-next">다음</button>
                   <button type="button" class="btn primary btn-lg" id="btn-sc-save-only">저장</button>
                 </div>
               </div>
@@ -858,12 +902,16 @@
           <div class="form-shell panel panel--pad">
             <div class="form-single-page">
               <h2 class="panel-title">미션 추가</h2>
-              <div class="wizard-steps" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;font-weight:800;color:var(--text-muted);font-size:13px;">
-                <span>① 스킴 설정</span>
-                <span>→</span>
-                <span style="color:var(--navy);">② 미션 설정</span>
-                <span>→</span>
-                <span>③ 완료</span>
+              <div class="wizard-steps" id="wz-strip-ms" aria-label="위저드 진행 단계"></div>
+              <div class="form-row" id="row-ms-copy" style="align-items:flex-start;">
+                <label>미션 복사</label>
+                <div class="field">
+                  <select id="ms-copy-preset">
+                    <option value="">복사 안 함</option>
+                    <option value="MS-001">기존: 서초 점심 단일 (목업)</option>
+                  </select>
+                  <div class="help">노션: 동일 목적 미션만 목록 · 복사 후 수정 가능</div>
+                </div>
               </div>
               <div class="warn" style="margin-bottom:14px;">캠페인: <strong id="ms-parent-name">-</strong></div>
               <div id="ms-scheme-ro" class="help" style="display:none;margin-bottom:12px;font-weight:700;"></div>
@@ -985,10 +1033,12 @@
 
               <div class="actions">
                 <div class="actions-left"></div>
-                <div class="actions-btns" style="flex-wrap:wrap;justify-content:flex-end;gap:8px;">
+                <div class="actions-btns" id="mission-actions-btns" style="flex-wrap:wrap;justify-content:flex-end;gap:8px;">
+                  <button type="button" class="btn ghost btn-lg" id="btn-ms-prev" style="display:none;">이전</button>
+                  <button type="button" class="btn ghost btn-lg" id="btn-ms-skip" style="display:none;">넘어가기</button>
                   <button type="button" class="btn ghost btn-lg" id="btn-ms-cancel">취소</button>
                   <button type="button" class="btn primary btn-lg" id="btn-ms-save-another">미션 추가 저장</button>
-                  <button type="button" class="btn primary btn-lg" id="btn-ms-save">저장</button>
+                  <button type="button" class="btn primary btn-lg" id="btn-ms-save">완료</button>
                 </div>
               </div>
             </div>
@@ -1352,8 +1402,10 @@
       <div class="hd" id="modal-title">저장 실패</div>
       <div class="bd" id="modal-body"></div>
       <div class="ft" id="modal-ft">
+        <button class="btn ghost" id="modal-cancel-reg" type="button" style="display:none">취소</button>
         <button class="btn ghost" id="modal-close" type="button">확인</button>
         <button class="btn primary" id="modal-off-confirm" type="button" style="display:none">중단</button>
+        <button class="btn primary" id="modal-confirm-reg" type="button" style="display:none">등록</button>
       </div>
     </div>
   </div>
@@ -1391,6 +1443,62 @@
       let addDraft = { campaign: null, scheme: null, mission: null };
       let msTimes = [];
       let msStages = [{ count:'', amount:'' }];
+      let pendingRegisterFn = null;
+
+      function paintWizardStrip(screen, step) {
+        const idMap = { cp: 'wz-strip-cp', sc: 'wz-strip-sc', ms: 'wz-strip-ms' };
+        const el = $(idMap[screen]);
+        if (!el) return;
+        const steps = [
+          { k: 1, lab: '① 캠페인' },
+          { k: 2, lab: '② 스킴' },
+          { k: 3, lab: '③ 미션' },
+          { k: 4, lab: '④ 완료' },
+        ];
+        const parts = [];
+        steps.forEach((s, i) => {
+          if (i) parts.push('<span style="opacity:.4;font-weight:700;">→</span>');
+          const on = s.k === step;
+          parts.push('<span style="color:' + (on ? 'var(--navy)' : 'var(--text-muted)') + ';font-weight:' + (on ? '900' : '600') + ';font-size:13px;">' + s.lab + '</span>');
+        });
+        el.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;';
+        el.innerHTML = parts.join('');
+      }
+
+      function syncSchemeActionButtons() {
+        const prev = $('btn-sc-prev');
+        const skip = $('btn-sc-skip');
+        const next = $('btn-sc-save-next');
+        const cancel = $('btn-sc-cancel');
+        const saveOnly = $('btn-sc-save-only');
+        if (!cancel || !next || !saveOnly) return;
+        const wz = addFlow === 'campaignCreate';
+        if (prev) prev.style.display = wz ? 'inline-flex' : 'none';
+        if (skip) skip.style.display = wz ? 'inline-flex' : 'none';
+        next.textContent = wz ? '다음' : '저장 후 미션 추가';
+        if (wz) {
+          saveOnly.style.display = 'none';
+          next.style.display = 'inline-flex';
+        } else {
+          saveOnly.style.display = 'inline-flex';
+          next.style.display = addFlow === 'schemeAdd' ? 'none' : 'inline-flex';
+        }
+      }
+
+      function syncMissionActionButtons() {
+        const prev = $('btn-ms-prev');
+        const skip = $('btn-ms-skip');
+        const saveAnother = $('btn-ms-save-another');
+        const complete = $('btn-ms-save');
+        const cancel = $('btn-ms-cancel');
+        if (!complete || !cancel) return;
+        const wz = addFlow === 'campaignCreate';
+        if (prev) prev.style.display = wz ? 'inline-flex' : 'none';
+        if (skip) skip.style.display = wz ? 'inline-flex' : 'none';
+        cancel.style.display = wz ? 'none' : 'inline-flex';
+        complete.textContent = wz ? '완료' : '저장';
+        if (saveAnother) saveAnother.style.display = wz ? 'inline-flex' : 'none';
+      }
 
       function renderMsTimeTags() {
         const wrap = $('ms-time-tags');
@@ -1577,9 +1685,9 @@
 
       // (deprecated) use setSubnavStatusChild for status tabs
 
-      function showCampaignAdd() {
+      function showCampaignAdd(preserveDraft) {
         addFlow = 'campaignCreate';
-        addDraft = { campaign: null, scheme: null, mission: null };
+        if (!preserveDraft) addDraft = { campaign: null, scheme: null, mission: null };
         navList.classList.add('active');
         screenList.classList.remove('active');
         if (screenDetail) screenDetail.classList.remove('active');
@@ -1598,6 +1706,13 @@
         if ($('cp-name')) $('cp-name').value = '';
         document.querySelectorAll('input[name="cp-purpose"]').forEach((el) => { el.checked = false; });
         if ($('cp-budget')) $('cp-budget').value = '';
+        const dcp = addDraft.campaign;
+        if (dcp && dcp.name) {
+          if ($('cp-name')) $('cp-name').value = dcp.name;
+          if ($('cp-budget') && dcp.budgetTotal != null) $('cp-budget').value = String(dcp.budgetTotal);
+          document.querySelectorAll('input[name="cp-purpose"]').forEach((el) => { el.checked = el.value === dcp.purpose; });
+        }
+        paintWizardStrip('cp', 1);
       }
 
       function parseCommaList(s) {
@@ -1687,6 +1802,10 @@
         const rowFs = $('row-sc-first-signup');
         const purposeChecked = (document.querySelector('input[name=\"sc-purpose\"]:checked') || {}).value || (c && c.purpose) || '';
         if (rowFs) rowFs.style.display = (purposeChecked === '전환' || (c && c.purpose === '전환')) ? 'flex' : 'none';
+        if ($('sc-order-scope')) $('sc-order-scope').value = '전체';
+        if ($('sc-import-preset')) $('sc-import-preset').value = '';
+        paintWizardStrip('sc', 2);
+        syncSchemeActionButtons();
       }
 
       function resolveMsScheme() {
@@ -1843,6 +1962,9 @@
           else radioSingle.checked = true;
         }
         syncMissionFormForSelectedScheme();
+        if ($('ms-copy-preset')) $('ms-copy-preset').value = '';
+        paintWizardStrip('ms', 3);
+        syncMissionActionButtons();
       }
 
       function showRegisterView(id) {
@@ -1950,22 +2072,28 @@
       if (subnavCampaignList) subnavCampaignList.addEventListener('click', (e) => { e.preventDefault(); showList(); });
       const subnavStatusScheme = $('subnav-status-scheme');
       const subnavStatusMission = $('subnav-status-mission');
-      if (subnavStatusScheme) subnavStatusScheme.addEventListener('click', (e) => { e.preventDefault(); activateStatusTab('sc'); setSubnavMode('list'); setSubnavStatusChild('sc'); hydratePickCampaign(); hydratePickScheme(); renderStatusSchemes(); });
-      if (subnavStatusMission) subnavStatusMission.addEventListener('click', (e) => { e.preventDefault(); activateStatusTab('ms'); setSubnavMode('list'); setSubnavStatusChild('ms'); hydratePickCampaign(); hydratePickScheme(); renderStatusMissions(); });
+      if (subnavStatusScheme) subnavStatusScheme.addEventListener('click', (e) => { e.preventDefault(); activateStatusTab('sc'); setSubnavMode('list'); setSubnavStatusChild('sc'); hydratePickCampaign(); hydratePickCampaignMs(); hydratePickScheme(); renderStatusSchemes(); });
+      if (subnavStatusMission) subnavStatusMission.addEventListener('click', (e) => { e.preventDefault(); activateStatusTab('ms'); setSubnavMode('list'); setSubnavStatusChild('ms'); hydratePickCampaign(); hydratePickCampaignMs(); hydratePickScheme(); renderStatusMissions(); });
       const subnavStepCampaign = $('subnav-step-campaign');
       const subnavStepScheme = $('subnav-step-scheme');
       const subnavStepMission = $('subnav-step-mission');
-      if (subnavStepCampaign) subnavStepCampaign.addEventListener('click', (e) => { e.preventDefault(); showCampaignAdd(); });
+      if (subnavStepCampaign) subnavStepCampaign.addEventListener('click', (e) => { e.preventDefault(); showCampaignAdd(false); });
       if (subnavStepScheme) subnavStepScheme.addEventListener('click', (e) => { e.preventDefault(); if (addDraft.campaign) showSchemeStep(); });
       if (subnavStepMission) subnavStepMission.addEventListener('click', (e) => { e.preventDefault(); if (addDraft.scheme) showMissionStep(); });
-      $('btn-open-register').addEventListener('click', showCampaignAdd);
+      $('btn-open-register').addEventListener('click', () => showCampaignAdd(false));
       const btnBackToList = $('btn-back-to-list');
       if (btnBackToList) btnBackToList.addEventListener('click', showList);
       $('btn-reset-filters').addEventListener('click', () => {
         $('flt-status').value = '';
         $('flt-purpose').value = '';
         $('flt-name').value = '';
+        if ($('flt-scheme-name')) $('flt-scheme-name').value = '';
+        if ($('flt-mission-name')) $('flt-mission-name').value = '';
+        if ($('flt-ms-from')) $('flt-ms-from').value = '';
+        if ($('flt-ms-to')) $('flt-ms-to').value = '';
         renderList();
+        renderStatusSchemes();
+        renderStatusMissions();
         showToast('검색 조건을 초기화했습니다.');
       });
       $('btn-logout-mock').addEventListener('click', () => showToast('목업: 로그아웃 동작 없음'));
@@ -2005,6 +2133,7 @@
         setSubnavMode('list');
         setSubnavStatusChild('sc');
         hydratePickCampaign();
+        hydratePickCampaignMs();
         hydratePickScheme();
         renderStatusSchemes();
       });
@@ -2013,6 +2142,7 @@
         setSubnavMode('list');
         setSubnavStatusChild('ms');
         hydratePickCampaign();
+        hydratePickCampaignMs();
         hydratePickScheme();
         renderStatusMissions();
       });
@@ -2022,8 +2152,20 @@
         pickCampaign.addEventListener('change', () => {
           activeCampaignId = String(pickCampaign.value || '');
           activeSchemeRef = { campaignId: '', schemeId: '' };
+          if ($('pick-campaign-ms')) $('pick-campaign-ms').value = activeCampaignId;
           hydratePickScheme();
           renderStatusSchemes();
+          renderStatusMissions();
+        });
+      }
+      const pickCampaignMs = $('pick-campaign-ms');
+      if (pickCampaignMs) {
+        pickCampaignMs.addEventListener('change', () => {
+          const v = String(pickCampaignMs.value || '');
+          if ($('pick-campaign')) $('pick-campaign').value = v;
+          activeCampaignId = v;
+          activeSchemeRef = { campaignId: '', schemeId: '' };
+          hydratePickScheme();
           renderStatusMissions();
         });
       }
@@ -2063,7 +2205,11 @@
       // ===== 추가 폼 이벤트 =====
       const btnCpCancel = $('btn-cp-cancel');
       const btnCpSave = $('btn-cp-save');
-      if (btnCpCancel) btnCpCancel.addEventListener('click', showList);
+      if (btnCpCancel) btnCpCancel.addEventListener('click', () => {
+        if (!window.confirm('입력을 중단할까요? 저장되지 않습니다.')) return;
+        addDraft = { campaign: null, scheme: null, mission: null };
+        showList();
+      });
       if (btnCpSave) btnCpSave.addEventListener('click', () => {
         if (addFlow !== 'campaignCreate') {
           showToast('이 플로우에서는 캠페인 생성 단계를 사용하지 않습니다.');
@@ -2102,6 +2248,7 @@
         const publish = $('sc-publish') ? $('sc-publish').value : '';
         const firstSignup = Number($('sc-first-signup') ? $('sc-first-signup').value : '');
         const budget = Number($('sc-budget') ? $('sc-budget').value : '');
+        const orderScope = $('sc-order-scope') ? String($('sc-order-scope').value || '전체') : '전체';
         const targets = Array.from(document.querySelectorAll('#sc-targets input[type=\"checkbox\"]:checked')).map((x) => x.value);
         const seg1 = Array.from(document.querySelectorAll('#sc-seg-activity input[type=\"checkbox\"]:checked')).map((x) => x.value);
         let regions = [];
@@ -2130,6 +2277,7 @@
         const schemeObj = {
           id: sid, name, purpose, start, end, publish,
           budgetTotal: budget, budgetSpent: 0, off: false,
+          orderScope,
           targets, segmentActivity: seg1, regions, activityRegions, zones,
           firstSignupDays: purpose === '전환' ? firstSignup : undefined,
           missions: []
@@ -2197,7 +2345,10 @@
       const btnScSaveOnly = $('btn-sc-save-only');
       if (btnScCancel) btnScCancel.addEventListener('click', () => {
         if (!window.confirm('입력을 중단할까요?')) return;
-        if (addFlow === 'campaignCreate') return showCampaignAdd();
+        if (addFlow === 'campaignCreate') {
+          addDraft = { campaign: null, scheme: null, mission: null };
+          return showList();
+        }
         if (addFlow === 'schemeAdd' && activeCampaignId) {
           showDetail(activeCampaignId);
           activateDetailTab('schemes');
@@ -2207,6 +2358,12 @@
       });
       if (btnScSaveNext) btnScSaveNext.addEventListener('click', () => commitSchemeFromForm(true));
       if (btnScSaveOnly) btnScSaveOnly.addEventListener('click', () => commitSchemeFromForm(false));
+      const btnScPrev = $('btn-sc-prev');
+      if (btnScPrev) btnScPrev.addEventListener('click', () => { showCampaignAdd(true); });
+      const btnScSkip = $('btn-sc-skip');
+      if (btnScSkip) btnScSkip.addEventListener('click', () => {
+        showToast('노션: 스킴 없이 STEP3로 넘어가면 미션 입력이 비활성화됩니다. (목업에서는 안내만)');
+      });
 
       function persistMissionFromForm(stayOnForm) {
         const s = resolveMsScheme();
@@ -2262,6 +2419,7 @@
             setSubnavMode('list');
             renderList();
             hydratePickCampaign();
+            hydratePickCampaignMs();
             hydratePickScheme();
             renderStatusMissions();
             showDetail(c0.id);
@@ -2304,7 +2462,9 @@
           addDraft = { campaign: null, scheme: null, mission: null };
           setSubnavMode('list');
           renderList();
+          hydratePickCampaignMs();
           showToast('저장했습니다.');
+          paintWizardStrip('ms', 4);
           showDetail(cp.id);
           activateDetailTab('missions');
         } else {
@@ -2323,6 +2483,17 @@
       const btnMsCancel = $('btn-ms-cancel');
       const btnMsSave = $('btn-ms-save');
       const btnMsSaveAnother = $('btn-ms-save-another');
+      const btnMsPrev = $('btn-ms-prev');
+      if (btnMsPrev) btnMsPrev.addEventListener('click', () => { showSchemeStep(); });
+      const btnMsSkip = $('btn-ms-skip');
+      if (btnMsSkip) btnMsSkip.addEventListener('click', () => {
+        openRegisterConfirmModal('등록 후 캠페인 정보는 수정할 수 없습니다. 캠페인·스킴만 저장하고 목록으로 이동할까요? (미션 미등록)', () => {
+          addDraft = { campaign: null, scheme: null, mission: null };
+          setSubnavMode('list');
+          showList();
+          showToast('목업: 넘어가기 확정 시 상세로 이동하는 흐름은 백엔드 연동 후 구현합니다.');
+        });
+      });
       if (btnMsCancel) btnMsCancel.addEventListener('click', () => {
         if (!window.confirm('입력을 중단할까요?')) return;
         if (addFlow === 'campaignCreate') return showSchemeStep();
@@ -2333,8 +2504,20 @@
         }
         return showList();
       });
-      if (btnMsSave) btnMsSave.addEventListener('click', () => persistMissionFromForm(false));
-      if (btnMsSaveAnother) btnMsSaveAnother.addEventListener('click', () => persistMissionFromForm(true));
+      if (btnMsSave) btnMsSave.addEventListener('click', () => {
+        if (addFlow === 'campaignCreate') {
+          openRegisterConfirmModal('등록 후 캠페인 정보는 수정할 수 없습니다. 등록하시겠습니까?', () => persistMissionFromForm(false));
+          return;
+        }
+        persistMissionFromForm(false);
+      });
+      if (btnMsSaveAnother) btnMsSaveAnother.addEventListener('click', () => {
+        if (addFlow === 'campaignCreate') {
+          openRegisterConfirmModal('등록 후 캠페인 정보는 수정할 수 없습니다. 미션을 저장하고 이어서 추가 등록할까요?', () => persistMissionFromForm(true));
+          return;
+        }
+        persistMissionFromForm(true);
+      });
 
       const msShipper = $('ms-shipper');
       if (msShipper) {
@@ -2352,6 +2535,20 @@
           const id = String(scCamp.value || '');
           const c = CAMPAIGNS.find((x) => x.id === id);
           if (c) addDraft.campaign = { id: c.id, name: c.name, purpose: c.purpose, start: c.start, end: c.end };
+        });
+      }
+      const scImp = $('sc-import-preset');
+      if (scImp) {
+        scImp.addEventListener('change', () => {
+          const v = String(scImp.value || '');
+          if (!v) return;
+          showToast('목업: 스킴 불러오기 시 필드 읽기 전용·연결만 (' + v + ').');
+        });
+      }
+      const msCopy = $('ms-copy-preset');
+      if (msCopy) {
+        msCopy.addEventListener('change', () => {
+          if (String(msCopy.value || '') === 'MS-001' && $('ms-name')) $('ms-name').value = '서초 점심 단일(복사)';
         });
       }
 
@@ -2440,6 +2637,7 @@
                 budgetTotal: 12000000,
                 budgetSpent: 3250000,
                 off: false,
+                orderScope: '전체',
                 targets: ['일반기사(프렌즈)'],
                 regions: ['전체지역'],
                 activityRegions: ['서울특별시 서초구'],
@@ -2459,6 +2657,7 @@
                 budgetTotal: 15000000,
                 budgetSpent: 0,
                 off: true,
+                orderScope: '프랜차이즈',
                 targets: ['NVP지점기사'],
                 zones: ['서울 강남ZONE'],
                 regions: [],
@@ -2487,6 +2686,7 @@
                 budgetTotal: 50000000,
                 budgetSpent: 12400000,
                 off: false,
+                orderScope: '전체',
                 targets: ['일반기사(프렌즈)'],
                 regions: ['서울특별시 강남구 청담동'],
                 activityRegions: ['서울특별시 서초구', '인천광역시 연수구'],
@@ -2889,9 +3089,11 @@
         if (!tb) return;
         tb.innerHTML = '';
         const pickedCampaignId = $('pick-campaign') ? String($('pick-campaign').value || '') : '';
+        const fltSn = $('flt-scheme-name') ? String($('flt-scheme-name').value || '').trim() : '';
         const rows = CAMPAIGNS
           .filter((c) => !pickedCampaignId || c.id === pickedCampaignId)
-          .flatMap((c) => (Array.isArray(c.schemes) ? c.schemes.map((s) => ({ campaign: c, scheme: s })) : []));
+          .flatMap((c) => (Array.isArray(c.schemes) ? c.schemes.map((s) => ({ campaign: c, scheme: s })) : []))
+          .filter(({ scheme }) => !fltSn || String(scheme.name || '').includes(fltSn));
         rows.forEach(({ campaign, scheme }) => {
           const st = statusOf(scheme);
           const ended = st.key === '완료';
@@ -2905,6 +3107,7 @@
             '<td>' + safeText(scheme.purpose || campaign.purpose || '-') + '</td>' +
             '<td>' + schemeTargetSummary(scheme) + '</td>' +
             '<td>' + schemeRegionSummary(scheme) + '</td>' +
+            '<td>' + safeText(scheme.orderScope || '전체') + '</td>' +
             '<td>' + safeText(fmtPeriod(scheme)) + '</td>' +
             '<td class=\"td-num\">' + fmtWon(Number(scheme.budgetTotal) || 0) + '</td>' +
             '<td><span class=\"badge ' + st.cls + '\">' + st.key + '</span></td>' +
@@ -2921,6 +3124,7 @@
             const c = CAMPAIGNS.find((x) => x.id === cid);
             const s = c && Array.isArray(c.schemes) ? c.schemes.find((x) => x.id === sid) : null;
             if ($('pick-campaign') && c) $('pick-campaign').value = c.id;
+            if ($('pick-campaign-ms')) $('pick-campaign-ms').value = c.id;
             hydratePickScheme();
             if ($('pick-scheme') && s) $('pick-scheme').value = (c.id + '::' + s.id);
             showToast('스킴을 선택했습니다.');
@@ -2942,6 +3146,17 @@
         });
       }
 
+      function missionInDateFilter(m) {
+        const from = $('flt-ms-from') ? String($('flt-ms-from').value || '') : '';
+        const to = $('flt-ms-to') ? String($('flt-ms-to').value || '') : '';
+        if (!from && !to) return true;
+        const ms = m.start;
+        const me = m.end;
+        if (from && me < from) return false;
+        if (to && ms > to) return false;
+        return true;
+      }
+
       function renderStatusMissions() {
         const tb = $('tbody-status-missions');
         if (!tb) return;
@@ -2949,13 +3164,16 @@
         const picked = $('pick-scheme') ? String($('pick-scheme').value || '') : '';
         const pickedCid = picked.includes('::') ? picked.split('::')[0] : '';
         const pickedSid = picked.includes('::') ? picked.split('::')[1] : '';
+        const fltMn = $('flt-mission-name') ? String($('flt-mission-name').value || '').trim() : '';
         const rows = CAMPAIGNS.flatMap((c) =>
           (Array.isArray(c.schemes) ? c.schemes.flatMap((s) =>
             (Array.isArray(s.missions) ? s.missions.map((m) => ({ campaign: c, scheme: s, mission: m })) : [])
           ) : [])
         );
         rows
-          .filter(({ campaign, scheme }) => (!pickedCid || campaign.id === pickedCid) && (!pickedSid || scheme.id === pickedSid))
+          .filter(({ campaign, scheme, mission }) => (!pickedCid || campaign.id === pickedCid) && (!pickedSid || scheme.id === pickedSid))
+          .filter(({ mission }) => !fltMn || String(mission.name || '').includes(fltMn))
+          .filter(({ mission }) => missionInDateFilter(mission))
           .forEach(({ campaign, scheme, mission }) => {
           const st = statusOf(mission);
           const mb = missionBadge(mission);
@@ -2966,12 +3184,12 @@
           const tr = document.createElement('tr');
           tr.innerHTML =
             '<td><a href=\"#\" class=\"link btn-pick-mission\" data-cid=\"' + campaign.id + '\" data-sid=\"' + scheme.id + '\">' + safeText(mission.name) + '</a></td>' +
-            '<td>' + safeText(campaign.name) + '</td>' +
             '<td>' + safeText(scheme.name) + '</td>' +
             '<td>' + safeText(mission.structure || '-') + '</td>' +
-            '<td>' + safeText(mission.shipper || '전체') + '</td>' +
+            '<td>' + safeText(missionTimeSummary(mission)) + '</td>' +
             '<td>' + safeText(fmtPeriod(mission)) + '</td>' +
             '<td><span class=\"badge ' + mb.cls + '\">' + mb.key + '</span></td>' +
+            '<td>' + safeText(mission.shipper || '전체') + '</td>' +
             '<td>' + manageTd + '</td>';
           tb.appendChild(tr);
         });
@@ -2985,9 +3203,10 @@
             const c = CAMPAIGNS.find((x) => x.id === cid);
             const s = c && Array.isArray(c.schemes) ? c.schemes.find((x) => x.id === sid) : null;
             if ($('pick-campaign') && c) $('pick-campaign').value = c.id;
+            if ($('pick-campaign-ms')) $('pick-campaign-ms').value = c.id;
             hydratePickScheme();
             if ($('pick-scheme') && s) $('pick-scheme').value = (c.id + '::' + s.id);
-            showToast('스킴을 선택했습니다.');
+            showToast('미션 행을 선택했습니다. (필터 동기화)');
           });
         });
         tb.querySelectorAll('.btn-toggle-status-mission').forEach((a) => {
@@ -3026,20 +3245,44 @@
         if (curr && Array.from(sel.options).some((o) => o.value === curr)) sel.value = curr;
       }
 
+      function hydratePickCampaignMs() {
+        const sel = $('pick-campaign-ms');
+        const main = $('pick-campaign');
+        if (!sel || !main) return;
+        const currMain = String(main.value || '');
+        const currMs = String(sel.value || '');
+        sel.innerHTML = '';
+        const opt0 = document.createElement('option');
+        opt0.value = '';
+        opt0.textContent = '전체';
+        sel.appendChild(opt0);
+        CAMPAIGNS.forEach((c) => {
+          const o = document.createElement('option');
+          o.value = c.id;
+          o.textContent = c.name;
+          sel.appendChild(o);
+        });
+        const prefer = currMain || currMs;
+        if (prefer && Array.from(sel.options).some((o) => o.value === prefer)) sel.value = prefer;
+        else sel.value = '';
+      }
+
       function hydratePickScheme() {
         const sel = $('pick-scheme');
         if (!sel) return;
         const cid = $('pick-campaign') ? String($('pick-campaign').value || '') : '';
+        const cidMs = $('pick-campaign-ms') ? String($('pick-campaign-ms').value || '') : '';
+        const effCid = cid || cidMs;
         const curr = String(sel.value || '');
         sel.innerHTML = '';
         const opt0 = document.createElement('option');
         opt0.value = '';
-        opt0.textContent = cid ? '스킴을 선택해 주세요' : '먼저 캠페인을 선택해 주세요';
+        opt0.textContent = effCid ? '스킴을 선택해 주세요' : '먼저 캠페인을 선택해 주세요';
         sel.appendChild(opt0);
-        const c = CAMPAIGNS.find((x) => x.id === cid);
+        const c = CAMPAIGNS.find((x) => x.id === effCid);
         (c && Array.isArray(c.schemes) ? c.schemes : []).forEach((s) => {
           const opt = document.createElement('option');
-          opt.value = (cid + '::' + s.id);
+          opt.value = (effCid + '::' + s.id);
           opt.textContent = s.name;
           sel.appendChild(opt);
         });
@@ -3047,6 +3290,10 @@
       }
 
       $('btn-search').addEventListener('click', renderList);
+      const btnSearchSchemes = $('btn-search-schemes');
+      if (btnSearchSchemes) btnSearchSchemes.addEventListener('click', renderStatusSchemes);
+      const btnSearchMissions = $('btn-search-missions');
+      if (btnSearchMissions) btnSearchMissions.addEventListener('click', renderStatusMissions);
       $('flt-status').addEventListener('change', renderList);
       $('flt-purpose').addEventListener('change', renderList);
       renderList();
@@ -3495,6 +3742,17 @@
       function setModalFooter(mode) {
         const closeEl = $('modal-close');
         const confirmEl = $('modal-off-confirm');
+        const regC = $('modal-cancel-reg');
+        const regOk = $('modal-confirm-reg');
+        if (regC) regC.style.display = 'none';
+        if (regOk) regOk.style.display = 'none';
+        if (mode === 'register') {
+          closeEl.style.display = 'none';
+          confirmEl.style.display = 'none';
+          if (regC) { regC.style.display = ''; regC.textContent = '취소'; }
+          if (regOk) { regOk.style.display = ''; regOk.textContent = '등록'; }
+          return;
+        }
         if (mode === 'confirm') {
           closeEl.style.display = '';
           closeEl.textContent = '닫기';
@@ -3506,9 +3764,18 @@
         }
       }
 
+      function openRegisterConfirmModal(message, fn) {
+        pendingRegisterFn = typeof fn === 'function' ? fn : null;
+        setModalFooter('register');
+        $('modal-title').textContent = '캠페인 등록 확인';
+        $('modal-body').textContent = message;
+        $('modal').style.display = 'flex';
+      }
+
       function hideModal() {
         $('modal').style.display = 'none';
         pendingOffId = null;
+        pendingRegisterFn = null;
         setModalFooter('single');
       }
 
@@ -3527,6 +3794,16 @@
         $('modal').style.display = 'flex';
       }
       $('modal-close').addEventListener('click', hideModal);
+      const modalCancelReg = $('modal-cancel-reg');
+      const modalConfirmReg = $('modal-confirm-reg');
+      if (modalCancelReg) modalCancelReg.addEventListener('click', hideModal);
+      if (modalConfirmReg) modalConfirmReg.addEventListener('click', () => {
+        const fn = pendingRegisterFn;
+        pendingRegisterFn = null;
+        $('modal').style.display = 'none';
+        setModalFooter('single');
+        if (fn) fn();
+      });
       $('modal-off-confirm').addEventListener('click', () => {
         if (!pendingOffId) { hideModal(); return; }
         CAMPAIGNS = CAMPAIGNS.map((c) => c.id === pendingOffId ? ({ ...c, off: true }) : c);
