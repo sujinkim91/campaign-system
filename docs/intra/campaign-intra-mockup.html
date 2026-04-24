@@ -616,7 +616,7 @@
       <div class="content">
         <!-- 화면 1: 캠페인 현황 -->
         <section id="screen-list" class="screen active">
-          <div class="filter-section">
+          <div class="filter-section" id="filter-section-campaign">
             <div class="filter-search-title">검색 조건</div>
             <div class="filter-row">
               <label for="flt-status">상태</label>
@@ -1732,6 +1732,10 @@
         const addSlot = $('list-footer-add-slot');
         const onCp = $('tab-cp') && $('tab-cp').classList.contains('active');
         if (addSlot) addSlot.style.display = onCp ? '' : 'none';
+        const fltCp = $('filter-section-campaign');
+        if (fltCp) fltCp.style.display = onCp ? '' : 'none';
+        const haList = $('header-actions-list');
+        if (haList) haList.style.display = onCp ? '' : 'none';
       }
       function showDetail(id) {
         const row = CAMPAIGNS.find((x) => x.id === id);
@@ -1773,6 +1777,10 @@
         if (pMs) pMs.style.display = key === 'ms' ? 'block' : 'none';
         const addSlot = $('list-footer-add-slot');
         if (addSlot) addSlot.style.display = key === 'cp' ? '' : 'none';
+        const fltCp = $('filter-section-campaign');
+        if (fltCp) fltCp.style.display = key === 'cp' ? '' : 'none';
+        const haList = $('header-actions-list');
+        if (haList) haList.style.display = key === 'cp' ? '' : 'none';
       }
 
       // (deprecated) use setSubnavStatusChild for status tabs
