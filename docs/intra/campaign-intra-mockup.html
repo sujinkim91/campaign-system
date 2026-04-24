@@ -409,6 +409,82 @@
     }
     .detail-mission-card .mission-name { font-weight: 900; color: var(--navy); font-size: 14px; }
 
+    /* Notion 5-2: 캠페인 → 스킴 → 미션 계층 */
+    .detail-hier-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 18px;
+      margin-bottom: 8px;
+      line-height: 1.45;
+    }
+    .detail-hier-tree {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px 16px;
+      background: #fafbfd;
+    }
+    .hier-root {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      padding-bottom: 12px;
+      margin-bottom: 4px;
+      border-bottom: 1px dashed var(--border);
+    }
+    .hier-entity-pill {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 6px;
+      letter-spacing: -0.02em;
+    }
+    .hier-entity-pill--cp { background: #e1f5ee; color: #085041; border: 1px solid rgba(29, 158, 117, 0.35); }
+    .hier-entity-pill--sc { background: #faeeda; color: #633806; border: 1px solid rgba(186, 117, 23, 0.35); }
+    .hier-entity-pill--ms { background: #fcebeb; color: #791f1f; border: 1px solid rgba(163, 45, 45, 0.28); }
+    .hier-name-strong { font-weight: 900; color: var(--navy); font-size: 15px; }
+    .hier-scheme-branch {
+      margin-top: 14px;
+      padding-left: 14px;
+      border-left: 2px solid rgba(29, 158, 117, 0.28);
+    }
+    .hier-scheme-branch:first-of-type { margin-top: 10px; }
+    .hier-scheme-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      margin-bottom: 12px;
+    }
+    .hier-scheme-head .hier-actions { margin-left: auto; }
+    .hier-mission-block {
+      margin: 10px 0 0 12px;
+      padding-left: 14px;
+      border-left: 2px solid rgba(163, 45, 45, 0.22);
+    }
+    .hier-mission-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 10px;
+      margin-top: 10px;
+    }
+    .hier-mission-head:first-child { margin-top: 0; }
+    .hier-mission-head .hier-actions { margin-left: auto; }
+    .hier-ascii {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      margin: 0 0 14px;
+      padding: 10px 12px;
+      background: var(--card);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      white-space: pre;
+      overflow-x: auto;
+      color: var(--navy);
+    }
+
     .invalid input:not([type="radio"]):not([type="checkbox"]),
     .invalid select,
     .invalid textarea { border-color: #c62828; background: #fff8f8; }
@@ -615,7 +691,7 @@
             <div class="table-wrap">
               <table class="data-table">
                 <colgroup>
-                  <col style="width:15%"><col style="width:13%"><col style="width:7%"><col style="width:9%"><col style="width:10%"><col style="width:9%"><col style="width:9%"><col style="width:9%"><col style="width:7%"><col style="width:7%">
+                  <col style="width:16%"><col style="width:14%"><col style="width:8%"><col style="width:10%"><col style="width:11%"><col style="width:10%"><col style="width:10%"><col style="width:11%"><col style="width:10%">
                 </colgroup>
                 <thead>
                   <tr>
@@ -627,7 +703,6 @@
                     <th>적용 오더</th>
                     <th>기간</th>
                     <th>예산</th>
-                    <th>상태</th>
                     <th>관리</th>
                   </tr>
                 </thead>
@@ -2713,6 +2788,14 @@
         return { key: base, cls: base === '진행' ? 'ok' : 'muted' };
       }
 
+      /** Notion: 스킴 개체에는 상태값이 없음. 기간 종료(및 목업 ON/OFF) 판단만 기간 기준으로 통일 */
+      function periodEnded(x) {
+        if (!x || !x.start || !x.end || !/^\d{4}-\d{2}-\d{2}$/.test(String(x.end))) return false;
+        const now = new Date();
+        const e = new Date(x.end + 'T23:59:59');
+        return now > e;
+      }
+
       function flatMissions(c) {
         return (Array.isArray(c.schemes) ? c.schemes : []).flatMap((s) => (Array.isArray(s.missions) ? s.missions : []));
       }
@@ -2936,47 +3019,61 @@
       function renderDetailHierarchy(c) {
         const root = $('panel-detail-hierarchy');
         if (!root) return;
-        root.innerHTML = '';
         const schemes = Array.isArray(c.schemes) ? c.schemes : [];
-        const sectionTitle = document.createElement('div');
-        sectionTitle.style.cssText = 'font-weight:900;color:var(--navy);margin-top:18px;margin-bottom:2px;font-size:15px;';
-        sectionTitle.textContent = '스킴 · 미션';
-        root.appendChild(sectionTitle);
+        let html = '';
+        html +=
+          '<div class="detail-hier-caption">' +
+            '※ Notion <strong>5-2 캠페인 상세</strong> — 소속 스킴·미션을 <strong>계층</strong>으로 표시합니다. ' +
+            '스킴 개체에는 PRD상 별도「상태」필드가 없으며, 상단 캠페인 정보의「상태」는 하위 <strong>미션 상태</strong>를 집계한 값입니다.' +
+          '</div>';
+        html += '<div class="detail-hier-tree">';
+        html +=
+          '<div class="hier-root">' +
+            '<span class="hier-entity-pill hier-entity-pill--cp">캠페인</span>' +
+            '<span class="hier-name-strong">' + escapeHtml(c.name || '—') + '</span>' +
+            '<span class="help">' + escapeHtml(safeText(c.id)) + '</span>' +
+          '</div>';
         if (!schemes.length) {
-          const empty = document.createElement('div');
-          empty.className = 'help';
-          empty.style.marginTop = '8px';
-          empty.textContent = '등록된 스킴이 없습니다. 상단에서 스킴을 추가할 수 있습니다.';
-          root.appendChild(empty);
+          html += '<div class="help" style="margin-top:6px;">등록된 스킴이 없습니다. 상단에서 스킴을 추가할 수 있습니다.</div></div>';
+          root.innerHTML = html;
           return;
         }
+        const asciiLines = ['캠페인'];
         schemes.forEach((s) => {
-          const st = statusOf(s);
-          const ended = st.key === '완료';
-          const manageHtml = ended
-            ? '<span class="manage-na" title="종료일이 지난 스킴은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
+          asciiLines.push('└ 스킴 · ' + (s.name || '—'));
+          (Array.isArray(s.missions) ? s.missions : []).forEach((m) => {
+            asciiLines.push('    └ 미션 · ' + (m.name || '—'));
+          });
+        });
+        html += '<pre class="hier-ascii" role="img" aria-label="캠페인·스킴·미션 계층 요약">' + asciiLines.map((ln) => escapeHtml(ln)).join('\n') + '</pre>';
+        schemes.forEach((s) => {
+          const schemeEnded = periodEnded(s);
+          const manageHtml = schemeEnded
+            ? '<span class="manage-na" title="적용 기간이 지난 스킴은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
             : '<a href="#" class="link btn-toggle-scheme" data-cid="' + c.id + '" data-sid="' + s.id + '">' + (s.off ? 'ON' : 'OFF') + '</a>';
           const bd = schemeBudgetDerived(s);
           const budgetHtml = fmtRemainInner(bd);
           const missions = Array.isArray(s.missions) ? s.missions : [];
           let missionsHtml = '';
           if (!missions.length) {
-            missionsHtml = '<div class="help" style="margin-top:8px;">이 스킴에 등록된 미션이 없습니다.</div>';
+            missionsHtml = '<div class="help" style="margin-top:4px;">이 스킴에 등록된 미션이 없습니다.</div>';
           } else {
             missionsHtml =
               '<div class="detail-mission-grid">' +
               missions.map((m) => {
-                const mst = statusOf(m);
                 const mb = missionBadge(m);
-                const mEnded = mst.key === '완료';
+                const mEnded = periodEnded(m);
                 const mManage = mEnded
-                  ? '<span class="manage-na" title="종료일이 지난 미션은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
+                  ? '<span class="manage-na" title="적용 기간이 지난 미션은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
                   : '<a href="#" class="link btn-toggle-mission" data-cid="' + c.id + '" data-sid="' + s.id + '" data-mid="' + m.id + '">' + (m.off ? 'ON' : 'OFF') + '</a>';
                 const periodM = (m.start && m.end) ? safeText(fmtPeriod(m)) : '—';
                 return (
                   '<div class="detail-mission-card">' +
                     '<div class="mission-card-head">' +
-                      '<span class="mission-name"><a href="#" class="link btn-open-mission" data-cid="' + c.id + '" data-sid="' + s.id + '" data-mid="' + m.id + '">' + escapeHtml(safeText(m.name)) + '</a></span>' +
+                      '<span class="mission-name">' +
+                        '<span class="hier-entity-pill hier-entity-pill--ms">미션</span> ' +
+                        '<a href="#" class="link btn-open-mission" data-cid="' + c.id + '" data-sid="' + s.id + '" data-mid="' + m.id + '">' + escapeHtml(safeText(m.name)) + '</a>' +
+                      '</span>' +
                       '<span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span class="badge ' + mb.cls + '">' + escapeHtml(mb.key) + '</span>' + mManage + '</span>' +
                     '</div>' +
                     '<div class="detail-overview-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px;">' +
@@ -3006,44 +3103,47 @@
               }).join('') +
               '</div>';
           }
-          const block = document.createElement('div');
-          block.className = 'detail-scheme-block';
-          block.innerHTML =
-            '<div class="detail-scheme-head">' +
-              '<span class="detail-scheme-title"><a href="#" class="link btn-open-scheme" data-cid="' + c.id + '" data-sid="' + s.id + '">' + escapeHtml(safeText(s.name)) + '</a></span>' +
-              '<span class="badge ' + st.cls + '">' + escapeHtml(st.key) + '</span>' +
-              '<span style="margin-left:auto;">' + manageHtml + '</span>' +
-            '</div>' +
-            '<div class="detail-overview-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;">' +
-              '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
-                '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">목적</div>' +
-                '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(safeText(s.purpose || c.purpose || '-')) + '</div>' +
+          html +=
+            '<div class="hier-scheme-branch">' +
+              '<div class="hier-scheme-head">' +
+                '<span class="hier-entity-pill hier-entity-pill--sc">스킴</span>' +
+                '<a href="#" class="link btn-open-scheme" data-cid="' + c.id + '" data-sid="' + s.id + '">' + escapeHtml(safeText(s.name)) + '</a>' +
+                '<span class="hier-actions">' + manageHtml + '</span>' +
               '</div>' +
-              '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
-                '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">적용대상</div>' +
-                '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(schemeTargetSummary(s)) + '</div>' +
+              '<div class="detail-overview-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;">' +
+                '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
+                  '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">목적</div>' +
+                  '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(safeText(s.purpose || c.purpose || '-')) + '</div>' +
+                '</div>' +
+                '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
+                  '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">적용대상</div>' +
+                  '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(schemeTargetSummary(s)) + '</div>' +
+                '</div>' +
+                '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
+                  '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">지역</div>' +
+                  '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(schemeRegionSummary(s)) + '</div>' +
+                '</div>' +
+                '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
+                  '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">적용 오더</div>' +
+                  '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(safeText(s.orderScope || '전체')) + '</div>' +
+                '</div>' +
+                '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
+                  '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">기간</div>' +
+                  '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(safeText(fmtPeriod(s))) + '</div>' +
+                '</div>' +
               '</div>' +
-              '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
-                '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">지역</div>' +
-                '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(schemeRegionSummary(s)) + '</div>' +
+              '<div class="panel" style="margin-top:14px;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
+                '<div style="font-weight:900;color:var(--navy);margin-bottom:8px;">예산 / 소진</div>' +
+                '<div>' + budgetHtml + '</div>' +
               '</div>' +
-              '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
-                '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">적용 오더</div>' +
-                '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(safeText(s.orderScope || '전체')) + '</div>' +
+              '<div class="hier-mission-block">' +
+                '<div style="font-weight:900;color:var(--navy);font-size:13px;margin-bottom:8px;">하위 미션 (' + missions.length + ')</div>' +
+                missionsHtml +
               '</div>' +
-              '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
-                '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">기간</div>' +
-                '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(safeText(fmtPeriod(s))) + '</div>' +
-              '</div>' +
-            '</div>' +
-            '<div class="panel" style="margin-top:14px;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
-              '<div style="font-weight:900;color:var(--navy);margin-bottom:8px;">예산 / 소진</div>' +
-              '<div>' + budgetHtml + '</div>' +
-            '</div>' +
-            '<div style="margin-top:16px;font-weight:900;color:var(--navy);font-size:13px;">미션 (' + missions.length + ')</div>' +
-            missionsHtml;
-          root.appendChild(block);
+            '</div>';
         });
+        html += '</div>';
+        root.innerHTML = html;
         root.querySelectorAll('.btn-open-scheme').forEach((a) => {
           a.addEventListener('click', (e) => { e.preventDefault(); showToast('목업: 스킴 상세 화면은 다음 단계에서 추가합니다.'); });
         });
@@ -3056,7 +3156,7 @@
             if (!row) return;
             const schemes2 = Array.isArray(row.schemes) ? row.schemes : [];
             const s2 = schemes2.find((x) => x.id === sid);
-            if (s2 && statusOf(s2).key === '완료') { showToast('종료일이 지난 스킴은 관리(ON/OFF)를 변경할 수 없습니다.'); return; }
+            if (s2 && periodEnded(s2)) { showToast('적용 기간이 지난 스킴은 관리(ON/OFF)를 변경할 수 없습니다.'); return; }
             if (s2 && !s2.off) { showToast('목업: OFF 확인 모달은 캠페인 단위로만 유지합니다.'); }
             if (s2) s2.off = !s2.off;
             renderOverviewPanel(row);
@@ -3079,7 +3179,7 @@
             const s2 = schemes2.find((x) => x.id === sid);
             const m2 = s2 && Array.isArray(s2.missions) ? s2.missions.find((x) => x.id === mid) : null;
             if (!m2) return;
-            if (statusOf(m2).key === '완료') { showToast('종료일이 지난 미션은 관리(ON/OFF)를 변경할 수 없습니다.'); return; }
+            if (periodEnded(m2)) { showToast('적용 기간이 지난 미션은 관리(ON/OFF)를 변경할 수 없습니다.'); return; }
             if (!m2.off) { showToast('목업: OFF 확인 모달은 캠페인 단위로만 유지합니다.'); }
             m2.off = !m2.off;
             renderOverviewPanel(row);
@@ -3145,10 +3245,9 @@
           .flatMap((c) => (Array.isArray(c.schemes) ? c.schemes.map((s) => ({ campaign: c, scheme: s })) : []))
           .filter(({ scheme }) => !fltSn || String(scheme.name || '').includes(fltSn));
         rows.forEach(({ campaign, scheme }) => {
-          const st = statusOf(scheme);
-          const ended = st.key === '완료';
+          const ended = periodEnded(scheme);
           const manageTd = ended
-            ? '<span class="manage-na" title="종료일이 지난 스킴은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
+            ? '<span class="manage-na" title="적용 기간이 지난 스킴은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
             : '<a href=\"#\" class=\"link btn-toggle-status-scheme\" data-cid=\"' + campaign.id + '\" data-sid=\"' + scheme.id + '\">' + (scheme.off ? 'ON' : 'OFF') + '</a>';
           const tr = document.createElement('tr');
           tr.innerHTML =
@@ -3160,7 +3259,6 @@
             '<td>' + safeText(scheme.orderScope || '전체') + '</td>' +
             '<td>' + safeText(fmtPeriod(scheme)) + '</td>' +
             '<td class=\"td-num\">' + fmtWon(Number(scheme.budgetTotal) || 0) + '</td>' +
-            '<td><span class=\"badge ' + st.cls + '\">' + st.key + '</span></td>' +
             '<td>' + manageTd + '</td>';
           tb.appendChild(tr);
         });
@@ -3188,7 +3286,7 @@
             const c = CAMPAIGNS.find((x) => x.id === cid);
             const s = c && Array.isArray(c.schemes) ? c.schemes.find((x) => x.id === sid) : null;
             if (!s) return;
-            if (statusOf(s).key === '완료') return showToast('종료일이 지난 스킴은 관리(ON/OFF)를 변경할 수 없습니다.');
+            if (periodEnded(s)) return showToast('적용 기간이 지난 스킴은 관리(ON/OFF)를 변경할 수 없습니다.');
             s.off = !s.off;
             renderStatusSchemes();
             renderList();
