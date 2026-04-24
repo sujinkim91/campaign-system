@@ -343,6 +343,72 @@
     .pill--tab { user-select: none; border-radius: 999px; }
     .pill--tab.active { border-color: var(--navy); background: #f0f4fa; box-shadow: 0 0 0 1px rgba(36,59,85,.08); }
 
+    .tabs-bar {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      align-items: stretch;
+      margin-bottom: 12px;
+    }
+    .tab-item {
+      appearance: none;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      padding: 10px 18px 12px;
+      font: inherit;
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 0;
+    }
+    .tab-item:hover { color: var(--navy); }
+    .tab-item.active {
+      color: var(--navy);
+      border-bottom-color: var(--navy);
+    }
+
+    .detail-scheme-block {
+      margin-top: 18px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+    }
+    .detail-scheme-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 14px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .detail-scheme-title { font-weight: 900; color: var(--navy); font-size: 15px; }
+    .detail-mission-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .detail-mission-card {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fafbfd;
+    }
+    .detail-mission-card .mission-card-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .detail-mission-card .mission-name { font-weight: 900; color: var(--navy); font-size: 14px; }
+
     .invalid input:not([type="radio"]):not([type="checkbox"]),
     .invalid select,
     .invalid textarea { border-color: #c62828; background: #fff8f8; }
@@ -498,11 +564,11 @@
             </div>
           </div>
 
-          <div style="margin: 12px 0 10px;">
-            <div class="radio-group" role="tablist" aria-label="캠페인 현황 탭">
-              <button type="button" class="pill pill--tab active" id="tab-cp">캠페인</button>
-              <button type="button" class="pill pill--tab" id="tab-sc">스킴</button>
-              <button type="button" class="pill pill--tab" id="tab-ms">미션</button>
+          <div style="margin: 12px 0 0;">
+            <div class="tabs-bar" role="tablist" aria-label="캠페인 현황 탭">
+              <button type="button" class="tab-item active" id="tab-cp">캠페인</button>
+              <button type="button" class="tab-item" id="tab-sc">스킴</button>
+              <button type="button" class="tab-item" id="tab-ms">미션</button>
             </div>
           </div>
 
@@ -615,7 +681,9 @@
           </div>
 
           <div class="list-footer">
-            <button type="button" class="btn-add" id="btn-open-register">+ 캠페인 추가</button>
+            <span id="list-footer-add-slot" class="list-footer-add-slot">
+              <button type="button" class="btn-add" id="btn-open-register">+ 캠페인 추가</button>
+            </span>
             <div class="pagination-mock" aria-hidden="true"><span>1</span></div>
             <span class="list-count-footer" id="list-count-footer">총 0건</span>
           </div>
@@ -628,69 +696,13 @@
               <h2 class="panel-title">캠페인 상세</h2>
               <div class="help" style="margin-bottom:12px;">캠페인 ID: <span id="d-id">-</span></div>
 
-              <div style="margin-top:4px;">
-                <div class="radio-group" role="tablist" aria-label="캠페인 상세 탭">
-                  <button type="button" class="pill pill--tab active" id="tab-overview">캠페인 정보</button>
-                  <button type="button" class="pill pill--tab" id="tab-schemes">스킴</button>
-                  <button type="button" class="pill pill--tab" id="tab-missions">미션</button>
-                </div>
+              <div class="detail-toolbar" style="margin-top:12px;display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;">
+                <button type="button" class="btn primary" id="btn-add-scheme">+ 스킴 추가</button>
+                <button type="button" class="btn primary" id="btn-add-mission">+ 미션 추가</button>
               </div>
 
               <div id="panel-overview" style="margin-top:16px;"></div>
-
-              <div id="panel-schemes" style="margin-top:16px; display:none;">
-                <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;">
-                  <div style="font-weight:900;color:var(--navy);">스킴 목록</div>
-                  <button type="button" class="btn primary" id="btn-add-scheme">+ 스킴 추가</button>
-                </div>
-                <div class="table-wrap" style="margin-top:10px;">
-                  <table class="data-table">
-                    <colgroup>
-                      <col style="width:18%"><col style="width:8%"><col style="width:14%"><col style="width:16%"><col style="width:12%"><col style="width:14%"><col style="width:8%"><col style="width:10%">
-                    </colgroup>
-                    <thead>
-                      <tr>
-                        <th>스킴명</th>
-                        <th>목적</th>
-                        <th>적용대상</th>
-                        <th>지역</th>
-                        <th>기간</th>
-                        <th>예산 / 소진</th>
-                        <th>상태</th>
-                        <th>관리</th>
-                      </tr>
-                    </thead>
-                    <tbody id="tbody-schemes"></tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div id="panel-missions" style="margin-top:16px; display:none;">
-                <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;">
-                  <div style="font-weight:900;color:var(--navy);">미션 목록</div>
-                  <button type="button" class="btn primary" id="btn-add-mission">+ 미션 추가</button>
-                </div>
-                <div class="table-wrap" style="margin-top:10px;">
-                  <table class="data-table">
-                    <colgroup>
-                      <col style="width:18%"><col style="width:16%"><col style="width:10%"><col style="width:14%"><col style="width:12%"><col style="width:18%"><col style="width:6%"><col style="width:6%">
-                    </colgroup>
-                    <thead>
-                      <tr>
-                        <th>미션명</th>
-                        <th>스킴명</th>
-                        <th>지급 구조</th>
-                        <th>시간대</th>
-                        <th>화주사</th>
-                        <th>달성 조건</th>
-                        <th>상태</th>
-                        <th>관리</th>
-                      </tr>
-                    </thead>
-                    <tbody id="tbody-missions"></tbody>
-                  </table>
-                </div>
-              </div>
+              <div id="panel-detail-hierarchy" style="margin-top:4px;"></div>
             </div>
           </div>
         </section>
@@ -1642,6 +1654,9 @@
         if (headerList) headerList.style.display = 'flex';
         if (headerRegister) headerRegister.style.display = 'none';
         if (headerDetail) headerDetail.style.display = 'none';
+        const addSlot = $('list-footer-add-slot');
+        const onCp = $('tab-cp') && $('tab-cp').classList.contains('active');
+        if (addSlot) addSlot.style.display = onCp ? '' : 'none';
       }
       function showDetail(id) {
         const row = CAMPAIGNS.find((x) => x.id === id);
@@ -1681,6 +1696,8 @@
         if (pCp) pCp.style.display = key === 'cp' ? 'block' : 'none';
         if (pSc) pSc.style.display = key === 'sc' ? 'block' : 'none';
         if (pMs) pMs.style.display = key === 'ms' ? 'block' : 'none';
+        const addSlot = $('list-footer-add-slot');
+        if (addSlot) addSlot.style.display = key === 'cp' ? '' : 'none';
       }
 
       // (deprecated) use setSubnavStatusChild for status tabs
@@ -2098,14 +2115,6 @@
       });
       $('btn-logout-mock').addEventListener('click', () => showToast('목업: 로그아웃 동작 없음'));
 
-      // ===== 상세 탭 이벤트 =====
-      const tabOverview = $('tab-overview');
-      const tabSchemes = $('tab-schemes');
-      const tabMissions = $('tab-missions');
-      if (tabOverview) tabOverview.addEventListener('click', () => activateDetailTab('overview'));
-      if (tabSchemes) tabSchemes.addEventListener('click', () => activateDetailTab('schemes'));
-      if (tabMissions) tabMissions.addEventListener('click', () => activateDetailTab('missions'));
-
       const btnAddScheme = $('btn-add-scheme');
       const btnAddMission = $('btn-add-mission');
       if (btnAddScheme) btnAddScheme.addEventListener('click', () => {
@@ -2307,7 +2316,6 @@
           } else {
             activateStatusTab('sc');
             showDetail(c0.id);
-            activateDetailTab('schemes');
             showToast('스킴을 저장했습니다.');
           }
           return;
@@ -2336,7 +2344,6 @@
         setSubnavMode('list');
         renderList();
         showDetail(cp.id);
-        activateDetailTab('schemes');
         showToast('스킴을 저장했습니다.');
       }
 
@@ -2351,7 +2358,6 @@
         }
         if (addFlow === 'schemeAdd' && activeCampaignId) {
           showDetail(activeCampaignId);
-          activateDetailTab('schemes');
           return;
         }
         return showList();
@@ -2423,7 +2429,6 @@
             hydratePickScheme();
             renderStatusMissions();
             showDetail(c0.id);
-            activateDetailTab('missions');
             showToast('미션을 저장했습니다.');
           } else {
             showToast('미션을 저장했습니다. 연속 등록을 이어갈 수 있습니다.');
@@ -2466,7 +2471,6 @@
           showToast('저장했습니다.');
           paintWizardStrip('ms', 4);
           showDetail(cp.id);
-          activateDetailTab('missions');
         } else {
           showToast('미션을 저장했습니다. 동일 스킴에 미션을 추가로 등록할 수 있습니다.');
           if ($('ms-name')) $('ms-name').value = '';
@@ -2499,7 +2503,6 @@
         if (addFlow === 'campaignCreate') return showSchemeStep();
         if (activeCampaignId) {
           showDetail(activeCampaignId);
-          activateDetailTab('missions');
           return;
         }
         return showList();
@@ -2887,25 +2890,7 @@
       function renderDetail(c) {
         if ($('d-id')) $('d-id').textContent = safeText(c.id);
         renderOverviewPanel(c);
-        renderSchemes(c);
-        renderMissions(c);
-        activateDetailTab('overview');
-      }
-
-      function activateDetailTab(key) {
-        const tO = $('tab-overview');
-        const tS = $('tab-schemes');
-        const tM = $('tab-missions');
-        const pO = $('panel-overview');
-        const pS = $('panel-schemes');
-        const pM = $('panel-missions');
-        const setAct = (el, on) => { if (!el) return; el.classList.toggle('active', !!on); };
-        setAct(tO, key === 'overview');
-        setAct(tS, key === 'schemes');
-        setAct(tM, key === 'missions');
-        if (pO) pO.style.display = key === 'overview' ? 'block' : 'none';
-        if (pS) pS.style.display = key === 'schemes' ? 'block' : 'none';
-        if (pM) pM.style.display = key === 'missions' ? 'block' : 'none';
+        renderDetailHierarchy(c);
       }
 
       function schemeTargetSummary(s) {
@@ -2930,50 +2915,6 @@
         return { total, spent, remain, remainPct };
       }
 
-      function renderSchemes(c) {
-        const tb = $('tbody-schemes');
-        if (!tb) return;
-        tb.innerHTML = '';
-        const schemes = Array.isArray(c.schemes) ? c.schemes : [];
-        schemes.forEach((s) => {
-          const st = statusOf(s);
-          const ended = st.key === '완료';
-          const manageTd = ended
-            ? '<span class="manage-na" title="종료일이 지난 스킴은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
-            : '<a href="#" class="link btn-toggle-scheme" data-cid="' + c.id + '" data-sid="' + s.id + '">' + (s.off ? 'ON' : 'OFF') + '</a>';
-          const bd = schemeBudgetDerived(s);
-          const budgetCell = fmtRemainInner(bd);
-          const tr = document.createElement('tr');
-          tr.innerHTML =
-            '<td><a href="#" class="link btn-open-scheme" data-cid="' + c.id + '" data-sid="' + s.id + '">' + safeText(s.name) + '</a></td>' +
-            '<td>' + safeText(s.purpose || c.purpose || '-') + '</td>' +
-            '<td>' + schemeTargetSummary(s) + '</td>' +
-            '<td>' + schemeRegionSummary(s) + '</td>' +
-            '<td>' + safeText(fmtPeriod(s)) + '</td>' +
-            '<td>' + budgetCell + '</td>' +
-            '<td><span class="badge ' + st.cls + '">' + st.key + '</span></td>' +
-            '<td>' + manageTd + '</td>';
-          tb.appendChild(tr);
-        });
-        tb.querySelectorAll('.btn-open-scheme').forEach((a) => {
-          a.addEventListener('click', (e) => { e.preventDefault(); showToast('목업: 스킴 상세 화면은 다음 단계에서 추가합니다.'); });
-        });
-        tb.querySelectorAll('.btn-toggle-scheme').forEach((a) => {
-          a.addEventListener('click', (e) => {
-            e.preventDefault();
-            const sid = a.getAttribute('data-sid');
-            if (!sid) return;
-            const schemes = Array.isArray(c.schemes) ? c.schemes : [];
-            const s = schemes.find((x) => x.id === sid);
-            if (s && statusOf(s).key === '완료') { showToast('종료일이 지난 스킴은 관리(ON/OFF)를 변경할 수 없습니다.'); return; }
-            if (s && !s.off) { showToast('목업: OFF 확인 모달은 캠페인 단위로만 유지합니다.'); }
-            s.off = !s.off;
-            renderSchemes(c);
-            renderList();
-          });
-        });
-      }
-
       function missionAchieveSummary(m) {
         const bits = [];
         if (m.structure === '단계형' && Array.isArray(m.stages) && m.stages.length) {
@@ -2992,48 +2933,157 @@
         return ts.map((t) => (t.start || '') + '~' + (t.end || '')).join(', ');
       }
 
-      function renderMissions(c) {
-        const tb = $('tbody-missions');
-        if (!tb) return;
-        tb.innerHTML = '';
+      function renderDetailHierarchy(c) {
+        const root = $('panel-detail-hierarchy');
+        if (!root) return;
+        root.innerHTML = '';
         const schemes = Array.isArray(c.schemes) ? c.schemes : [];
-        const missions = schemes.flatMap((s) => (Array.isArray(s.missions) ? s.missions.map((m) => ({ ...m, schemeName: s.name, schemeId: s.id })) : []));
-        missions.forEach((m) => {
-          const st = statusOf(m);
-          const mb = missionBadge(m);
+        const sectionTitle = document.createElement('div');
+        sectionTitle.style.cssText = 'font-weight:900;color:var(--navy);margin-top:18px;margin-bottom:2px;font-size:15px;';
+        sectionTitle.textContent = '스킴 · 미션';
+        root.appendChild(sectionTitle);
+        if (!schemes.length) {
+          const empty = document.createElement('div');
+          empty.className = 'help';
+          empty.style.marginTop = '8px';
+          empty.textContent = '등록된 스킴이 없습니다. 상단에서 스킴을 추가할 수 있습니다.';
+          root.appendChild(empty);
+          return;
+        }
+        schemes.forEach((s) => {
+          const st = statusOf(s);
           const ended = st.key === '완료';
-          const manageTd = ended
-            ? '<span class="manage-na" title="종료일이 지난 미션은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
-            : '<a href="#" class="link btn-toggle-mission" data-cid="' + c.id + '" data-sid="' + m.schemeId + '" data-mid="' + m.id + '">' + (m.off ? 'ON' : 'OFF') + '</a>';
-          const tr = document.createElement('tr');
-          tr.innerHTML =
-            '<td><a href="#" class="link btn-open-mission" data-cid="' + c.id + '" data-sid="' + m.schemeId + '" data-mid="' + m.id + '">' + safeText(m.name) + '</a></td>' +
-            '<td>' + safeText(m.schemeName) + '</td>' +
-            '<td>' + safeText(m.structure || '-') + '</td>' +
-            '<td>' + missionTimeSummary(m) + '</td>' +
-            '<td>' + safeText(m.shipper || '전체') + '</td>' +
-            '<td>' + missionAchieveSummary(m) + '</td>' +
-            '<td><span class="badge ' + mb.cls + '">' + mb.key + '</span></td>' +
-            '<td>' + manageTd + '</td>';
-          tb.appendChild(tr);
+          const manageHtml = ended
+            ? '<span class="manage-na" title="종료일이 지난 스킴은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
+            : '<a href="#" class="link btn-toggle-scheme" data-cid="' + c.id + '" data-sid="' + s.id + '">' + (s.off ? 'ON' : 'OFF') + '</a>';
+          const bd = schemeBudgetDerived(s);
+          const budgetHtml = fmtRemainInner(bd);
+          const missions = Array.isArray(s.missions) ? s.missions : [];
+          let missionsHtml = '';
+          if (!missions.length) {
+            missionsHtml = '<div class="help" style="margin-top:8px;">이 스킴에 등록된 미션이 없습니다.</div>';
+          } else {
+            missionsHtml =
+              '<div class="detail-mission-grid">' +
+              missions.map((m) => {
+                const mst = statusOf(m);
+                const mb = missionBadge(m);
+                const mEnded = mst.key === '완료';
+                const mManage = mEnded
+                  ? '<span class="manage-na" title="종료일이 지난 미션은 ON/OFF를 변경할 수 없습니다.">ON 불가</span>'
+                  : '<a href="#" class="link btn-toggle-mission" data-cid="' + c.id + '" data-sid="' + s.id + '" data-mid="' + m.id + '">' + (m.off ? 'ON' : 'OFF') + '</a>';
+                const periodM = (m.start && m.end) ? safeText(fmtPeriod(m)) : '—';
+                return (
+                  '<div class="detail-mission-card">' +
+                    '<div class="mission-card-head">' +
+                      '<span class="mission-name"><a href="#" class="link btn-open-mission" data-cid="' + c.id + '" data-sid="' + s.id + '" data-mid="' + m.id + '">' + escapeHtml(safeText(m.name)) + '</a></span>' +
+                      '<span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span class="badge ' + mb.cls + '">' + escapeHtml(mb.key) + '</span>' + mManage + '</span>' +
+                    '</div>' +
+                    '<div class="detail-overview-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px;">' +
+                      '<div class="panel" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--card);">' +
+                        '<div style="font-size:11px;color:var(--text-muted);font-weight:800;">지급 구조</div>' +
+                        '<div style="font-weight:800;margin-top:3px;font-size:13px;">' + escapeHtml(safeText(m.structure || '-')) + '</div>' +
+                      '</div>' +
+                      '<div class="panel" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--card);">' +
+                        '<div style="font-size:11px;color:var(--text-muted);font-weight:800;">시간대</div>' +
+                        '<div style="font-weight:800;margin-top:3px;font-size:13px;">' + escapeHtml(missionTimeSummary(m)) + '</div>' +
+                      '</div>' +
+                      '<div class="panel" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--card);">' +
+                        '<div style="font-size:11px;color:var(--text-muted);font-weight:800;">기간</div>' +
+                        '<div style="font-weight:800;margin-top:3px;font-size:13px;">' + escapeHtml(periodM) + '</div>' +
+                      '</div>' +
+                      '<div class="panel" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--card);">' +
+                        '<div style="font-size:11px;color:var(--text-muted);font-weight:800;">화주사</div>' +
+                        '<div style="font-weight:800;margin-top:3px;font-size:13px;">' + escapeHtml(safeText(m.shipper || '전체')) + '</div>' +
+                      '</div>' +
+                      '<div class="panel" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--card);grid-column:1/-1;">' +
+                        '<div style="font-size:11px;color:var(--text-muted);font-weight:800;">달성 조건</div>' +
+                        '<div style="font-weight:800;margin-top:3px;font-size:13px;">' + escapeHtml(missionAchieveSummary(m)) + '</div>' +
+                      '</div>' +
+                    '</div>' +
+                  '</div>'
+                );
+              }).join('') +
+              '</div>';
+          }
+          const block = document.createElement('div');
+          block.className = 'detail-scheme-block';
+          block.innerHTML =
+            '<div class="detail-scheme-head">' +
+              '<span class="detail-scheme-title"><a href="#" class="link btn-open-scheme" data-cid="' + c.id + '" data-sid="' + s.id + '">' + escapeHtml(safeText(s.name)) + '</a></span>' +
+              '<span class="badge ' + st.cls + '">' + escapeHtml(st.key) + '</span>' +
+              '<span style="margin-left:auto;">' + manageHtml + '</span>' +
+            '</div>' +
+            '<div class="detail-overview-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;">' +
+              '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
+                '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">목적</div>' +
+                '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(safeText(s.purpose || c.purpose || '-')) + '</div>' +
+              '</div>' +
+              '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
+                '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">적용대상</div>' +
+                '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(schemeTargetSummary(s)) + '</div>' +
+              '</div>' +
+              '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
+                '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">지역</div>' +
+                '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(schemeRegionSummary(s)) + '</div>' +
+              '</div>' +
+              '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
+                '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">적용 오더</div>' +
+                '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(safeText(s.orderScope || '전체')) + '</div>' +
+              '</div>' +
+              '<div class="panel" style="padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
+                '<div style="font-size:12px;color:var(--text-muted);font-weight:800;">기간</div>' +
+                '<div style="font-weight:800;margin-top:4px;">' + escapeHtml(safeText(fmtPeriod(s))) + '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="panel" style="margin-top:14px;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--card);">' +
+              '<div style="font-weight:900;color:var(--navy);margin-bottom:8px;">예산 / 소진</div>' +
+              '<div>' + budgetHtml + '</div>' +
+            '</div>' +
+            '<div style="margin-top:16px;font-weight:900;color:var(--navy);font-size:13px;">미션 (' + missions.length + ')</div>' +
+            missionsHtml;
+          root.appendChild(block);
         });
-        tb.querySelectorAll('.btn-open-mission').forEach((a) => {
+        root.querySelectorAll('.btn-open-scheme').forEach((a) => {
+          a.addEventListener('click', (e) => { e.preventDefault(); showToast('목업: 스킴 상세 화면은 다음 단계에서 추가합니다.'); });
+        });
+        root.querySelectorAll('.btn-toggle-scheme').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sid = a.getAttribute('data-sid');
+            if (!sid) return;
+            const row = CAMPAIGNS.find((x) => x.id === c.id);
+            if (!row) return;
+            const schemes2 = Array.isArray(row.schemes) ? row.schemes : [];
+            const s2 = schemes2.find((x) => x.id === sid);
+            if (s2 && statusOf(s2).key === '완료') { showToast('종료일이 지난 스킴은 관리(ON/OFF)를 변경할 수 없습니다.'); return; }
+            if (s2 && !s2.off) { showToast('목업: OFF 확인 모달은 캠페인 단위로만 유지합니다.'); }
+            if (s2) s2.off = !s2.off;
+            renderOverviewPanel(row);
+            renderDetailHierarchy(row);
+            renderList();
+          });
+        });
+        root.querySelectorAll('.btn-open-mission').forEach((a) => {
           a.addEventListener('click', (e) => { e.preventDefault(); showToast('목업: 미션 상세 화면은 다음 단계에서 추가합니다.'); });
         });
-        tb.querySelectorAll('.btn-toggle-mission').forEach((a) => {
+        root.querySelectorAll('.btn-toggle-mission').forEach((a) => {
           a.addEventListener('click', (e) => {
             e.preventDefault();
             const sid = a.getAttribute('data-sid');
             const mid = a.getAttribute('data-mid');
             if (!sid || !mid) return;
-            const schemes = Array.isArray(c.schemes) ? c.schemes : [];
-            const s = schemes.find((x) => x.id === sid);
-            const m = s && Array.isArray(s.missions) ? s.missions.find((x) => x.id === mid) : null;
-            if (!m) return;
-            if (statusOf(m).key === '완료') { showToast('종료일이 지난 미션은 관리(ON/OFF)를 변경할 수 없습니다.'); return; }
-            if (!m.off) { showToast('목업: OFF 확인 모달은 캠페인 단위로만 유지합니다.'); }
-            m.off = !m.off;
-            renderMissions(c);
+            const row = CAMPAIGNS.find((x) => x.id === c.id);
+            if (!row) return;
+            const schemes2 = Array.isArray(row.schemes) ? row.schemes : [];
+            const s2 = schemes2.find((x) => x.id === sid);
+            const m2 = s2 && Array.isArray(s2.missions) ? s2.missions.find((x) => x.id === mid) : null;
+            if (!m2) return;
+            if (statusOf(m2).key === '완료') { showToast('종료일이 지난 미션은 관리(ON/OFF)를 변경할 수 없습니다.'); return; }
+            if (!m2.off) { showToast('목업: OFF 확인 모달은 캠페인 단위로만 유지합니다.'); }
+            m2.off = !m2.off;
+            renderOverviewPanel(row);
+            renderDetailHierarchy(row);
             renderList();
           });
         });
